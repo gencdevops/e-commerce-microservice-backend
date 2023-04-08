@@ -1,4 +1,4 @@
-package com.fmss.webclient;
+package com.fmss.apigateway.webclient;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

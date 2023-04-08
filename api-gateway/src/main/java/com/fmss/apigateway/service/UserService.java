@@ -1,4 +1,4 @@
-package com.fmss.service;
+package com.fmss.apigateway.service;
 
 import com.fmss.commondata.model.LoginRequestDto;
 import lombok.RequiredArgsConstructor;

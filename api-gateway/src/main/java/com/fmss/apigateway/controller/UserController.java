@@ -1,7 +1,7 @@
-package com.fmss.controller;
+package com.fmss.apigateway.controller;
 
+import com.fmss.apigateway.service.UserService;
 import com.fmss.commondata.model.LoginRequestDto;
-import com.fmss.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
