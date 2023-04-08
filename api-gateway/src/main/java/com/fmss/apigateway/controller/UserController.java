@@ -15,7 +15,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
     @PostMapping("/login")
     public Mono<ResponseEntity<String>> login(@RequestBody LoginRequestDto loginRequestDto) {
         return userService.login(loginRequestDto);

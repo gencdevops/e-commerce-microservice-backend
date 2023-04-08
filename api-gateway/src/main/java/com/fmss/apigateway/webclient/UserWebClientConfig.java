@@ -3,9 +3,7 @@ package com.fmss.apigateway.webclient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 @Configuration
 public class UserWebClientConfig {
@@ -13,7 +11,7 @@ public class UserWebClientConfig {
     String userServiceBaseUrl;
 
     @Bean(name = "userServiceWebClient")
-    public WebClient serviceTwoWebClient() {
+    public WebClient userServiceWebClient() {
         return WebClient
                 .builder()
                 .baseUrl(userServiceBaseUrl)
