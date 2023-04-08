@@ -16,6 +16,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
+
+    implementation ("com.fmss:common-data:0.0.1-SNAPSHOT") { changing = true }
 }
 
 tasks.named('test') {
