@@ -26,6 +26,7 @@ public class FeignTestController {
 
     @GetMapping
     public String testFeign(){
+
         String text = "";
             text += basketFeignClient.testFeign() + "\n";
             text += orderFeignClient.testFeign() + "\n";
