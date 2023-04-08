@@ -2,6 +2,75 @@ version: '3.8'
 
 
 services:
+################ DATABASES ################################################################################
+  postgres-user:
+    image: postgres:15.2
+    container_name: postgres-user
+    restart: always
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  postgres-product:
+    image: postgres:15.2
+    container_name: postgres-product
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: product_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  postgres-order:
+    image: postgres:15.2
+    container_name: postgres-order
+    restart: always
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+################ KAFKA ################################################################################
+  kafka:
+    image: 'bitnami/kafka:latest'
+    container_name: spring_kafka
+    ports:
+      - '9094:9094'
+    restart: unless-stopped
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_LISTENERS=BROKER://kafka:9092,CONTROLLER://kafka:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=BROKER://kafka:9092,EXTERNAL://127.0.0.1:9094
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=BROKER
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - ALLOW_EMPTY_PASSWORD=yes
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: spring_kafka-ui
+    ports:
+      - "8082:8082"
+    restart: unless-stopped
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - SERVER_PORT=8082
+    depends_on:
+      - kafka
+
+################ ELK ################################################################################
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
     container_name: elasticsearch_springboot
@@ -47,6 +116,8 @@ services:
       - elastic
     depends_on:
       - elasticsearch
+
+################################################################################################
 
 networks:
   elastic:
