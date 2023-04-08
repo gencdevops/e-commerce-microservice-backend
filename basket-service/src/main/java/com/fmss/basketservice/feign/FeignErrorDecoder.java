@@ -2,7 +2,6 @@ package com.fmss.basketservice.feign;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fmss.basketservice.model.ErrorBody;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import jakarta.ws.rs.BadRequestException;

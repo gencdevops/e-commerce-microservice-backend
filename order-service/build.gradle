@@ -27,6 +27,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.2'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    implementation 'org.springframework.kafka:spring-kafka'
+
     implementation ("com.fmss:common-data:1.0") { changing = true }
 
     runtimeOnly 'org.postgresql:postgresql'
