@@ -10,6 +10,7 @@ sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -17,7 +18,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
 
-    implementation ("com.fmss:common-data:0.0.1-SNAPSHOT") { changing = true }
+    implementation ("com.fmss:common-data:1.0") { changing = true }
 }
 
 tasks.named('test') {
