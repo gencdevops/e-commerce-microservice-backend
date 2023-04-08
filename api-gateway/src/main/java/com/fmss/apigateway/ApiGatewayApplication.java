@@ -10,8 +10,6 @@ import org.springframework.cache.annotation.EnableCaching;
 public class ApiGatewayApplication {
 
     public static void main(String[] args) {
-
-        LoginRequestDto asd;
         SpringApplication.run(ApiGatewayApplication.class, args);
     }
 
