@@ -10,6 +10,7 @@ sourceCompatibility = '17'
 
 repositories {
 	mavenCentral()
+	mavenLocal()
 	maven { url 'https://artifactory-oss.prod.netflix.net/artifactory/maven-oss-candidates' }
 }
 
@@ -25,7 +26,7 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.2'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	implementation ("com.fmss:common-data:0.0.1-SNAPSHOT") { changing = true }
+	implementation ("com.fmss:common-data:1.0") { changing = true }
 
 	compileOnly 'org.projectlombok:lombok:1.18.26'
 	annotationProcessor 'org.projectlombok:lombok:1.18.26'
