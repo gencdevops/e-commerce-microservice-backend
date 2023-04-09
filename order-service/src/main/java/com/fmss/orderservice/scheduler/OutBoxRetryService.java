@@ -7,7 +7,7 @@ import com.fmss.orderservice.repository.OrderOutboxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import service.ProducerService;
+import com.fmss.orderservice.service.ProducerService;
 
 @Component
 @RequiredArgsConstructor

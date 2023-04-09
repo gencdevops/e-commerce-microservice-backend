@@ -1,4 +1,4 @@
-package service;
+package com.fmss.orderservice.service;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
