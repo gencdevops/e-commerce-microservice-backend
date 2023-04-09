@@ -29,6 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     implementation ("com.fmss:common-data:1.0") { changing = true }
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     runtimeOnly 'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok:1.18.26'
