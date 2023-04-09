@@ -2,6 +2,7 @@ package com.fmss.orderservice.feign;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fmss.commondata.model.entity.ErrorBody;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import jakarta.ws.rs.BadRequestException;

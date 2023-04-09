@@ -2,7 +2,7 @@ package com.fmss.productservice.feign;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fmss.productservice.model.ErrorBody;
+import com.fmss.commondata.model.entity.ErrorBody;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import jakarta.ws.rs.BadRequestException;
