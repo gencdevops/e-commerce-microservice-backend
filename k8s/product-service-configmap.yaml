@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+
+data:
+  spring.datasource.driverClassName = org.postgresql.Driver
+  spring.datasource.url = jdbc:postgresql://localhost:5433/product_db
+  spring.datasource.username = postgres
+  spring.datasource.password = postgres
+  spring.jpa.hibernate.ddl-auto = create-drop
+
+

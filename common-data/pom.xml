@@ -110,6 +110,15 @@
             <version>6.1.6.Final</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-kubernetes-dependencies -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-kubernetes-dependencies</artifactId>
+            <version>3.0.2</version>
+            <type>pom</type>
+        </dependency>
+
+
 
         <dependency>
             <groupId>io.micrometer</groupId>

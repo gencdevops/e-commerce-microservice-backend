@@ -2,7 +2,18 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.5'
 	id 'io.spring.dependency-management' version '1.1.0'
+	id 'com.google.cloud.tools.jib' version '3.3.1'
 }
+
+//jib {
+//	container {
+//		jvmFlags = ['-Xms512m', '-Xdebug']
+//		mainClass = 'com.example.demo.DemoApplication'com/fmss/basketservice/BasketServiceApplication.java
+//		args = []
+//		ports = ['9006/tcp']
+//	}
+//}
+//jib.to.image = 'fmss/basket-service'
 
 group = 'com.fmss'
 version = '0.0.1-SNAPSHOT'

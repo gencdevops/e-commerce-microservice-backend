@@ -1,0 +1,73 @@
+apiVersion: skaffold/v4beta4
+kind: Config
+metadata:
+  name: e-commerce-microservice-backend
+build:
+  artifacts:
+    - image: api-gateway
+      context: api-gateway
+      buildpacks:
+        builder: gcr.io/k8s-skaffold/skaffold:edge
+    - image: basket-service
+      context: basket-service
+      buildpacks:
+        builder: gcr.io/k8s-skaffold/skaffold:edge
+    - image: log-service
+      context: log-service
+      buildpacks:
+        builder: gcr.io/k8s-skaffold/skaffold:edge
+    - image: order-service
+      context: order-service
+      buildpacks:
+        builder: gcr.io/k8s-skaffold/skaffold:edge
+    - image: payment-service
+      context: payment-service
+      buildpacks:
+        builder: gcr.io/k8s-skaffold/skaffold:edge
+    - image: product-service
+      context: product-service
+      buildpacks:
+        builder: gcr.io/k8s-skaffold/skaffold:edge
+    - image: user-service
+      context: user-service
+      buildpacks:
+        builder: gcr.io/k8s-skaffold/skaffold:edge
+    - image: common-data
+      context: common-data
+      jib:
+        project: com.fmss:common-data
+manifests:
+  rawYaml:
+    - log-service/deployment.yaml
+    - order-service/deployment.yaml
+    - payment-service/deployment.yaml
+    - product-service/deployment.yaml
+    - user-service/deployment.yaml
+    - common-data/deployment.yaml
+    - api-gateway/deployment.yaml
+    - basket-service/deployment.yaml
+portForward:
+  - resourceType: service
+    resourceName: api-gateway
+    port: 8090
+  - resourceType: service
+    resourceName: basket-service
+    port: 9006
+  - resourceType: service
+    resourceName: log-service
+    port: 9007
+  - resourceType: service
+    resourceName: order-service
+    port: 9005
+  - resourceType: service
+    resourceName: payment-service
+    port: 9004
+  - resourceType: service
+    resourceName: product-service
+    port: 9003
+  - resourceType: service
+    resourceName: user-service
+    port: 9002
+  - resourceType: service
+    resourceName: common-data
+    port: 9012
