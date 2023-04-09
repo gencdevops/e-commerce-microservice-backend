@@ -1,3 +1,23 @@
 spring:
   cache:
     type: redis
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+#  prometheus:
+#    metrics:
+#      export:
+#        enabled: true
+

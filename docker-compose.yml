@@ -158,31 +158,25 @@ services:
     depends_on:
       - elasticsearch
 ################ REDIS ##############################################################################
-#  redis:
-#    image: redis:latest
-#    container_name: redis_container
-#    ports:
-#      - "6379:6379"
-#    networks:
-#      - redis_network
-#
-#  redisinsight:
-#    image: redislabs/redisinsight:latest
-#    container_name: redisinsight_container
-#    ports:
-#      - "8001:8001"
-#    networks:
-#      - redis_network
-#    depends_on:
-#      - redis
-
-
   redis:
     image: redis:latest
     ports:
       - "6379:6379"
 
+################ PROMETHEUS #########################################################################
+  prometheus:
+    image: quay.io/prometheus/prometheus:v2.0.0
+    ports:
+      - "9090:9090"
+    command: "--config.file=/etc/prometheus/prometheus.yml"
+    configs:
+      - source: prometheus.yml
+        target: /etc/prometheus/prometheus.yml
 ################################################################################################
+
+configs:
+  prometheus.yml:
+    file: ./prometheus.yml
 
 networks:
   elastic:

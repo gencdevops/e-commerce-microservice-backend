@@ -23,7 +23,10 @@
             </providers>
         </encoder>
     </appender>
-    <root level="info">
+
+    <logger name="com.fmss" level="INFO">
         <appender-ref ref="logstash" />
-    </root>
+    </logger>
+<!--    <logger name="com.fmss.basketservice.BasketServiceApplication" level="FATAL">-->
+<!--    </logger>-->
 </configuration>

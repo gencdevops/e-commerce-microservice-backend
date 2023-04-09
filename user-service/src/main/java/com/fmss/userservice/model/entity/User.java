@@ -1,6 +1,7 @@
 package com.fmss.userservice.model.entity;
 
 import com.fmss.commondata.model.entity.AbstractEntity;
+import com.fmss.userservice.model.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @Entity
-@Table(name = "_user")
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends AbstractEntity {
@@ -45,6 +46,13 @@ public class User extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
+
+    @Column
+    @Size(max = 128)
+    protected String beforePassword;
 
     public String generateCreatePasswordToken() {
         return DigestUtils.md5Hex("CreatePassword|" + getEmail() + "|" + getUserName() + "|" + password);
