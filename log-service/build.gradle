@@ -10,6 +10,7 @@ sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -21,6 +22,11 @@ dependencies {
     implementation 'net.logstash.logback:logstash-logback-encoder:7.3'
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    implementation 'org.springframework.kafka:spring-kafka'
 
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

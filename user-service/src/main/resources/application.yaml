@@ -1,1 +1,14 @@
+spring:
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: ets46475@gmail.com
+    password: gmjheplyplgejsht
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 

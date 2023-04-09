@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: common-data
+  labels:
+    app: common-data
+spec:
+  ports:
+  - port: 9012
+    protocol: TCP
+  clusterIP: None
+  selector:
+    app: common-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: common-data
+  labels:
+    app: common-data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: common-data
+  template:
+    metadata:
+      labels:
+        app: common-data
+    spec:
+      containers:
+      - name: common-data
+        image: common-data

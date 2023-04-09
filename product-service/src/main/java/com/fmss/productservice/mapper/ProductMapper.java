@@ -1,6 +1,7 @@
 package com.fmss.productservice.mapper;
 
 import com.fmss.productservice.model.Product;
+import com.fmss.productservice.model.dto.ProductRequestDto;
 import com.fmss.productservice.model.dto.ProductResponseDto;
 import org.springframework.stereotype.Component;
 
@@ -16,5 +17,9 @@ public class ProductMapper {
         price = product.getPrice();
 
         return new ProductResponseDto(name, price);
+    }
+
+    public Product toEntity(ProductRequestDto productRequestDto){
+        return new Product(productRequestDto.name(), productRequestDto.price(), productRequestDto.status());
     }
 }
