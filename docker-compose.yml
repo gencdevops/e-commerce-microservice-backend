@@ -156,12 +156,31 @@ services:
       - elastic
     depends_on:
       - elasticsearch
+################ REDIS ##############################################################################
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+    networks:
+      - redis_network
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: redisinsight_container
+    ports:
+      - "8001:8001"
+    networks:
+      - redis_network
+    depends_on:
+      - redis
 
 ################################################################################################
 
 networks:
   elastic:
     driver: bridge
+  redis_network:
 
 volumes:
   elasticsearch_data:
