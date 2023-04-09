@@ -116,6 +116,7 @@ services:
     container_name: elasticsearch_springboot
     environment:
       - bootstrap.memory_lock=true
+      - cluster.name=docker-cluster
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - "discovery.type=single-node"
       - xpack.security.enabled=false
@@ -147,8 +148,8 @@ services:
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
     ports:
       - "5044:5044"
-      - "5012:5012/tcp"
-      - "5000:5000/udp"
+      - "5012:5000/tcp"
+      - "5033:5000/udp"
       - "9600:9600"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
