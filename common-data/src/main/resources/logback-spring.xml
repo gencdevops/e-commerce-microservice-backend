@@ -6,21 +6,24 @@
         <destination>localhost:5012</destination>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <mdc />
-                <context />
-                <logLevel />
-                <loggerName />
+                <timestamp />
+                <version />
                 <pattern>
                     <pattern>
                         {
-                        "app": "test-log"
+                        "app": "my-app",
+                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSSZZ}",
+                        "level": "%level",
+                        "logger": "%logger",
+                        "message": "%message",
+                        "thread": "%thread",
+                        "stacktrace": "%ex{full}",
+                        "mdc": "%mdc"
                         }
                     </pattern>
                 </pattern>
-                <threadName />
-                <message />
+                <context />
                 <logstashMarkers />
-                <stackTrace />
             </providers>
         </encoder>
     </appender>
@@ -28,10 +31,10 @@
     <appender name="kafkaAppender" class="com.fmss.commondata.configuration.kafka.KafkaAppender">
         <encoder class="com.fmss.commondata.configuration.kafka.LayoutKafkaMessageEncoder">
             <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>[%date] %highlight([%level]) [%logger{10} %file:%line] %msg%n</pattern>
+                <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} | ${HOSTNAME} | %-5level | %logger{80} | [%file:%line] | %thread | %X{traceId:-} | %X{spanId:-} | %msg%n</pattern>
             </layout>
         </encoder>
-        <topic>fmss.log.info</topic>
+        <topic>logs</topic>
         <producerConfig>bootstrap.servers=localhost:9094</producerConfig>
     </appender>
 
@@ -39,6 +42,4 @@
         <appender-ref ref="logstash" />
         <appender-ref ref="kafkaAppender" />
     </logger>
-<!--    <logger name="com.fmss.basketservice.BasketServiceApplication" level="FATAL">-->
-<!--    </logger>-->
 </configuration>

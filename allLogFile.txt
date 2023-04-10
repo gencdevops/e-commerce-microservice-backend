@@ -1,0 +1,14 @@
+10-04-2023 23:26:44.954 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.BasketServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started BasketServiceApplication in 8.703 seconds (process running for 14.701)10-04-2023 23:47:46.712 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.productservice.ProductServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+10-04-2023 23:47:47.976 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 18.871 seconds (process running for 25.687)
+
+10-04-2023 23:47:47.290 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.userservice.UserServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+10-04-2023 23:47:54.456 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.productservice.ProductServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started ProductServiceApplication in 17.954 seconds (process running for 25.48)
+
+10-04-2023 23:47:55.034 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.userservice.UserServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started UserServiceApplication in 10.226 seconds (process running for 16.821)
+
+10-04-2023 23:48:54.255 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:37] | http-nio-9006-exec-1 |  |  | requestId 490b433e-da35-48f4-a9f5-0e30e8e92f40, host localhost:9006  HttpMethod: GET, URI : /api/v1/test
+
+10-04-2023 23:48:54.485 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:33] | http-nio-9006-exec-1 |  |  | requestId 490b433e-da35-48f4-a9f5-0e30e8e92f40, Handle :com.fmss.basketservice.controller.FeignTestController#testFeign() , request take time: 204
+

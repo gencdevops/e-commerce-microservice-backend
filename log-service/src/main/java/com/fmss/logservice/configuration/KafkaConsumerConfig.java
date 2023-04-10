@@ -10,6 +10,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableKafka
@@ -22,8 +23,8 @@ public class KafkaConsumerConfig {
     private String groupId;
 
     @Bean
-    public ConsumerFactory<String, Object> getConsumerFactory() {
-        var factoryProps = new HashMap<String, Object>();
+    public ConsumerFactory<String, Object> consumerFactory() {
+        Map<String, Object> factoryProps = new HashMap<>();
 
         factoryProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootstrapServer);
         factoryProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
@@ -31,8 +32,5 @@ public class KafkaConsumerConfig {
         factoryProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(factoryProps);
     }
-
-
-
 }
 
