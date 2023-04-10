@@ -1,6 +1,6 @@
 package com.fmss.productservice.config;
 
-import com.fmss.productservice.model.dto.ProductRequestDto;
+import com.fmss.productservice.model.dto.ProductResponseDto;
 import com.fmss.productservice.service.ProductService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cache.CacheManager;
@@ -15,8 +15,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
-import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.List;
 
 @Configuration
 public class RedisConfig {
@@ -46,20 +46,20 @@ public class RedisConfig {
         template.setConnectionFactory(jedisConnectionFactory());
         template.setKeySerializer(RedisSerializer.string());
         template.setValueSerializer(RedisSerializer.json());
-        template.setHashValueSerializer(RedisSerializer.json());
-        template.setHashKeySerializer(RedisSerializer.string());
+        template.setHashValueSerializer(RedisSerializer.java());
+        template.setHashKeySerializer(RedisSerializer.json());
         return template;
     }
 
     @Bean
     public CommandLineRunner commandLineRunner(ProductService productService){
         return args -> {
-            productService.createProduct(new ProductRequestDto("test1", BigDecimal.ONE, true));
-            productService.createProduct(new ProductRequestDto("test2", BigDecimal.TEN, true));
-            productService.createProduct(new ProductRequestDto("test3", BigDecimal.ZERO, true));
-
+//            productService.createProduct(new ProductRequestDto("test1", BigDecimal.ONE, true));
+//            productService.createProduct(new ProductRequestDto("test2", BigDecimal.TEN, true));
+//            productService.createProduct(new ProductRequestDto("test3", BigDecimal.ZERO, true));
+//
             productService.getAllProducts();
-            //var allProducts = (List<ProductResponseDto>) redisTemplate().opsForValue().get("allProducts");
+            var allProducts = (List<ProductResponseDto>) redisTemplate().opsForValue().get("allProducts");
 
             System.out.println();
         };
