@@ -159,12 +159,14 @@ services:
       - elasticsearch
 ################ REDIS ##############################################################################
   redis:
+    container_name: the_redis
     image: redis:latest
     ports:
       - "6379:6379"
 
 ################ PROMETHEUS #########################################################################
   prometheus:
+    container_name: the_prometheus
     image: quay.io/prometheus/prometheus:v2.0.0
     ports:
       - "9090:9090"
