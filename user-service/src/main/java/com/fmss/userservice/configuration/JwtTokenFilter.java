@@ -2,26 +2,19 @@ package com.fmss.userservice.configuration;
 
 import com.fmss.userservice.util.Validations;
 import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.annotation.Nullable;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.stream.Stream;
 
 import static java.util.Objects.nonNull;
 
@@ -34,15 +27,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final UserDetailsConfig userDetailsConfig;
-    private final Map<String, SessionInformation> sessionIdSessionInformationMap;
 
     public JwtTokenFilter(
             JwtTokenUtil jwtTokenUtil,
-            UserDetailsConfig userDetailsConfig,
-            @Qualifier(BEAN_HAZELCAST_INSTANCE) HazelcastInstance hz) {
+            UserDetailsConfig userDetailsConfig) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.userDetailsConfig = userDetailsConfig;
-        this.sessionIdSessionInformationMap = hz.getMap(CacheNames.HZ_MAP_SESSION_ID_SESSION_INFORMATION);
     }
 
     @Override
@@ -64,45 +54,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if (nonNull(request.getCookies())) {
-                String cookieSessionId = getCookieJSessionId(request);
-
-                if (StringUtils.isNotBlank(cookieSessionId)) {
-                    EcommerceUserDetailService ecommerceUserDetailService = getAdviceMyUserDetailsFromHz(cookieSessionId);
-                    if (nonNull(ecommerceUserDetailService)) {
-                        setAuthentication(request, ecommerceUserDetailService);
-                        chain.doFilter(request, response);
-                        return;
-                    }
-                }
-            }
-
             UserDetails userDetails = userDetailsConfig.loadUserByUsername(username);
             if (Boolean.TRUE.equals(jwtTokenUtil.validateToken(token, userDetails))) {
                 setAuthentication(request, userDetails);
             }
         }
         chain.doFilter(request, response);
-    }
-
-    @Nullable
-    private EcommerceUserDetailService getAdviceMyUserDetailsFromHz(String cookieSessionId) {
-        return (EcommerceUserDetailService) sessionIdSessionInformationMap.keySet()
-                .stream()
-                .filter(s -> s.equals(cookieSessionId))
-                .map(sessionIdSessionInformationMap::get)
-                .findFirst()
-                .map(SessionInformation::getPrincipal)
-                .orElse(null);
-    }
-
-    @Nullable
-    private static String getCookieJSessionId(HttpServletRequest request) {
-        return Stream.of(request.getCookies())
-                .filter(cookie -> JSESSIONID.equals(cookie.getName()))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElse(null);
     }
 
     private static void setAuthentication(HttpServletRequest request, UserDetails userDetails) {

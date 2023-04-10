@@ -12,3 +12,8 @@ spring:
           starttls:
             enable: true
 
+jwt:
+  secret: 'ecom-fmss'
+  get:
+    token:
+      uri: '/authenticate'

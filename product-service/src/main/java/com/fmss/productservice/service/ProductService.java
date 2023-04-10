@@ -20,7 +20,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
-    @Cacheable(value = "allProducts")
+    //@Cacheable(value = "allProducts", cacheManager = "cacheManager")
     public List<ProductResponseDto> getAllProducts() {
         return productRepository.getAllProducts().parallelStream().map(productMapper::toResponseDto).toList();
     }

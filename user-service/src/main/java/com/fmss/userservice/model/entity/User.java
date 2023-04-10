@@ -10,7 +10,6 @@ import lombok.Setter;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 
@@ -22,19 +21,21 @@ import java.util.Collection;
 @AllArgsConstructor
 public class User extends AbstractEntity {
 
-    @Column(nullable = false, unique = true)
-    protected String userName;
 
-    @Column(nullable = false, unique = true)
+    protected String firstName;
+
+    protected String lastName;
+
     protected String birthDate;
+
+    protected String userName;
 
     @Email
     @Size(max = 100)
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email")
     protected String email;
 
     @Column
-    @NotNull
     @Size(max = 128)
     protected String password;
 
@@ -53,6 +54,10 @@ public class User extends AbstractEntity {
     @Column
     @Size(max = 128)
     protected String beforePassword;
+
+    public String getUserName() {
+        return getFirstName() + getLastName();
+    }
 
     public String generateCreatePasswordToken() {
         return DigestUtils.md5Hex("CreatePassword|" + getEmail() + "|" + getUserName() + "|" + password);

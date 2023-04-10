@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>localhost:5012</destination>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
@@ -24,8 +25,19 @@
         </encoder>
     </appender>
 
+    <appender name="kafkaAppender" class="com.fmss.commondata.configuration.kafka.KafkaAppender">
+        <encoder class="com.fmss.commondata.configuration.kafka.LayoutKafkaMessageEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>[%date] %highlight([%level]) [%logger{10} %file:%line] %msg%n</pattern>
+            </layout>
+        </encoder>
+        <topic>fmss.log.info</topic>
+        <producerConfig>bootstrap.servers=localhost:9094</producerConfig>
+    </appender>
+
     <logger name="com.fmss" level="INFO">
         <appender-ref ref="logstash" />
+        <appender-ref ref="kafkaAppender" />
     </logger>
 <!--    <logger name="com.fmss.basketservice.BasketServiceApplication" level="FATAL">-->
 <!--    </logger>-->

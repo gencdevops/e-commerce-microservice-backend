@@ -4,15 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -26,14 +26,12 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
     private final UserDetailsConfig userDetailsConfig;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenFilter jwtTokenFilter;
-    private final HazelcastInstance hazelcastInstance;
-
     private final ObjectMapper objectMapper;
 
     @Bean
@@ -65,27 +63,9 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/authenticate").permitAll()
-                .requestMatchers(
-                        HttpMethod.GET,
-                        "/",
-                        "/v2/api-docs",           // swagger
-                        "/webjars/**",            // swagger-ui webjars
-                        "/swagger/**",
-                        "/swagger-resources/**",  // swagger-ui resources
-                        "/configuration/**",      // swagger configuration
-                        "/*.html",
-                        "/favicon.ico",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js"
-                ).permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .authenticationProvider(authenticationProvider())
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint())
-                .accessDeniedHandler(accessDeniedHandler())
-                .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
 
@@ -103,7 +83,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SessionRegistry sessionRegistry() {
-        return new RedisSessionRegistry(hazelcastInstance);
+        return new SessionRegistryImpl();
     }
 
     @Bean
@@ -111,8 +91,4 @@ public class SecurityConfiguration {
         return new RestAuthenticationEntryPoint(objectMapper);
     }
 
-    @Bean
-    public RestAccessDeniedHandler accessDeniedHandler() {
-        return new RestAccessDeniedHandler(objectMapper);
-    }
 }
