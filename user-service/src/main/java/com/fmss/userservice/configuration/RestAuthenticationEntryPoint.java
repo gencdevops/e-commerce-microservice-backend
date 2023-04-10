@@ -1,7 +1,8 @@
 package com.fmss.userservice.configuration;
 
-import com.advicemybackend.configuration.fault.ErrorsView;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -10,8 +11,6 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -26,10 +25,9 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        LOG.debug("AuthenticationException: {}", authException.getMessage(), authException);
         final HttpStatus status = getHttpStatus(authException);
         response.setStatus(status.value());
-        objectMapper.writeValue(response.getOutputStream(), new ErrorsView(authException.getMessage()));
+        objectMapper.writeValue(response.getOutputStream(), authException.getMessage());
     }
 
     private HttpStatus getHttpStatus(AuthenticationException authException) {

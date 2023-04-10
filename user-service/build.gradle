@@ -30,6 +30,9 @@ dependencies {
 	implementation("com.fmss:common-data:1.0") { changing = true }
 	implementation 'org.springframework.boot:spring-boot-starter-security:2.7.1'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	runtimeOnly 'org.postgresql:postgresql'
 	compileOnly 'org.projectlombok:lombok:1.18.26'

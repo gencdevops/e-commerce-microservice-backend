@@ -1,11 +1,9 @@
 package com.fmss.userservice.service;
 
-import com.fmss.userservice.configuration.ConfigurationHolder;
 import com.fmss.userservice.configuration.EcommerceUserDetailService;
 import com.fmss.userservice.configuration.mail.MailingService;
 import com.fmss.userservice.exeption.RestException;
 import com.fmss.userservice.model.entity.User;
-import com.fmss.userservice.model.enums.UserStatus;
 import com.fmss.userservice.repository.UserRepository;
 import com.fmss.userservice.util.Validations;
 import com.google.common.primitives.Longs;
@@ -22,7 +20,8 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-import static com.fmss.userservice.util.AppSettingsKey.*;
+import static com.fmss.userservice.util.AppSettingsKey.CREATE_PASSWORD_URL_FORMAT;
+import static com.fmss.userservice.util.AppSettingsKey.RESET_PASSWORD_URL_FORMAT;
 import static com.fmss.userservice.util.Validations.ERR_INVALID_FORGOT_PASSWORD_TOKEN;
 
 
@@ -31,13 +30,12 @@ import static com.fmss.userservice.util.Validations.ERR_INVALID_FORGOT_PASSWORD_
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final ConfigurationHolder configurationHolder;
     private final MailingService mailingService;
 
 
     @Transactional(readOnly = true)
     public void sendForgotPasswordMail(String username) {
-        final var user = userRepository.findByEmailAndUserStatus(username, UserStatus.ACTIVE);
+        final var user = userRepository.findByEmail(username);
         final String link = createForgotPasswordLink(user);
         mailingService.sendForgotPasswordEmail(user.getEmail(), user.getUserName(), link);
     }
@@ -45,7 +43,7 @@ public class UserService {
 
     private String createNewUserPasswordLink(User user) {
         final String token = user.generateCreatePasswordToken();
-        String url = configurationHolder.getStringProperty(APPLICATION_MAIL_SOURCE_URL);
+        String url = null;
         if (StringUtils.isEmpty(url)) {
             url = "http://localhost:8090";
         }
@@ -58,7 +56,7 @@ public class UserService {
 
     private String createForgotPasswordLink(User user) {
         final String token = user.generateResetPasswordToken();
-        String url = configurationHolder.getStringProperty(APPLICATION_MAIL_SOURCE_URL);
+        String url = null;
         if (StringUtils.isEmpty(url)) {
             url = "http://localhost:8090";
         }
@@ -73,7 +71,7 @@ public class UserService {
 
     @Transactional
     public User findByEmail(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmailAndUserStatus(username, UserStatus.ACTIVE);
+        return userRepository.findByEmail(username);
     }
 
 
