@@ -3,6 +3,7 @@ package com.fmss.userservice.service;
 import com.fmss.userservice.configuration.EcommerceUserDetailService;
 import com.fmss.userservice.configuration.mail.MailingService;
 import com.fmss.userservice.exeption.RestException;
+import com.fmss.userservice.model.dto.request.UserRegisterRequestDto;
 import com.fmss.userservice.model.entity.User;
 import com.fmss.userservice.repository.UserRepository;
 import com.fmss.userservice.util.Validations;
@@ -32,35 +33,23 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final MailingService mailingService;
 
+    @Transactional
+    public void registerUser(UserRegisterRequestDto userRegisterRequestDto) {
+        final var user = userRegisterRequestDto.toUser();
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public boolean existByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 
     @Transactional(readOnly = true)
     public void sendForgotPasswordMail(String username) {
         final var user = userRepository.findByEmail(username);
         final String link = createForgotPasswordLink(user);
         mailingService.sendForgotPasswordEmail(user.getEmail(), user.getUserName(), link);
-    }
-
-
-    private String createNewUserPasswordLink(User user) {
-        final String token = user.generateCreatePasswordToken();
-        String url = null;
-        if (StringUtils.isEmpty(url)) {
-            url = "http://localhost:8090";
-        }
-        return String.format(CREATE_PASSWORD_URL_FORMAT, url, token, createBase64UserId(user));
-    }
-
-    private String createBase64UserId(User user) {
-        return Base64.encodeBase64URLSafeString(user.getId().getBytes());
-    }
-
-    private String createForgotPasswordLink(User user) {
-        final String token = user.generateResetPasswordToken();
-        String url = null;
-        if (StringUtils.isEmpty(url)) {
-            url = "http://localhost:8090";
-        }
-        return String.format(RESET_PASSWORD_URL_FORMAT, url, token, createBase64UserId(user));
     }
 
     @Transactional
@@ -137,5 +126,27 @@ public class UserService {
         user.setBeforePassword(currentPassword);
         user.setPassword(passwordEncoder.encode(password));
         userRepository.saveAndFlush(user);
+    }
+
+    private String createNewUserPasswordLink(User user) {
+        final String token = user.generateCreatePasswordToken();
+        String url = null;
+        if (StringUtils.isEmpty(url)) {
+            url = "http://localhost:8090";
+        }
+        return String.format(CREATE_PASSWORD_URL_FORMAT, url, token, createBase64UserId(user));
+    }
+
+    private String createBase64UserId(User user) {
+        return Base64.encodeBase64URLSafeString(user.getId().getBytes());
+    }
+
+    private String createForgotPasswordLink(User user) {
+        final String token = user.generateResetPasswordToken();
+        String url = null;
+        if (StringUtils.isEmpty(url)) {
+            url = "http://localhost:8090";
+        }
+        return String.format(RESET_PASSWORD_URL_FORMAT, url, token, createBase64UserId(user));
     }
 }

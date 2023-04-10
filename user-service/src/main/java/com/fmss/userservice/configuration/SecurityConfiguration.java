@@ -1,10 +1,6 @@
 package com.fmss.userservice.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fmss.userservice.model.entity.User;
-import com.fmss.userservice.model.enums.UserStatus;
-import com.fmss.userservice.repository.UserRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,19 +32,6 @@ public class SecurityConfiguration {
     private final UserDetailsConfig userDetailsConfig;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenFilter jwtTokenFilter;
-
-    private final UserRepository userRepository;
-
-    @PostConstruct
-    public void createUser() {
-        User user = new User();
-        user.setUserName("sercan@a.com");
-        user.setPassword(passwordEncoder.encode("1234"));
-        user.setEmail("sercan@a.com");
-        user.setUserStatus(UserStatus.ACTIVE);
-        userRepository.save(user);
-    }
-
     private final ObjectMapper objectMapper;
 
     @Bean

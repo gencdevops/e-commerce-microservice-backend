@@ -22,9 +22,13 @@ import java.util.Collection;
 public class User extends AbstractEntity {
 
 
-    protected String userName;
+    protected String firstName;
+
+    protected String lastName;
 
     protected String birthDate;
+
+    protected String userName;
 
     @Email
     @Size(max = 100)
@@ -50,6 +54,10 @@ public class User extends AbstractEntity {
     @Column
     @Size(max = 128)
     protected String beforePassword;
+
+    public String getUserName() {
+        return getFirstName() + getLastName();
+    }
 
     public String generateCreatePasswordToken() {
         return DigestUtils.md5Hex("CreatePassword|" + getEmail() + "|" + getUserName() + "|" + password);
