@@ -12,17 +12,16 @@ import org.springframework.util.backoff.FixedBackOff;
 
 @Configuration
 @RequiredArgsConstructor
-public class    KafkaListenerConfig {
+public class KafkaListenerConfig {
 private final ConsumerFactory<String, Object> consumerFactory;
 private final KafkaTemplate<String, Object> kafkaTemplate;
 
-@Bean
+    @Bean
     ConcurrentKafkaListenerContainerFactory<String, String> kafkaBlockingRetryContainerFactory(){
         ConcurrentKafkaListenerContainerFactory<String, String> factory=new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         factory.setCommonErrorHandler(new DefaultErrorHandler(
-        new DeadLetterPublishingRecoverer(kafkaTemplate),new FixedBackOff(5000,3))
-        );
-        return factory;
+        new DeadLetterPublishingRecoverer(kafkaTemplate),new FixedBackOff(5000,3)));
+            return factory;
         }
-        }
+}
