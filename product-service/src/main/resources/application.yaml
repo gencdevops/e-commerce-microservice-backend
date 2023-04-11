@@ -16,8 +16,11 @@ management:
     export:
       prometheus:
         enabled: true
-#  prometheus:
-#    metrics:
-#      export:
-#        enabled: true
-
+  #  prometheus:
+  #    metrics:
+  #      export:
+  #        enabled: true
+aws:
+  bucket-name: 'advivemy-images'
+  access-key: 'AKIAYHLZLDRDSWZZIDPD'
+  secret-key: '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'

@@ -9,17 +9,22 @@ import java.math.BigDecimal;
 
 @Component
 public class ProductMapper {
-    public ProductResponseDto toResponseDto(Product product){
+    public ProductResponseDto toResponseDto(Product product) {
+        
+        String id;
         String name;
+        String image;
         BigDecimal price;
 
+        id = product.getId();
         name = product.getName();
+        image = product.getUrl();
         price = product.getPrice();
 
-        return new ProductResponseDto(name, price);
+        return new ProductResponseDto(id, name, image, price);
     }
 
-    public Product toEntity(ProductRequestDto productRequestDto){
-        return new Product(productRequestDto.name(), productRequestDto.price(), productRequestDto.status());
+    public Product toEntity(ProductRequestDto productRequestDto, String url) {
+        return new Product(productRequestDto.getName(), productRequestDto.getPrice(), productRequestDto.getStatus(), url);
     }
 }
