@@ -5,11 +5,15 @@ import com.fmss.userservice.configuration.mail.MailingService;
 import com.fmss.userservice.exeption.RestException;
 import com.fmss.userservice.model.dto.request.UserRegisterRequestDto;
 import com.fmss.userservice.model.entity.User;
+import com.fmss.userservice.repository.LdapDataRepository;
 import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.repository.UserRepository;
+import com.fmss.userservice.repository.model.LdapUser;
 import com.fmss.userservice.util.Validations;
 import com.google.common.primitives.Longs;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.context.annotation.Lazy;
@@ -18,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.naming.ldap.LdapName;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -37,6 +42,25 @@ public class UserService {
     private final MailingService mailingService;
 
     private final LdapRepository ldapRepository;
+    private final LdapDataRepository ldapDataRepository;
+
+    @SneakyThrows
+    @PostConstruct
+    public void init() {
+     LdapUser ldapUser1 = ldapDataRepository.findByMail("muhammed.alagoz@fmsstech.com");
+        System.out.println(ldapUser1);
+        LdapUser ldapUser = new LdapUser();
+        ldapUser.setUserPrincipalName("");
+        ldapUser.setGivenName("sercan");
+        ldapUser.setSn("masar");
+        ldapUser.setMail("sercan.masar@fmsstech.com");
+        ldapUser.setUserPassword(passwordEncoder.encode("1234"));
+        ldapUser.setId(new LdapName("uid=sercan2"));
+        LdapUser save = ldapDataRepository.save(ldapUser);
+
+        System.out.println();
+//        ldapRepository.create(ldapUser);
+    }
 
     @Transactional
     public void registerUser(UserRegisterRequestDto userRegisterRequestDto) {

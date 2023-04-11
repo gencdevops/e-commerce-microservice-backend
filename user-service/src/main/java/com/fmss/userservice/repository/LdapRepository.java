@@ -34,7 +34,7 @@ public class LdapRepository {
     private static final String FULLNAME_ATTRIBUTE = "cn";
     private static final String EMAIL_ATTRIBUTE = "mail";
     public static final String USER_PASSWORD_ATTRIBUTE = "userpassword";
-    public static final String LDAP_USER = "user";
+    public static final String LDAP_USER = "users";
 
 
     private final LdapTemplate ldapTemplate;
@@ -71,6 +71,20 @@ public class LdapRepository {
     }
 
     public void create(LdapUser p) {
+
+//        Name dn = LdapNameBuilder.newInstance()
+//                .add("ou", "Users")
+//                .add("cn", p.getGivenName() + " " + p.getSn())
+//                .build();
+//        DirContextAdapter context = new DirContextAdapter(dn);
+//
+//        context.setAttributeValue("cn", p.getGivenName() + " " + p.getSn());
+//        context.setAttributeValue("sn", p.getSn());
+//        context.setAttributeValue("userPassword", p.getUserPassword());
+//        context.setAttributeValue(EMAIL_ATTRIBUTE, p.getMail());
+//
+//        ldapTemplate.bind(context);
+
         Name dn = buildDn(p);
         ldapTemplate.bind(dn, null, buildAttributes(p));
     }
@@ -105,7 +119,7 @@ public class LdapRepository {
     }
 
     private Name buildDn(LdapUser p) {
-        return LdapNameBuilder.newInstance(BASE_DN).add("ou", LDAP_USER).add(EMAIL_ATTRIBUTE, p.getMail()).build();
+        return LdapNameBuilder.newInstance(BASE_DN).add(EMAIL_ATTRIBUTE, p.getMail()).build();
     }
 
     private Attributes buildAttributes(LdapUser p) {
