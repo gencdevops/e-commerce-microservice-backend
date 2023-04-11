@@ -1,7 +1,7 @@
 package com.fmss.userservice.configuration;
 
-import com.fmss.userservice.model.entity.User;
-import com.fmss.userservice.service.UserService;
+import com.fmss.userservice.repository.LdapRepository;
+import com.fmss.userservice.repository.model.LdapUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,23 +14,15 @@ import java.util.Objects;
 @Component
 @RequiredArgsConstructor
 public class UserDetailsConfig implements UserDetailsService {
-    private final UserService userService;
+    private final LdapRepository ldapRepository;
 
 
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) {
-        User user = userService.findByEmail(username);
-        if (Objects.nonNull(user)) {
-            return new EcommerceUserDetailService(user);
+        LdapUser ldapUser = ldapRepository.findUser(username);
+        if (Objects.nonNull(ldapUser)) {
+            return new EcommerceUserDetailService(ldapUser);
         }
         throw new UsernameNotFoundException("error.userNotFound");
-    }
-
-    public EcommerceUserDetailService getUserById(Long userId) {
-        final User user = userService.getById(userId);
-        if (Objects.nonNull(user)) {
-            return new EcommerceUserDetailService(user);
-        }
-        throw new UsernameNotFoundException("error.badCredentials");
     }
 }

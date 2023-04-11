@@ -11,8 +11,9 @@ import com.google.common.primitives.Longs;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,8 @@ import static com.fmss.userservice.util.Validations.ERR_INVALID_FORGOT_PASSWORD_
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    @Lazy
+    private final PasswordEncoder passwordEncoder;
     private final MailingService mailingService;
 
     @Transactional
@@ -70,7 +72,7 @@ public class UserService {
         if (!StringUtils.equals(token, user.generateResetPasswordToken())) {
             throw new RestException(ERR_INVALID_FORGOT_PASSWORD_TOKEN);
         }
-        return new EcommerceUserDetailService(user);
+        return null;//TODO new EcommerceUserDetailService(user);
     }
 
 
@@ -97,7 +99,7 @@ public class UserService {
         if (!StringUtils.equals(token, user.generateCreatePasswordToken())) {
             throw new RestException("error.createPasswordTokenInvalid");
         }
-        return new EcommerceUserDetailService(user);
+        return null;//TODO new EcommerceUserDetailService(user);
     }
 
     @Transactional

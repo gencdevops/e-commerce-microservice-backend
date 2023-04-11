@@ -11,7 +11,10 @@ spring:
           auth: true
           starttls:
             enable: true
-
+  ldap:
+    urls: 'ldap://ldap.jumpcloud.com:389'
+    username: 'uid=mahoni,ou=Users,o=64346c9136393df65a68908f,dc=jumpcloud,dc=com'
+    password: 'R*t$9gmxG$EnpQ3'
 jwt:
   secret: 'ecom-fmss'
   get:
