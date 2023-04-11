@@ -25,6 +25,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+    @GetMapping()
+    public ResponseEntity<ProductResponseDto> getProductById (String productId) {
+        return null;
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> saveProduct(@RequestParam("productRequestDto") String productRequestDtoJson, @RequestParam("file") MultipartFile file) {
         ObjectMapper objectMapper = new ObjectMapper();

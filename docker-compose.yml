@@ -47,6 +47,16 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
+  postgres-payment:
+    image: postgres:15.2
+    container_name: postgres-payment
+    restart: always
+    ports:
+      - "5439:5432"
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 
   mongo-logservice:
     image: mongo:5.0
@@ -54,29 +64,31 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=password
-      - MONGO_INITDB_DATABASE=logservice_db
     restart: always
     ports:
       - "27019:27017"
     volumes:
-      - mongo_data:/data/db
-      - dev_archive:/Databases/dev.archive
-      - production:/Databases/production
+      - mongo_data:/data/log_db
+      - dev_archive:/Databases/log_dev.archive
+      - production:/Databases/log_production
+    networks:
+      mongo-log:
 
-  mongo-express:
+  mongo-express-logservice:
     image: mongo-express
-    container_name: mexpress
+    container_name: mongo-express-logservice
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=root
       - ME_CONFIG_MONGODB_ADMINPASSWORD=password
-      - ME_CONFIG_MONGODB_URL=mongodb://root:password@mongo-logservice:27017/?authSource=admin
-      - ME_CONFIG_BASICAUTH_USERNAME=mexpress
-      - ME_CONFIG_BASICAUTH_PASSWORD=mexpress
+      - ME_CONFIG_MONGODB_SERVER=mongo-logservice
+      - ME_CONFIG_MONGODB_PORT=27019
     restart: always
     depends_on:
       - mongo-logservice
     ports:
       - "8081:8081"
+    networks:
+      mongo-log:
 
   ################ KAFKA ################################################################################
   kafka:
@@ -191,6 +203,8 @@ networks:
   elastic:
     driver: bridge
   redis_network:
+  mongo-log:
+  mongo-payment:
 
 volumes:
   elasticsearch_data:

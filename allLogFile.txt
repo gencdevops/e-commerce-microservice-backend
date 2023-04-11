@@ -12,3 +12,93 @@
 
 10-04-2023 23:48:54.485 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:33] | http-nio-9006-exec-1 |  |  | requestId 490b433e-da35-48f4-a9f5-0e30e8e92f40, Handle :com.fmss.basketservice.controller.FeignTestController#testFeign() , request take time: 204
 
+11-04-2023 11:17:32.461 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.BasketServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 11:17:39.820 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.BasketServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started BasketServiceApplication in 10.716 seconds (process running for 16.812)
+
+11-04-2023 14:13:28.905 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 14:14:28.606 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.BasketServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 14:14:35.967 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.BasketServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started BasketServiceApplication in 9.418 seconds (process running for 15.472)
+
+11-04-2023 14:17:42.359 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 14:20:46.288 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 14:20:53.260 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.BasketServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 14:21:08.206 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.BasketServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started BasketServiceApplication in 25.55 seconds (process running for 32.793)
+
+11-04-2023 14:21:20.218 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 14:23:09.233 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplicationTests | [SpringApplication.java:638] | Test worker |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 14:23:19.458 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplicationTests | [StartupInfoLogger.java:57] | Test worker |  |  | Started PaymentServiceApplicationTests in 18.456 seconds (process running for 21.908)
+
+11-04-2023 14:23:49.830 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 14:26:07.984 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 14:26:14.167 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 8.352 seconds (process running for 14.441)
+
+11-04-2023 14:27:52.385 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 14:27:58.409 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 8.363 seconds (process running for 14.525)
+
+11-04-2023 14:29:16.128 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:37] | http-nio-9006-exec-1 |  |  | requestId 58d76ebf-11ce-402e-99de-04d5deb3d8f8, host localhost:9006  HttpMethod: GET, URI : /api/v1/test
+
+11-04-2023 14:29:16.492 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:33] | http-nio-9006-exec-1 |  |  | requestId 58d76ebf-11ce-402e-99de-04d5deb3d8f8, Handle :com.fmss.basketservice.controller.FeignTestController#testFeign() , request take time: 317
+
+11-04-2023 14:32:46.430 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:37] | http-nio-9006-exec-2 |  |  | requestId cdedeac5-e6de-4a0c-b3af-b19aa7c180a8, host localhost:9006  HttpMethod: GET, URI : /api/v1/test
+
+11-04-2023 14:32:46.493 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:33] | http-nio-9006-exec-2 |  |  | requestId cdedeac5-e6de-4a0c-b3af-b19aa7c180a8, Handle :com.fmss.basketservice.controller.FeignTestController#testFeign() , request take time: 26
+
+11-04-2023 14:32:49.874 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:37] | http-nio-9006-exec-3 |  |  | requestId bfe461ca-8ce3-42df-8ec3-116434879810, host localhost:9006  HttpMethod: GET, URI : /api/v1/test
+
+11-04-2023 14:32:49.919 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:33] | http-nio-9006-exec-3 |  |  | requestId bfe461ca-8ce3-42df-8ec3-116434879810, Handle :com.fmss.basketservice.controller.FeignTestController#testFeign() , request take time: 3
+
+11-04-2023 14:41:01.297 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:37] | http-nio-9006-exec-4 |  |  | requestId 4a55e1be-d07c-4c02-8046-16689bd67c4b, host localhost:9006  HttpMethod: GET, URI : /api/v1/test
+
+11-04-2023 14:41:01.398 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:33] | http-nio-9006-exec-4 |  |  | requestId 4a55e1be-d07c-4c02-8046-16689bd67c4b, Handle :com.fmss.basketservice.controller.FeignTestController#testFeign() , request take time: 21
+
+11-04-2023 14:44:29.025 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:37] | http-nio-9006-exec-5 |  |  | requestId 8c98e801-4a37-4f45-9c22-a4446a797079, host localhost:9006  HttpMethod: GET, URI : /api/v1/test
+
+11-04-2023 14:44:29.084 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.basketservice.log.ApiLogger | [ApiLogger.java:33] | http-nio-9006-exec-5 |  |  | requestId 8c98e801-4a37-4f45-9c22-a4446a797079, Handle :com.fmss.basketservice.controller.FeignTestController#testFeign() , request take time: 25
+
+11-04-2023 16:23:17.922 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 16:23:22.244 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 6.193 seconds (process running for 11.905)
+
+11-04-2023 16:25:58.939 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 16:26:04.609 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 9.008 seconds (process running for 14.963)
+
+11-04-2023 16:27:14.965 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 16:27:19.386 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 6.406 seconds (process running for 12.131)
+
+11-04-2023 16:28:30.163 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 16:28:36.227 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 7.889 seconds (process running for 14.832)
+
+11-04-2023 16:29:47.582 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 16:29:54.931 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 9.289 seconds (process running for 15.314)
+
+11-04-2023 16:30:38.278 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 16:30:42.638 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 6.614 seconds (process running for 12.636)
+
+11-04-2023 16:32:17.345 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 16:32:21.725 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 8.14 seconds (process running for 14.459)
+
+11-04-2023 16:37:49.464 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 16:37:54.225 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 6.194 seconds (process running for 11.84)
+
+11-04-2023 16:41:42.204 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [SpringApplication.java:638] | main |  |  | The following 1 profile is active: "dev"
+
+11-04-2023 16:41:46.697 | Oguzcans-MacBook-Pro.local | INFO  | com.fmss.paymentservice.PaymentServiceApplication | [StartupInfoLogger.java:57] | main |  |  | Started PaymentServiceApplication in 6.015 seconds (process running for 11.816)
+
