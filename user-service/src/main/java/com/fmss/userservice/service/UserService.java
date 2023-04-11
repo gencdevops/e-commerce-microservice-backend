@@ -5,6 +5,7 @@ import com.fmss.userservice.configuration.mail.MailingService;
 import com.fmss.userservice.exeption.RestException;
 import com.fmss.userservice.model.dto.request.UserRegisterRequestDto;
 import com.fmss.userservice.model.entity.User;
+import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.repository.UserRepository;
 import com.fmss.userservice.util.Validations;
 import com.google.common.primitives.Longs;
@@ -35,11 +36,13 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final MailingService mailingService;
 
+    private final LdapRepository ldapRepository;
+
     @Transactional
     public void registerUser(UserRegisterRequestDto userRegisterRequestDto) {
         final var user = userRegisterRequestDto.toUser();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        user.setUserPassword(passwordEncoder.encode(userRegisterRequestDto.password()));
+        ldapRepository.create(user);
     }
 
     @Transactional

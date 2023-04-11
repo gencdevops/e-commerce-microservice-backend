@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Set;
 
-import static com.fmss.userservice.model.enums.UserStatus.ACTIVE;
-
 @Getter
 @ToString
 public class EcommerceUserDetailService implements UserDetails {
@@ -33,22 +31,22 @@ public class EcommerceUserDetailService implements UserDetails {
 
     @Override
     public String getPassword() {
-        return delegate.getPassword();
+        return delegate.getUserPassword();
     }
 
     @Override
     public String getUsername() {
-        return delegate.getEmail();
+        return delegate.getMail();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return delegate.getStatus().equals(ACTIVE);
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return delegate.getStatus().equals(ACTIVE);
+        return true;
     }
 
     @Override
@@ -58,7 +56,7 @@ public class EcommerceUserDetailService implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return delegate.getStatus().equals(ACTIVE);
+        return true;
     }
 
 }
