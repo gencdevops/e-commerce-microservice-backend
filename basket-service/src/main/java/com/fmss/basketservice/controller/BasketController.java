@@ -16,17 +16,17 @@ public class BasketController {
 
     private final BasketService basketService;
 
-    @GetMapping("/basket/{userId}") //endpoint doğru mu ?
+    @GetMapping("/basket-user/{userId}") //endpoint doğru mu ?
     public ResponseEntity<BasketResponseDto> getBasketByUserId(@PathVariable String userId) {
         return ResponseEntity.ok(basketService.getBasketByUserId(userId));
     }
 
-    @GetMapping("/basket-user/{basketId}")
+    @GetMapping("/basket-basket/{basketId}")
     public ResponseEntity<BasketResponseDto> getBasketByBasketId(@PathVariable String basketId) {
         return ResponseEntity.ok(basketService.getBasketByBasketId(basketId));
     }
 
-    @PutMapping("/basket/disable/{basketId}")
+    @PutMapping("/disable/{basketId}")
     public void disableBasket(@PathVariable String basketId) {
         basketService.disableBasket(basketId);
     }
@@ -37,15 +37,5 @@ public class BasketController {
         basketService.deleteBasket(basketId);
     }
 
-    @PostMapping("/basket-item")
-    public ResponseEntity<BasketItemResponseDto> addBasketItemToBasket(@RequestBody BasketItemRequestDto basketItemRequestDto) {
-        return ResponseEntity.ok(basketService.addBasketItemToBasket(basketItemRequestDto));
-    }
 
-
-    @DeleteMapping("/basket-item/{basketItemId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBasketItemOnBasket(String basketItemId) {
-        basketService.deleteBasketItemFromBasket(basketItemId);
-    }
 }
