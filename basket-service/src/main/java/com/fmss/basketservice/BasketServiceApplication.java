@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
+import java.util.UUID;
+
 @EnableFeignClients
 @SpringBootApplication
 public class BasketServiceApplication {
@@ -18,7 +20,7 @@ public class BasketServiceApplication {
 	@Bean
 	CommandLineRunner commandLineRunner(BasketService basketService){
 		return args -> {
-			basketService.getBasketByUserId("myTestUser");
+			basketService.getBasketByUserId(UUID.randomUUID());
 		};
 	}
 
