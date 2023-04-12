@@ -68,9 +68,11 @@ public class BasketService {
     }
 
     public BasketItemResponseDto addBasketItemToBasket(BasketItemRequestDto basketItemRequestDto){
-        Basket basket = getById(basketItemRequestDto.basketId()); //Bu adımda basketin olduğudan eminiz
+        Basket basket = getById(basketItemRequestDto.basketId());
 
-        BasketItem basketItem = basketItemRepository.save(new BasketItem(basketItemRequestDto.basketId(), basketItemRequestDto.quantity(), basket));
+        BasketItem basketItem = new BasketItem(basketItemRequestDto.basketId(), basketItemRequestDto.quantity(), basket);
+
+        basketItemRepository.save(basketItem);
 
         return basketItemMapper.toResponseDto(basketItem);
     }

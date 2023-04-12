@@ -11,6 +11,7 @@ public class BasketItemMapper {
 
     public BasketItemResponseDto toResponseDto(BasketItem basketItem) {
         return BasketItemResponseDto.builder()
+                .basketItemId(basketItem.getId())
                 .productId(basketItem.getProductId())
                 .quantity(basketItem.getQuantity())
                 .build();
