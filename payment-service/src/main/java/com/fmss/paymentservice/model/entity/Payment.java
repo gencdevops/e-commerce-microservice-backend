@@ -12,9 +12,9 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@SuperBuilder
 @Getter
 @Setter
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Payment extends AbstractEntity {

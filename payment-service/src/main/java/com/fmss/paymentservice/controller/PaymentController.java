@@ -1,5 +1,7 @@
 package com.fmss.paymentservice.controller;
 
+import com.fmss.paymentservice.model.dto.CreatePaymentRequestDto;
+import com.fmss.paymentservice.model.dto.PaymentResponseDto;
 import com.fmss.paymentservice.model.entity.Payment;
 import com.fmss.paymentservice.model.enums.PaymentStatus;
 import com.fmss.paymentservice.repository.PaymentRepository;
@@ -22,13 +24,12 @@ public class PaymentController {
     public final PaymentRepository paymentRepository;
 
     @PostMapping
-    public ResponseEntity<Payment> createPayment() {
-//        return ResponseEntity.ok(paymentService.createPayment("10000", PaymentStatus.APPROVAL));
-        return ResponseEntity.ok(paymentRepository.save(new Payment("1000", PaymentStatus.APPROVAL)));
+    public ResponseEntity<PaymentResponseDto> createPayment(CreatePaymentRequestDto createPaymentRequestDto) {
+        return ResponseEntity.ok(paymentService.createPayment(createPaymentRequestDto));
     }
 
     @GetMapping
-    public ResponseEntity<List<Payment>> getAllPayment() {
-        return ResponseEntity.ok(paymentRepository.findAll());
+    public ResponseEntity<PaymentResponseDto> getPaymentByOrderId(String orderId) {
+        return ResponseEntity.ok(paymentService.getPaymentByOrderId(orderId));
     }
 }
