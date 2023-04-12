@@ -1,4 +1,4 @@
-package com.fmss.basketservice.model.enitity;
+package com.fmss.basketservice.model.entity;
 
 import com.fmss.basketservice.model.enums.BasketStatus;
 import com.fmss.commondata.model.entity.AbstractEntity;
@@ -20,8 +20,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Basket extends AbstractEntity {
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BasketItem> basketItems;
+
     private BigDecimal totalPrice;
 
     @Enumerated(EnumType.STRING)
