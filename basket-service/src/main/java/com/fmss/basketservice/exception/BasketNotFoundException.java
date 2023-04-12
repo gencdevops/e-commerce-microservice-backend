@@ -2,7 +2,7 @@ package com.fmss.basketservice.exception;
 
 public class BasketNotFoundException extends RuntimeException{
     public BasketNotFoundException() {
-        super("Seper bulunamadı.");
+        super("Sepet bulunamadı.");
     }
 
     public BasketNotFoundException(String message) {

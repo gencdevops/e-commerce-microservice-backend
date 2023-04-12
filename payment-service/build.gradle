@@ -30,10 +30,6 @@ dependencies {
 
     implementation ("com.fmss:common-data:1.0") { changing = true }
 
-    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-
-
     //PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
     implementation 'com.h2database:h2'

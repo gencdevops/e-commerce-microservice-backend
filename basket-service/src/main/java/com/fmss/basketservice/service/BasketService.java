@@ -28,7 +28,7 @@ public class BasketService {
     private final BasketMapper basketMapper;
     private final BasketItemMapper basketItemMapper;
 
-    private Basket createBasket (String userId) {
+    private Basket createBasket (UUID userId) {
         Basket newBasket = Basket.builder()
                 .userId(userId)
                 .basketStatus(BasketStatus.ACTIVE)
@@ -39,31 +39,31 @@ public class BasketService {
         return basketRepository.save(newBasket);
     }
 
-    public BasketResponseDto getBasketByUserId(String userId) {
+    public BasketResponseDto getBasketByUserId(UUID userId) {
         Basket basketByUserId = basketRepository.findActiveBasketByUserId(userId).orElse(createBasket(userId));
         BasketResponseDto basketResponseDto = basketMapper.basketToBasketResponseDto(basketByUserId);
 
         return basketResponseDto;
     }
 
-    public BasketResponseDto getBasketByBasketId(String basketId) {
+    public BasketResponseDto getBasketByBasketId(UUID basketId) {
         return basketMapper.basketToBasketResponseDto(
                 getById(basketId)
         );
     }
 
-    public void disableBasket(String basketId){
+    public void disableBasket(UUID basketId){
         Basket basket = getById(basketId);
         basket.setBasketStatus(BasketStatus.PASSIVE);
 
         basketRepository.save(basket);
     }
 
-    private Basket getById(String basketId){
+    private Basket getById(UUID basketId){
         return basketRepository.findById(basketId).orElseThrow(BasketNotFoundException::new);
     }
 
-    public void deleteBasket(String basketId){
+    public void deleteBasket(UUID basketId){
         basketRepository.deleteById(basketId);
     }
 
@@ -77,10 +77,18 @@ public class BasketService {
         return basketItemMapper.toResponseDto(basketItem);
     }
 
-    public void deleteBasketItemFromBasket(String basketItemId){
-        basketItemRepository.deleteById(UUID.fromString(basketItemId));
+    public void deleteBasketItemFromBasket(UUID basketItemId){
+        basketItemRepository.deleteById(basketItemId);
     }
 
-    //public
+    public BasketItemResponseDto incrementQuantityBasketItem(UUID basketItemId){
+        BasketItem basketItem = basketItemRepository.findById(basketItemId).orElseThrow(() -> new RuntimeException("Basket item not found."));
+
+        Integer quantity = basketItem.getQuantity();
+
+        basketItem.setQuantity(quantity + 1);
+
+        return basketItemMapper.toResponseDto(basketItemRepository.save(basketItem));
+    }
 
 }

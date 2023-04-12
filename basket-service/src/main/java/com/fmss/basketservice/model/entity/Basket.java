@@ -3,17 +3,15 @@ package com.fmss.basketservice.model.entity;
 import com.fmss.basketservice.model.enums.BasketStatus;
 import com.fmss.commondata.model.entity.AbstractEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
-@SuperBuilder
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,5 +26,5 @@ public class Basket extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private BasketStatus basketStatus;
 
-    private String userId;
+    private UUID userId;
 }
