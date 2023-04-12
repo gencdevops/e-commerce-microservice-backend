@@ -1,4 +1,4 @@
-package com.fmss.commondata.configuration.kafka;
+package com.fmss.commondata.kafka;
 
 import ch.qos.logback.core.Layout;
 import ch.qos.logback.core.spi.ContextAwareBase;

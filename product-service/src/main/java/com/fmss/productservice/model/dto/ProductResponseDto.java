@@ -7,7 +7,5 @@ public record ProductResponseDto(
         String id,
         String name,
         String image,
-        BigDecimal price
-
-) implements Serializable {
+        BigDecimal price) implements Serializable {
 }

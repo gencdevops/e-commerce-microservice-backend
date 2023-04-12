@@ -8,6 +8,7 @@ import com.fmss.productservice.model.dto.ProductResponseDto;
 import com.fmss.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,11 +27,21 @@ public class ProductService {
     private final FileUploadService fileUploadService;
 
     //@Cacheable(value = "allProducts", cacheManager = "cacheManager")
+
+    @Cacheable(
+            value = {"sharepoint"},
+            key = "{#methodName}",
+            unless = "#result == null"
+    )
     public List<ProductResponseDto> getAllProducts() {
         return productRepository.getAllProducts().parallelStream().map(productMapper::toResponseDto).toList();
     }
 
     @CacheEvict(value = "allProducts")
+    @CacheEvict(
+            value = {"page-manager"},
+            allEntries = true
+    )
     public ProductResponseDto updateProduct(ProductRequestDto productRequestDto, String productId) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 

@@ -1,15 +1,13 @@
-package com.fmss.commondata.configuration.kafka;
+package com.fmss.commondata.kafka;
 
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.AsyncAppenderBase;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.spi.AppenderAttachable;
 import ch.qos.logback.core.spi.AppenderAttachableImpl;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.producer.*;
-import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 
 import java.util.*;

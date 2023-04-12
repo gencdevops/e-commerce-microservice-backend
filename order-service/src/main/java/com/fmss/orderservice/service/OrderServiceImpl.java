@@ -53,8 +53,6 @@ public class OrderServiceImpl implements OrderService {
         Order orderCreated = orderRepository.saveAndFlush(order);
 
 
-        PaymentResponse paymentResponse = paymentSystem.pay(placeOrderRequestDTO.getOrderItems(),
-                cardMapper.convertCardFromCardInfoDto(placeOrderRequestDTO.getCardInfo()));
 
 
         if (Objects.isNull(paymentResponse) || !paymentResponse.getPaymentStatus().equals(PaymentStatus.SUCCESS)) {

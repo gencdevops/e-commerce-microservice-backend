@@ -1,21 +1,43 @@
-package com.fmss.productservice.config;
+package com.fmss.productservice.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.cache.RedisCacheWriter;
+import org.springframework.data.redis.connection.*;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 import java.time.Duration;
+import java.util.List;
 
 @Configuration
-public class RedisConfig {
+@EnableRedisRepositories
+public class RedisConfiguration {
+
+
+    @Value("${redis.server.address:}")
+    private String redisServerAddress;
+    @Value("${redis.server.port}")
+    private int redisServerPort;
+    @Value("${redis.server.password}")
+    private String redisServerPassword;
+    @Value("${redis.server.environment}")
+    private String redisServerEnvironment;
+    @Value("${redis.server.cluster.nodes:}")
+    private List<String> redisServerClusterNodes;
+    @Value("${redis.service.prefix}")
+    private String redisServicePrefix;
+    @Value("${redis.service.cacheable.ttl}")
+    private long redisCacheableTtl;
+
+
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration("localhost", 6379);
@@ -45,6 +67,31 @@ public class RedisConfig {
         template.setHashValueSerializer(RedisSerializer.java());
         template.setHashKeySerializer(RedisSerializer.json());
         return template;
+    }
+
+
+    private RedisStandaloneConfiguration localRedisConnection() {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName("localhost");
+        redisStandaloneConfiguration.setPort(6379);
+        return redisStandaloneConfiguration;
+    }
+
+    private RedisClusterConfiguration openshiftRedisConnection() {
+        RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
+        if (this.redisServerClusterNodes != null && !this.redisServerClusterNodes.isEmpty()) {
+            redisClusterConfiguration = new RedisClusterConfiguration(this.redisServerClusterNodes);
+        } else {
+            redisClusterConfiguration.addClusterNode(new RedisNode(this.redisServerAddress, this.redisServerPort));
+        }
+
+        redisClusterConfiguration.setPassword(RedisPassword.of(this.redisServerPassword));
+        return redisClusterConfiguration;
+    }
+
+    @Bean
+    RedisCacheWriter redisCacheWriter() {
+        return RedisCacheWriter.lockingRedisCacheWriter(this.redisConnectionFactory());
     }
 
 //    @Bean

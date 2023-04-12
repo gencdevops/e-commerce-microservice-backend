@@ -2,17 +2,19 @@ package com.fmss.orderservice.feign;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fmss.commondata.model.entity.ErrorBody;
+
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 @Slf4j
+@RequiredArgsConstructor
 public class FeignErrorDecoder implements ErrorDecoder {
     private ErrorDecoder errorDecoder = new Default();
 

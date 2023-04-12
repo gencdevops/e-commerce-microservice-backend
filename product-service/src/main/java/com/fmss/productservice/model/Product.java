@@ -1,7 +1,7 @@
 package com.fmss.productservice.model;
 
 
-import com.fmss.commondata.model.entity.AbstractEntity;
+
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
