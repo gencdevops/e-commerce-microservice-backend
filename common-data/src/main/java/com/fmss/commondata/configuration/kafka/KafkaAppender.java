@@ -3,6 +3,7 @@ package com.fmss.commondata.configuration.kafka;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.AsyncAppenderBase;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.spi.AppenderAttachable;
 import ch.qos.logback.core.spi.AppenderAttachableImpl;
@@ -18,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 
-public class KafkaAppender<E> extends UnsynchronizedAppenderBase<E> implements AppenderAttachable<E> {
+public class KafkaAppender<E> extends AsyncAppenderBase<E> implements AppenderAttachable<E> {
     private static final String KAFKA_LOGGER_PREFIX = "org.apache.kafka.clients";
     private LazyProducer lazyProducer = null;
     private final AppenderAttachableImpl<E> aai = new AppenderAttachableImpl<>();

@@ -1,10 +1,10 @@
 package com.fmss.orderservice.service;
 
 
-import com.fmss.orderservice.dto.slack.SlackContextMessage;
-import com.fmss.orderservice.dto.slack.SlackDetailMessage;
-import com.fmss.orderservice.dto.slack.SlackMessage;
-import com.fmss.orderservice.dto.slack.SlackMessageBlock;
+import com.fmss.orderservice.model.slack.SlackContextMessage;
+import com.fmss.orderservice.model.slack.SlackDetailMessage;
+import com.fmss.orderservice.model.slack.SlackMessage;
+import com.fmss.orderservice.model.slack.SlackMessageBlock;
 import io.micrometer.core.instrument.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 
