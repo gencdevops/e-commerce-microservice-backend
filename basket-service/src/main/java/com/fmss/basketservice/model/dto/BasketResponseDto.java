@@ -1,6 +1,5 @@
 package com.fmss.basketservice.model.dto;
 
-import com.fmss.basketservice.model.enitity.BasketItem;
 import lombok.Builder;
 
 import java.math.BigDecimal;

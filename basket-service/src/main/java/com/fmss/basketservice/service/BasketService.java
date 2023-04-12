@@ -1,9 +1,15 @@
 package com.fmss.basketservice.service;
 
+import com.fmss.basketservice.exception.BasketNotFoundException;
+import com.fmss.basketservice.mapper.BasketItemMapper;
 import com.fmss.basketservice.mapper.BasketMapper;
+import com.fmss.basketservice.model.dto.BasketItemRequestDto;
+import com.fmss.basketservice.model.dto.BasketItemResponseDto;
 import com.fmss.basketservice.model.dto.BasketResponseDto;
-import com.fmss.basketservice.model.enitity.Basket;
+import com.fmss.basketservice.model.entity.Basket;
+import com.fmss.basketservice.model.entity.BasketItem;
 import com.fmss.basketservice.model.enums.BasketStatus;
+import com.fmss.basketservice.repository.BasketItemRepository;
 import com.fmss.basketservice.repository.BasketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,35 +24,59 @@ import java.util.UUID;
 public class BasketService {
 
     private final BasketRepository basketRepository;
+    private final BasketItemRepository basketItemRepository;
     private final BasketMapper basketMapper;
-    public BasketResponseDto createBasket (String userId) {
+
+    private final BasketItemMapper basketItemMapper;
+
+    private Basket createBasket (String userId) {
         Basket newBasket = Basket.builder()
                 .userId(userId)
                 .basketStatus(BasketStatus.ACTIVE)
                 .totalPrice(BigDecimal.ZERO)
                 .basketItems(new ArrayList<>())
                 .build();
-        basketRepository.save(newBasket);
-        return basketMapper.basketToBasketResponseDto(newBasket);
+        return basketRepository.save(newBasket);
     }
 
     public BasketResponseDto getBasketByUserId (String userId) {
-        List<Basket> basketList = basketRepository.findBasketsByUserId(userId);
+        Basket basketByUserId = basketRepository.findActiveBasketByUserId(userId).orElse(createBasket(userId));
+        BasketResponseDto basketResponseDto = basketMapper.basketToBasketResponseDto(basketByUserId);
 
-        if (basketList.isEmpty()) {
-            return createBasket(userId);
-        }
-
-        if (basketList.stream().filter(basket -> basket.getBasketStatus() == BasketStatus.ACTIVE)) {
-
-        }
-
+        return basketResponseDto;
     }
 
-    private
+    public BasketResponseDto getBasketByBasketId(String basketId) {
+        return basketMapper.basketToBasketResponseDto(
+                getById(basketId)
+        );
+    }
 
-    public void getBasketByBasketId () {
+    public void disableBasket(String basketId){
+        Basket basket = getById(basketId);
+        basket.setBasketStatus(BasketStatus.PASSIVE);
 
+        basketRepository.save(basket);
+    }
+
+    private Basket getById(String basketId){
+        return basketRepository.findById(basketId).orElseThrow(BasketNotFoundException::new);
+    }
+
+    public void deleteBasket(String basketId){
+        basketRepository.deleteById(basketId);
+    }
+
+    public BasketItemResponseDto addBasketItemToBasket(BasketItemRequestDto basketItemRequestDto){
+        Basket basket = getById(basketItemRequestDto.basketId()); //Bu adımda basketin olduğudan eminiz
+
+        BasketItem basketItem = basketItemRepository.save(new BasketItem(basketItemRequestDto.basketId(), basketItemRequestDto.quantity(), basket));
+
+        return basketItemMapper.toResponseDto(basketItem);
+    }
+
+    public void deleteBasketItemFromBasket(String basketItemId){
+        basketItemRepository.deleteById(UUID.fromString(basketItemId));
     }
 
 }
