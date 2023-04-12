@@ -21,7 +21,7 @@ public class BasketController {
         return ResponseEntity.ok(basketService.getBasketByUserId(userId));
     }
 
-    @GetMapping("/basket/{basketId}")
+    @GetMapping("/basket-user/{basketId}")
     public ResponseEntity<BasketResponseDto> getBasketByBasketId(@PathVariable String basketId) {
         return ResponseEntity.ok(basketService.getBasketByBasketId(basketId));
     }
