@@ -51,6 +51,10 @@ public class ProductService {
                         });
     }
 
+    public ProductResponseDto getProductById(String productId){
+        return productMapper.toResponseDto(productRepository.findById(UUID.fromString(productId)).orElseThrow(() -> new RuntimeException("Product not found")));
+    }
+
     @Transactional
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto, MultipartFile multipartFile) {
 
