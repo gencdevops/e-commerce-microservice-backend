@@ -1,6 +1,7 @@
 package com.fmss.userservice.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fmss.commondata.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -89,6 +90,11 @@ public class SecurityConfiguration {
     @Bean
     public RestAuthenticationEntryPoint authenticationEntryPoint() {
         return new RestAuthenticationEntryPoint(objectMapper);
+    }
+
+    @Bean
+    public JwtUtil jwtUtil() {
+        return new JwtUtil();
     }
 
 }

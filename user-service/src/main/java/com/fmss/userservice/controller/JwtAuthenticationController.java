@@ -1,10 +1,11 @@
 package com.fmss.userservice.controller;
 
+import com.fmss.commondata.util.JwtUtil;
 import com.fmss.userservice.configuration.EcommerceUserDetailService;
-import com.fmss.userservice.configuration.JwtTokenUtil;
 import com.fmss.userservice.configuration.UserDetailsConfig;
 import com.fmss.userservice.model.dto.request.JwtRequest;
 import com.fmss.userservice.model.dto.response.JwtResponse;
+import com.fmss.userservice.model.entity.User;
 import com.fmss.userservice.util.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ import java.util.Objects;
 public class JwtAuthenticationController {
 
 	private final AuthenticationManager authenticationManager;
-	private final JwtTokenUtil jwtTokenUtil;
+	private final JwtUtil jwtUtil;
 	private final UserDetailsConfig userDetailsConfig;
 
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -34,7 +35,9 @@ public class JwtAuthenticationController {
 	public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest jwtRequest, HttpServletRequest request) throws Exception {
 		authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
 		final var userDetails = userDetailsConfig.loadUserByUsername(jwtRequest.getUsername());
-		final String token = jwtTokenUtil.generateToken((EcommerceUserDetailService) userDetails);
+		final var userDetailService = (EcommerceUserDetailService) userDetails;
+		User user = userDetailService.getDelegate();
+		final String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getUserName());
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 

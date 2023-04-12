@@ -5,10 +5,8 @@ import com.fmss.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,10 +17,15 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> saveUser(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
-        if (userService.existByEmail(userRegisterRequestDto.email())){
+        if (userService.existByEmail(userRegisterRequestDto.email())) {
             return new ResponseEntity<>("User already exist", HttpStatus.BAD_REQUEST);
         }
         userService.registerUser(userRegisterRequestDto);
         return new ResponseEntity<>("User successfully registered", HttpStatus.OK);
+    }
+
+    @PostMapping("/validate-token/{token}")
+    public boolean validateToken(@RequestBody UserDetails userDetails, @PathVariable String token) {
+        return userService.validateToken(token, userDetails);
     }
 }
