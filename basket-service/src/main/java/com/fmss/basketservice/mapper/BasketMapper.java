@@ -2,12 +2,16 @@ package com.fmss.basketservice.mapper;
 
 import com.fmss.basketservice.model.dto.BasketResponseDto;
 import com.fmss.basketservice.model.entity.Basket;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Documented;
+
 @Component
+@RequiredArgsConstructor
 public class BasketMapper {
 
-    BasketItemMapper basketItemMapper;
+    private final BasketItemMapper basketItemMapper;
 
     public BasketResponseDto basketToBasketResponseDto(Basket basket){
         return BasketResponseDto.builder()
