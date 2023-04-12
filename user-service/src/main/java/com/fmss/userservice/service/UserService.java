@@ -1,6 +1,7 @@
 package com.fmss.userservice.service;
 
 import com.fmss.userservice.configuration.EcommerceUserDetailService;
+import com.fmss.userservice.configuration.JwtTokenUtil;
 import com.fmss.userservice.configuration.mail.MailingService;
 import com.fmss.userservice.exeption.RestException;
 import com.fmss.userservice.model.dto.request.UserRegisterRequestDto;
@@ -11,6 +12,7 @@ import com.google.common.primitives.Longs;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final MailingService mailingService;
+
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Transactional
     public void registerUser(UserRegisterRequestDto userRegisterRequestDto) {
@@ -148,5 +152,9 @@ public class UserService {
             url = "http://localhost:8090";
         }
         return String.format(RESET_PASSWORD_URL_FORMAT, url, token, createBase64UserId(user));
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        return jwtTokenUtil.validateToken(token, userDetails.getUsername());
     }
 }

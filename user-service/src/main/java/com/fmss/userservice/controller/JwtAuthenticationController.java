@@ -1,7 +1,7 @@
 package com.fmss.userservice.controller;
 
+import com.fmss.commondata.util.JwtUtil;
 import com.fmss.userservice.configuration.EcommerceUserDetailService;
-import com.fmss.userservice.configuration.JwtTokenUtil;
 import com.fmss.userservice.configuration.UserDetailsConfig;
 import com.fmss.userservice.model.dto.request.JwtRequest;
 import com.fmss.userservice.model.dto.response.JwtResponse;
@@ -26,7 +26,7 @@ import java.util.Objects;
 public class JwtAuthenticationController {
 
 	private final AuthenticationManager authenticationManager;
-	private final JwtTokenUtil jwtTokenUtil;
+	private final JwtUtil jwtTokenUtil;
 	private final UserDetailsConfig userDetailsConfig;
 
 	@CrossOrigin(origins = "http://localhost:3000")
