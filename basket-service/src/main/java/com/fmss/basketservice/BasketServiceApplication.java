@@ -18,7 +18,7 @@ public class BasketServiceApplication {
 	@Bean
 	CommandLineRunner commandLineRunner(BasketService basketService){
 		return args -> {
-			basketService.getBasketByBasketId("myTestUser");
+			basketService.getBasketByUserId("myTestUser");
 		};
 	}
 
