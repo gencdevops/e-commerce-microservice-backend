@@ -5,6 +5,5 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 
 @Configuration
-@EnableMongoRepositories("com.fmss.logservice.repository")
 public class GlobalConfiguration {
 }

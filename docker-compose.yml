@@ -47,6 +47,16 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
+  postgres-payment:
+    image: postgres:15.2
+    container_name: postgres-payment
+    restart: always
+    ports:
+      - "5439:5432"
+    environment:
+      POSTGRES_DB: payment_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 
   mongo-logservice:
     image: mongo:5.0
@@ -77,6 +87,7 @@ services:
       - mongo-logservice
     ports:
       - "8081:8081"
+
 
   ################ KAFKA ################################################################################
   kafka:
@@ -159,6 +170,12 @@ services:
       - elastic
     depends_on:
       - elasticsearch
+################ ZIPKIN ##############################################################################
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
 ################ REDIS ##############################################################################
   redis:
     container_name: the_redis
