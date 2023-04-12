@@ -1,14 +1,14 @@
-package com.fmss.orderservice.dto.slack;
+package com.fmss.orderservice.model.slack;
 
-public class SlackDetailMessage {
-    private String text;
+public class SlackMessage {
+    private SlackDetailMessage text;
     private String type;
 
-    public String getText() {
+    public SlackDetailMessage getText() {
         return text;
     }
 
-    public void setText(String text) {
+    public void setText(SlackDetailMessage text) {
         this.text = text;
     }
 
@@ -25,10 +25,10 @@ public class SlackDetailMessage {
     }
 
     public static final class SlackMessageBuilder {
-        private String text;
+        private SlackDetailMessage text;
         private String type;
 
-        public SlackMessageBuilder text(String text) {
+        public SlackMessageBuilder text(SlackDetailMessage text) {
             this.text = text;
             return this;
         }
@@ -38,8 +38,8 @@ public class SlackDetailMessage {
             return this;
         }
 
-        public SlackDetailMessage build() {
-            SlackDetailMessage slackMessage = new SlackDetailMessage();
+        public SlackMessage build() {
+            SlackMessage slackMessage = new SlackMessage();
             slackMessage.setText(text);
             slackMessage.setType(type);
             return slackMessage;

@@ -1,4 +1,4 @@
-package com.fmss.configserver.config;
+package com.fmss.configserver.configuration;
 
 import org.springframework.cloud.config.server.EnableConfigServer;
 import org.springframework.context.annotation.Configuration;

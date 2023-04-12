@@ -1,4 +1,4 @@
-package com.fmss.orderservice.dto.slack;
+package com.fmss.orderservice.model.slack;
 
 import java.util.List;
 

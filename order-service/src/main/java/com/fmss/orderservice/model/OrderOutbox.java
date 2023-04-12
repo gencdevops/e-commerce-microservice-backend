@@ -1,6 +1,6 @@
 package com.fmss.orderservice.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
+
 import jakarta.persistence.*;
 import lombok.*;
 
