@@ -4,6 +4,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+database/
+allLogFile.txt
 
 ### STS ###
 .apt_generated
@@ -25,7 +27,6 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-database/
 
 ### NetBeans ###
 /nbproject/private/

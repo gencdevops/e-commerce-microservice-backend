@@ -31,7 +31,8 @@
     <appender name="kafkaAppender" class="com.fmss.commondata.configuration.kafka.KafkaAppender">
         <encoder class="com.fmss.commondata.configuration.kafka.LayoutKafkaMessageEncoder">
             <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} | ${HOSTNAME} | %-5level | %logger{80} | [%file:%line] | %thread | %X{traceId:-} | %X{spanId:-} | %msg%n</pattern>
+                <pattern>d{dd-MM-yyyy HH:mm:ss.SSS} | ${HOSTNAME} | %-5level | %logger{80} | [%file:%line] | %thread | %X{traceId:-} | %X{spanId:-} | %msg%n</pattern>
+<!--                <pattern>[%date] %highlight([%level]) [%logger{10} %file:%line] %msg%n</pattern>-->
             </layout>
         </encoder>
         <topic>logs</topic>
