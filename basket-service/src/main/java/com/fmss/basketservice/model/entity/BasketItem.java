@@ -1,4 +1,4 @@
-package com.fmss.basketservice.model.enitity;
+package com.fmss.basketservice.model.entity;
 
 import com.fmss.commondata.model.entity.AbstractEntity;
 import jakarta.persistence.Entity;

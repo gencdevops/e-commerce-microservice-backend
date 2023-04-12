@@ -1,7 +1,7 @@
 package com.fmss.basketservice.mapper;
 
 import com.fmss.basketservice.model.dto.BasketResponseDto;
-import com.fmss.basketservice.model.enitity.Basket;
+import com.fmss.basketservice.model.entity.Basket;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,7 +11,7 @@ public class BasketMapper {
 
     public BasketResponseDto basketToBasketResponseDto(Basket basket){
         return BasketResponseDto.builder()
-                .basketItemList(basketItemMapper.basketItemListToBasketItemResponseDtoList(basket.getBasketItems()))
+                .basketItemList(basketItemMapper.toResponseDtoList(basket.getBasketItems()))
                 .totalPrice(basket.getTotalPrice())
                 .build();
     }
