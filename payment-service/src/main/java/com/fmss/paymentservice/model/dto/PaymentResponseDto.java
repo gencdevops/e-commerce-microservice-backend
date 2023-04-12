@@ -1,10 +1,12 @@
 package com.fmss.paymentservice.model.dto;
 
-import com.fmss.paymentservice.model.enums.PaymentStatus;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
 @Builder
-public record PaymentResponseDto(String paymentId, String orderId, @Enumerated(EnumType.STRING) PaymentStatus paymentStatus) {
+public record PaymentResponseDto(
+        @JsonProperty(namespace = "paymentId")
+        String id,
+
+        String paymentStatus) {
 }

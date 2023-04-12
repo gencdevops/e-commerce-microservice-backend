@@ -11,16 +11,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
+
 @Entity
 @Getter
 @Setter
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Payment extends AbstractEntity {
+public class Payment extends AbstractEntity implements Serializable {
     private String orderId;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
+    private String userId;
 }

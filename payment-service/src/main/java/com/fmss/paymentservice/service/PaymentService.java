@@ -19,14 +19,14 @@ public class PaymentService {
     private final PaymentMapper paymentMapper;
 
     public PaymentResponseDto createPayment(CreatePaymentRequestDto createPaymentRequestDto) {
-        Payment payment = paymentMapper.createPaymentRequestDtoToPayment(createPaymentRequestDto);
+        Payment payment = paymentMapper.convertPaymentFromCreatePaymentRequestDto(createPaymentRequestDto);
         paymentRepository.save(payment);
-        return paymentMapper.paymentToPaymentRequestDto(payment);
+        return paymentMapper.convertPaymentResponseDtoFromPayment(payment);
     }
 
     public PaymentResponseDto getPaymentByOrderId(String orderId) {
         return paymentRepository.findPaymentByOrderId(orderId)
-                        .map(payment -> paymentMapper.paymentToPaymentRequestDto(payment))
+                        .map(paymentMapper::convertPaymentResponseDtoFromPayment)
                         .orElseThrow(()-> new PaymentNotFoundException("Payment Not Found!"));
     }
 

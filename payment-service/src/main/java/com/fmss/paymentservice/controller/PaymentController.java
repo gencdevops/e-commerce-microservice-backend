@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/payment")
+@RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor
 public class PaymentController {
 
@@ -25,7 +25,7 @@ public class PaymentController {
 
     @PostMapping
     public ResponseEntity<PaymentResponseDto> createPayment(CreatePaymentRequestDto createPaymentRequestDto) {
-        return ResponseEntity.ok(paymentService.createPayment(createPaymentRequestDto));
+        return ResponseEntity.status(201).body(paymentService.createPayment(createPaymentRequestDto));
     }
 
     @GetMapping

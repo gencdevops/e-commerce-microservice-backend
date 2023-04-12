@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@SuperBuilder
 @NoArgsConstructor
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -24,7 +23,7 @@ import java.util.UUID;
 public class AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID orderId;
+    private UUID id;
 
     @CreatedDate
     @Column(name = "created_date", nullable = true, updatable = false)
