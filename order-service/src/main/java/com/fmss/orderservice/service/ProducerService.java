@@ -22,7 +22,7 @@ public class ProducerService {
 
     public void sendMessage(Order order) {
         try {
-            log.info("Order sendMessage()   {}", order);
+            log.info("Order send kafka topic :    {}", order);
             kafkaTemplate.send(producerTopic,  order);
         }catch (Exception e){
             slackReportingService.sendErrorMessage("Order Outbox Retry Error", e);

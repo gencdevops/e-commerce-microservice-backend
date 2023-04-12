@@ -1,5 +1,6 @@
-package com.fmss.basketservice.model.dto;
+package com.fmss.commondata.dtos.response;
 
+import com.fmss.commondata.dtos.response.BasketItemResponseDto;
 import lombok.Builder;
 
 import java.math.BigDecimal;

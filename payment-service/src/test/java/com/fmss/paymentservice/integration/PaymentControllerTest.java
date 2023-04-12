@@ -1,9 +1,7 @@
 package com.fmss.paymentservice.integration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fmss.paymentservice.model.dto.CreatePaymentRequestDto;
 import com.fmss.paymentservice.model.entity.Payment;
-import com.fmss.paymentservice.model.enums.PaymentStatus;
 import com.fmss.paymentservice.repository.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

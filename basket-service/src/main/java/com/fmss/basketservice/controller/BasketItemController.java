@@ -2,8 +2,8 @@ package com.fmss.basketservice.controller;
 
 
 import com.fmss.basketservice.model.dto.BasketItemRequestDto;
-import com.fmss.basketservice.model.dto.BasketItemResponseDto;
 import com.fmss.basketservice.service.BasketService;
+import com.fmss.commondata.dtos.response.BasketItemResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -13,8 +13,8 @@ import java.util.UUID;
 public class OrderOutBoxService {
     private final OrderOutboxRepository orderOutboxRepository;
 
-    public void saveOrderOutbox(OrderOutbox orderOutbox) {
-        orderOutboxRepository.save(orderOutbox);
+    public OrderOutbox saveOrderOutbox(OrderOutbox orderOutbox) {
+     return   orderOutboxRepository.save(orderOutbox);
 
     }
 

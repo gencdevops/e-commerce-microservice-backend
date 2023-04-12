@@ -43,6 +43,10 @@ public class SlackReportingService {
         restTemplate.postForEntity(webHookBaseUrl + errorsChannel, getSlackMessage(subject, null, e), String.class);
     }
 
+    public void sendErrorMessage(String subject, String exMessage) {
+       sendErrorMessage(subject, new RuntimeException(exMessage.toString()));
+    }
+
     private SlackMessageBlock getSlackMessage(String subject, String msg, Throwable e) {
 
         String stackTrace = e != null ? ExceptionUtils.getStackTrace(e).replace("\n", "<br>") : Strings.EMPTY;

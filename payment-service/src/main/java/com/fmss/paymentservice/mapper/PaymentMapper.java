@@ -1,7 +1,8 @@
 package com.fmss.paymentservice.mapper;
 
-import com.fmss.paymentservice.model.dto.CreatePaymentRequestDto;
-import com.fmss.paymentservice.model.dto.PaymentResponseDto;
+
+import com.fmss.commondata.dtos.request.CreatePaymentRequestDto;
+import com.fmss.commondata.dtos.response.PaymentResponseDto;
 import com.fmss.paymentservice.model.entity.Payment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

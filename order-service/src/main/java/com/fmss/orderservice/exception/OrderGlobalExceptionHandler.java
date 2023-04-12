@@ -2,6 +2,7 @@ package com.fmss.orderservice.exception;
 
 
 
+import com.fmss.commondata.model.ErrorBody;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -98,19 +99,20 @@ public class OrderGlobalExceptionHandler {
                 .build());
     }
 
-
-
-
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404",
+                    description = "Payment Failure ",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorBody.class),
+                            mediaType = "application/json"))})
+    @ExceptionHandler(PaymentFailureException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<ErrorBody> orderNotFoundException( OrderNotFoundException exception) {
+    public ResponseEntity<ErrorBody> paymentFailureException( PaymentFailureException exception) {
         return responseEntity(ErrorBody.builder()
                 .errorCode(HttpStatus.NOT_FOUND.value())
                 .errorDescription(exception.getMessage())
                 .build());
     }
-
-
 
 
     @ApiResponses(value = {

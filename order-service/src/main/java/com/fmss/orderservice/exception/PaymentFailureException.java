@@ -1,12 +1,10 @@
 package com.fmss.orderservice.exception;
 
-
-
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class OrderNotFoundException extends RuntimeException{
-    public OrderNotFoundException(String message){
+public class PaymentFailureException extends RuntimeException{
+    public PaymentFailureException(String message){
         super(message);
     }
 }

@@ -3,8 +3,9 @@ package com.fmss.orderservice.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fmss.commondata.model.enums.OrderStatus;
 import com.fmss.orderservice.model.Order;
-import com.fmss.orderservice.model.enums.OrderStatus;
+
 import com.fmss.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,9 @@ public class KafkaOrderEventOperationsListenerService {
     private final OrderRepository orderRepository;
     private final ObjectMapper objectMapper;
     private final OrderOutBoxService orderOutBoxService;
+    private final SlackReportingService slackReportingService;
+
+
     @RetryableTopic(
             attempts = "5",
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
@@ -39,11 +43,11 @@ public class KafkaOrderEventOperationsListenerService {
     public void handleMessage(String order, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {
         Order orderString = objectMapper.readValue(order, Order.class);
         log.info("Order -> {}", order);
-        Optional<Order> orderOptional = orderRepository.findById(orderString.getOrderId());
+        Optional<Order> orderOptional = orderRepository.findById(orderString.getId());
         orderOptional.ifPresent(ord ->  {
             ord.setOrderStatus(OrderStatus.PREPARING);
             orderRepository.saveAndFlush(ord);
-            orderOutBoxService.deleteOrderOutbox(ord.getOrderId());
+            orderOutBoxService.deleteOrderOutbox(ord.getId());
         });
 
     }
@@ -51,7 +55,8 @@ public class KafkaOrderEventOperationsListenerService {
     @DltHandler
     public void handleDlt(String order, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         log.info("Message: {} handled by dlq topic: {}", order, topic);
-        // TODO : Dead Letter queue'ya gelen Mongo'ya falan basilabilir
+        slackReportingService.sendErrorMessage(topic, order);
+
     }
 
 

@@ -1,4 +1,4 @@
-package com.fmss.basketservice.model.dto;
+package com.fmss.commondata.dtos.response;
 
 import lombok.Builder;
 

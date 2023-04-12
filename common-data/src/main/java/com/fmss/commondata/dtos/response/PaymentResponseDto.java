@@ -1,4 +1,4 @@
-package com.fmss.paymentservice.model.dto;
+package com.fmss.commondata.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

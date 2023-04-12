@@ -1,4 +1,4 @@
-package com.fmss.commondata.model.entity;
+package com.fmss.commondata.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

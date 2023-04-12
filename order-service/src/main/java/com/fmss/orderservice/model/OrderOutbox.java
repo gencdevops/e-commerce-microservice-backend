@@ -1,26 +1,27 @@
 package com.fmss.orderservice.model;
 
 
+import com.fmss.commondata.model.AbstractEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-@Table(name = "order_outbox")
 @Entity
-@NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
-@Data
-@Builder
-public class OrderOutbox {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID orderOutboxId;
+@NoArgsConstructor
+@SuperBuilder
+public class OrderOutbox extends AbstractEntity implements Serializable {
+
     @Lob
     private String orderPayload;
+
     private UUID orderId;
+
     private String paymentId;
-
-
 
 }

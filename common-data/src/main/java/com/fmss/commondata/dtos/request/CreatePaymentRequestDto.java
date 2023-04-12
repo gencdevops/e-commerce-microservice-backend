@@ -1,4 +1,4 @@
-package com.fmss.paymentservice.model.dto;
+package com.fmss.commondata.dtos.request;
 
 
 import lombok.Builder;

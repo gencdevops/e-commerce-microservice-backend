@@ -1,11 +1,10 @@
 package com.fmss.paymentservice.service;
 
+import com.fmss.commondata.dtos.request.CreatePaymentRequestDto;
+import com.fmss.commondata.dtos.response.PaymentResponseDto;
 import com.fmss.paymentservice.exceptions.PaymentNotFoundException;
 import com.fmss.paymentservice.mapper.PaymentMapper;
-import com.fmss.paymentservice.model.dto.CreatePaymentRequestDto;
-import com.fmss.paymentservice.model.dto.PaymentResponseDto;
 import com.fmss.paymentservice.model.entity.Payment;
-import com.fmss.paymentservice.model.enums.PaymentStatus;
 import com.fmss.paymentservice.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

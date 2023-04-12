@@ -9,6 +9,7 @@ import com.fmss.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,10 +27,11 @@ public class ProductService {
 
     private final FileUploadService fileUploadService;
 
-    //@Cacheable(value = "allProducts", cacheManager = "cacheManager")
+
+
 
     @Cacheable(
-            value = {"sharepoint"},
+            value = {"products"},
             key = "{#methodName}",
             unless = "#result == null"
     )
@@ -37,11 +39,12 @@ public class ProductService {
         return productRepository.getAllProducts().parallelStream().map(productMapper::toResponseDto).toList();
     }
 
-    @CacheEvict(value = "allProducts")
+
     @CacheEvict(
-            value = {"page-manager"},
+            value = {"product"},
             allEntries = true
     )
+    @Transactional
     public ProductResponseDto updateProduct(ProductRequestDto productRequestDto, String productId) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
@@ -67,6 +70,11 @@ public class ProductService {
     }
 
     @Transactional
+    @Cacheable(
+            value = {"product"},
+            key = "{#methodName}",
+            unless = "#result == null"
+    )
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto, MultipartFile multipartFile) {
 
         String url;

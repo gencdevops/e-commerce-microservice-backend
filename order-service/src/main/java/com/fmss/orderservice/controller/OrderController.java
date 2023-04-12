@@ -1,8 +1,10 @@
 package com.fmss.orderservice.controller;
 
 
-import com.fmss.orderservice.dto.OrderResponseDTO;
+
+import com.fmss.commondata.dtos.response.OrderResponseDTO;
 import com.fmss.orderservice.dto.PlaceOrderRequestDTO;
+import com.fmss.orderservice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,7 +38,10 @@ public class OrderController {
                     mediaType = "application/json")))
     @PostMapping("/place-order")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderResponseDTO placeOrder(@RequestBody @Valid PlaceOrderRequestDTO placeOrderRequestDTO) {
+    public OrderResponseDTO placeOrder(@RequestBody @Valid PlaceOrderRequestDTO placeOrderRequestDTO
+
+
+    ) {
 
         return orderService.placeOrder(placeOrderRequestDTO);
     }

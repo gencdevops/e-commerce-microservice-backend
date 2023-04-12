@@ -1,4 +1,4 @@
-package com.fmss.commondata.model;
+package com.fmss.commondata.dtos.request;
 
 public record LoginRequestDto(String username, String password) {
 }

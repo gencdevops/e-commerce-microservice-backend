@@ -1,9 +1,8 @@
 package com.fmss.paymentservice.controller;
 
-import com.fmss.paymentservice.model.dto.CreatePaymentRequestDto;
-import com.fmss.paymentservice.model.dto.PaymentResponseDto;
-import com.fmss.paymentservice.model.entity.Payment;
-import com.fmss.paymentservice.model.enums.PaymentStatus;
+
+import com.fmss.commondata.dtos.request.CreatePaymentRequestDto;
+import com.fmss.commondata.dtos.response.PaymentResponseDto;
 import com.fmss.paymentservice.repository.PaymentRepository;
 import com.fmss.paymentservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/payment")
