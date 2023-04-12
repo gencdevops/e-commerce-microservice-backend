@@ -7,8 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fmss.orderservice.dto.OrderResponseDTO;
 import com.fmss.orderservice.dto.PlaceOrderRequestDTO;
 import com.fmss.orderservice.mapper.OrderMapper;
+import com.fmss.orderservice.model.Order;
+import com.fmss.orderservice.model.enums.OrderStatus;
 import com.fmss.orderservice.repository.OrderRepository;
 import com.fmss.orderservice.service.OrderOutBoxService;
+import com.fmss.orderservice.service.OrderService;
 import com.fmss.orderservice.service.ProducerService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class OrderServiceImpl implements service.OrderService {
+public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
@@ -49,13 +52,6 @@ public class OrderServiceImpl implements service.OrderService {
 
         Order orderCreated = orderRepository.saveAndFlush(order);
 
-        var orderItemList = placeOrderRequestDTO.getOrderItems().stream()
-                .map(orderItemMapper::convertOrderItemFromOrderItemRequestDTO).toList();
-
-        orderItemList.forEach(orderItem -> orderItem.setOrderId(orderCreated.getOrderId()));
-        List<OrderItem> orderItems = orderItemRepository.saveAll(orderItemList);
-
-        cardRepository.save(cardMapper.convertCardFromCardInfoDto(placeOrderRequestDTO.getCardInfo()));
 
         PaymentResponse paymentResponse = paymentSystem.pay(placeOrderRequestDTO.getOrderItems(),
                 cardMapper.convertCardFromCardInfoDto(placeOrderRequestDTO.getCardInfo()));
