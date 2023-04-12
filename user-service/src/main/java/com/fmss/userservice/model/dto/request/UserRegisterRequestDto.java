@@ -19,7 +19,6 @@ public record UserRegisterRequestDto(
                 user.setSn(lastName);
                 user.setMail(email);
                 user.setUserPassword(password);
-                user.setUserPrincipalName(userName);
                 return user;
         }
 }

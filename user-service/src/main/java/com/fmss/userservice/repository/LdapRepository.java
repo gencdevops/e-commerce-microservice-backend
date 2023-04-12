@@ -13,8 +13,11 @@ import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+import javax.naming.Context;
 import javax.naming.Name;
+import javax.naming.NamingException;
 import javax.naming.directory.*;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,14 +37,16 @@ public class LdapRepository {
     private static final String FULLNAME_ATTRIBUTE = "cn";
     private static final String EMAIL_ATTRIBUTE = "mail";
     public static final String USER_PASSWORD_ATTRIBUTE = "userpassword";
-    public static final String LDAP_USER = "users";
+    public static final String LDAP_USER = "Users";
+//    public static final String LDAP_URL = "cn=jdoe,ou=people,dc=example,dc=com";
 
 
     private final LdapTemplate ldapTemplate;
-//    @PostConstruct
-//    public void init() {
-//        LdapUser mahoni = findUser("mahoni");
-//    }
+
+/*    @PostConstruct
+    public void init() {
+        LdapUser mahoni = findUser("mahoni");
+    }*/
 
     public boolean checkPassword(String username, String password) {
         try {
@@ -63,7 +68,6 @@ public class LdapRepository {
     private AttributesMapper<LdapUser> convert() {
         return (Attributes attributes) -> {
             LdapUser user = new LdapUser();
-            user.setUserPrincipalName((String) attributes.get(USERNAME_ATTRIBUTE).get());
             user.setMail((String) attributes.get(EMAIL_ATTRIBUTE).get());
             user.setUserPassword(attributes.get(USER_PASSWORD_ATTRIBUTE).get().toString());
             return user;
@@ -71,6 +75,31 @@ public class LdapRepository {
     }
 
     public void create(LdapUser p) {
+        try {
+            Hashtable<String, String> env = new Hashtable<>();
+            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+            env.put(Context.PROVIDER_URL, "ldap://ldap.jumpcloud.com:389/o=64346c9136393df65a68908f");
+            env.put(Context.SECURITY_AUTHENTICATION, "simple");
+            env.put(Context.SECURITY_PRINCIPAL, "cn=smasar, ou=Users, o=64346c9136393df65a68908f");
+            env.put(Context.SECURITY_CREDENTIALS, "deneme_1A");
+            DirContext ctx = new InitialDirContext(env);
+
+            // Yeni giriş oluşturma işlemi
+            String newEntryDN = "ou=Users,o=64346c9136393df65a68908f,dc=FMSS,dc=Com"; // Yeni girişin DN'i
+            Attributes attrs = new BasicAttributes();
+            attrs.put("objectClass", "person");
+            attrs.put("cn", p.getGivenName() + " " + p.getSn());
+            attrs.put("sn", p.getSn());
+            attrs.put("givenName", p.getGivenName());
+            attrs.put("uid", p.getGivenName() + p.getSn());
+            ctx.createSubcontext(BASE_DN, attrs); // Yeni girişi oluşturma
+
+            ctx.close();
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
+        // LDAP bağlantısı oluşturma
+
 
 //        Name dn = LdapNameBuilder.newInstance()
 //                .add("ou", "Users")
@@ -84,9 +113,9 @@ public class LdapRepository {
 //        context.setAttributeValue(EMAIL_ATTRIBUTE, p.getMail());
 //
 //        ldapTemplate.bind(context);
-
-        Name dn = buildDn(p);
-        ldapTemplate.bind(dn, null, buildAttributes(p));
+//
+////        Name dn = buildDn(p);
+//        ldapTemplate.bind(dn, null, buildAttributes(p));
     }
 
     public List<LdapUser> findAll() {
@@ -139,7 +168,6 @@ public class LdapRepository {
     private static class PersonContextMapper extends AbstractContextMapper<LdapUser> {
         public LdapUser doMapFromContext(DirContextOperations context) {
             LdapUser person = new LdapUser();
-            person.setUserPrincipalName(context.getStringAttribute(EMAIL_ATTRIBUTE));
             person.setMail(context.getStringAttribute(EMAIL_ATTRIBUTE));
             person.setUserPassword(context.getStringAttribute(PASSWORD));
             person.setGivenName(context.getStringAttribute(FIRST_NAME));
