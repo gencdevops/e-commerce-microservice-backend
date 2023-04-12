@@ -23,10 +23,15 @@ public class BasketItemController {
         return ResponseEntity.ok(basketService.addBasketItemToBasket(basketItemRequestDto));
     }
 
+    @PutMapping("/quantity-increment/{basketItemId}")
+    public ResponseEntity<BasketItemResponseDto> incrementQuantityBasketItem(@PathVariable UUID basketItemId){
+        return ResponseEntity.ok(basketService.incrementQuantityBasketItem(basketItemId));
+    }
+
 
     @DeleteMapping("/basket-item/{basketItemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBasketItemOnBasket(String basketItemId) {
+    public void deleteBasketItemOnBasket(UUID basketItemId) {
         basketService.deleteBasketItemFromBasket(basketItemId);
     }
 }

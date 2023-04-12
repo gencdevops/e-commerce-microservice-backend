@@ -1,7 +1,9 @@
 package com.fmss.basketservice.model.dto;
 
+import java.util.UUID;
+
 public record BasketItemRequestDto(
-        String productId,
+        UUID productId,
         Integer quantity,
-        String basketId)
+        UUID basketId)
 {}
