@@ -70,7 +70,7 @@ public class BasketService {
     public BasketItemResponseDto addBasketItemToBasket(BasketItemRequestDto basketItemRequestDto){
         Basket basket = getById(basketItemRequestDto.basketId());
 
-        BasketItem basketItem = new BasketItem(basketItemRequestDto.basketId(), basketItemRequestDto.quantity(), basket);
+        BasketItem basketItem = new BasketItem(basketItemRequestDto.productId(), basketItemRequestDto.quantity(), basket);
 
         basketItemRepository.save(basketItem);
 
@@ -80,5 +80,7 @@ public class BasketService {
     public void deleteBasketItemFromBasket(String basketItemId){
         basketItemRepository.deleteById(UUID.fromString(basketItemId));
     }
+
+    //public
 
 }

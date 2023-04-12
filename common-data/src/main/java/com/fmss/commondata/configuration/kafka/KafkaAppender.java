@@ -19,9 +19,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 
-public class KafkaAppender<E> extends AsyncAppenderBase<E> implements AppenderAttachable<E> {
+public class KafkaAppender<E> extends UnsynchronizedAppenderBase<E> implements AppenderAttachable<E> {
     private static final String KAFKA_LOGGER_PREFIX = "org.apache.kafka.clients";
-    private LazyProducer lazyProducer = null;
     private final AppenderAttachableImpl<E> aai = new AppenderAttachableImpl<>();
     private final ConcurrentLinkedQueue<E> queue = new ConcurrentLinkedQueue<>();
 
@@ -51,7 +50,6 @@ public class KafkaAppender<E> extends AsyncAppenderBase<E> implements AppenderAt
     @Override
     public void start() {
         if (this.checkPrerequisites()) {
-            this.lazyProducer = new LazyProducer();
             super.start();
         }
     }
@@ -59,14 +57,6 @@ public class KafkaAppender<E> extends AsyncAppenderBase<E> implements AppenderAt
     @Override
     public void stop() {
         super.stop();
-        if (this.lazyProducer != null && this.lazyProducer.isInitialized()) {
-            try {
-                this.lazyProducer.get().close();
-            } catch (KafkaException var2) {
-                this.addWarn("Failed to shut down kafka producer: " + var2.getMessage(), var2);
-            }
-            this.lazyProducer = null;
-        }
     }
 
     public void addAppender(Appender<E> newAppender) {
@@ -96,14 +86,15 @@ public class KafkaAppender<E> extends AsyncAppenderBase<E> implements AppenderAt
     public boolean detachAppender(String name) {
         return this.aai.detachAppender(name);
     }
-
     @SneakyThrows
     protected void append(E e) {
         byte[] payload = this.encoder.doEncode(e);
         ProducerRecord<byte[], byte[]> producerRecord = new ProducerRecord<>(this.topic, null, payload);
 
+
+
         try {
-            final Future<RecordMetadata> future = this.lazyProducer.get().send(producerRecord);
+            final Future<RecordMetadata> future = createProducer().send(producerRecord);
             future.get();
         } catch (BufferExhaustedException | ExecutionException | CancellationException ex) {
             onFailedDelivery(e);
@@ -195,38 +186,5 @@ public class KafkaAppender<E> extends AsyncAppenderBase<E> implements AppenderAt
         KNOWN_PRODUCER_CONFIG_KEYS.add("partitioner.class");
         KNOWN_PRODUCER_CONFIG_KEYS.add("max.block.ms");
         KNOWN_PRODUCER_CONFIG_KEYS.add("request.timeout.ms");
-    }
-
-
-    private class LazyProducer {
-        private volatile Producer<byte[], byte[]> producer;
-        private LazyProducer() {}
-
-        public Producer<byte[], byte[]> get() {
-            Producer<byte[], byte[]> result = this.producer;
-            if (result == null) {
-                synchronized (this) {
-                    result = this.producer;
-                    if (result == null) {
-                        this.producer = result = this.initialize();
-                    }
-                }
-            }
-            return result;
-        }
-
-        protected Producer<byte[], byte[]> initialize() {
-            Producer<byte[], byte[]> producer2 = null;
-            try {
-                producer2 = KafkaAppender.this.createProducer();
-            } catch (Exception var3) {
-                KafkaAppender.this.addError("error creating producer", var3);
-            }
-            return producer2;
-        }
-
-        public boolean isInitialized() {
-            return this.producer != null;
-        }
     }
 }

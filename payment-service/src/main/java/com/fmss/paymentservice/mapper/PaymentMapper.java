@@ -3,29 +3,37 @@ package com.fmss.paymentservice.mapper;
 import com.fmss.paymentservice.model.dto.CreatePaymentRequestDto;
 import com.fmss.paymentservice.model.dto.PaymentResponseDto;
 import com.fmss.paymentservice.model.entity.Payment;
-import com.fmss.paymentservice.model.enums.PaymentStatus;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.NullValueCheckStrategy;
+import org.mapstruct.ReportingPolicy;
 
-import java.time.ZonedDateTime;
-
-@Component
-public class PaymentMapper {
+@Mapper(implementationName = "PaymentMapperImpl", componentModel = "spring")
+public interface PaymentMapper {
 
 
-    public PaymentResponseDto paymentToPaymentRequestDto(Payment payment) {
-        return PaymentResponseDto.builder()
-                .paymentId(payment.getId())
-                .orderId(payment.getOrderId())
-                .paymentStatus(payment.getPaymentStatus())
-                .build();
-    }
+    @Mapping(target = "paymentStatus", expression = "java(payment.getPaymentStatus().toString())")
+    PaymentResponseDto convertPaymentResponseDtoFromPayment(Payment payment);
 
-    public Payment createPaymentRequestDtoToPayment(CreatePaymentRequestDto createPaymentRequestDto) {
-        return Payment.builder()
-                .id(null)
-                .orderId(createPaymentRequestDto.orderId())
-                .paymentStatus(PaymentStatus.PENDING)
-                .createdDate(ZonedDateTime.now())
-                .build();
-    }
+    Payment convertPaymentFromCreatePaymentRequestDto(CreatePaymentRequestDto createPaymentRequestDto);
+
+//    public PaymentResponseDto paymentToPaymentRequestDto(Payment payment) {
+//        return PaymentResponseDto.builder()
+//                .paymentId(payment.getId())
+//                .orderId(payment.getOrderId())
+//                .userId(payment.getUserId())
+//                .paymentStatus(payment.getPaymentStatus())
+//                .build();
+//    }
+
+//    public Payment createPaymentRequestDtoToPayment(CreatePaymentRequestDto createPaymentRequestDto) {
+//        return Payment.builder()
+//                .id(null)
+//                .orderId(createPaymentRequestDto.orderId())
+//                .userId(createPaymentRequestDto.userId())
+//                .paymentStatus(PaymentStatus.PENDING)
+//                .createdDate(ZonedDateTime.now())
+//                .createdBy(createPaymentRequestDto.userId())
+//                .build();
+//    }
 }

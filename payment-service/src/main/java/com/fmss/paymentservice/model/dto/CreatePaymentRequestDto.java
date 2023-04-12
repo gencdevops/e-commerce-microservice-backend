@@ -1,5 +1,8 @@
 package com.fmss.paymentservice.model.dto;
 
 
-public record CreatePaymentRequestDto(String orderId) {
+import lombok.Builder;
+
+@Builder
+public record CreatePaymentRequestDto(String orderId, String userId) {
 }

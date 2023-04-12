@@ -31,7 +31,7 @@ public class ProductService {
     }
 
     @CacheEvict(value = "allProducts")
-    public ProductResponseDto updateProduct(ProductRequestDto productRequestDto, UUID productId) {
+    public ProductResponseDto updateProduct(ProductRequestDto productRequestDto, String productId) {
         Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
         product.setName(productRequestDto.getName());
@@ -42,7 +42,7 @@ public class ProductService {
     }
 
 
-    public void deleteProduct(UUID productId) {
+    public void deleteProduct(String productId) {
         productRepository.findById(productId)
                 .ifPresentOrElse(
                         product -> productRepository.delete(product),
@@ -52,7 +52,7 @@ public class ProductService {
     }
 
     public ProductResponseDto getProductById(String productId){
-        return productMapper.toResponseDto(productRepository.findById(UUID.fromString(productId)).orElseThrow(() -> new RuntimeException("Product not found")));
+        return productMapper.toResponseDto(productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found")));
     }
 
     @Transactional
