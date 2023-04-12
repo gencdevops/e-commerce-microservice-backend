@@ -26,7 +26,6 @@ public class BasketService {
     private final BasketRepository basketRepository;
     private final BasketItemRepository basketItemRepository;
     private final BasketMapper basketMapper;
-
     private final BasketItemMapper basketItemMapper;
 
     private Basket createBasket (String userId) {
@@ -36,10 +35,11 @@ public class BasketService {
                 .totalPrice(BigDecimal.ZERO)
                 .basketItems(new ArrayList<>())
                 .build();
+
         return basketRepository.save(newBasket);
     }
 
-    public BasketResponseDto getBasketByUserId (String userId) {
+    public BasketResponseDto getBasketByUserId(String userId) {
         Basket basketByUserId = basketRepository.findActiveBasketByUserId(userId).orElse(createBasket(userId));
         BasketResponseDto basketResponseDto = basketMapper.basketToBasketResponseDto(basketByUserId);
 

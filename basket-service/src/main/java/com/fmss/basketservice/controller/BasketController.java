@@ -1,7 +1,5 @@
 package com.fmss.basketservice.controller;
 
-import com.fmss.basketservice.model.dto.BasketItemRequestDto;
-import com.fmss.basketservice.model.dto.BasketItemResponseDto;
 import com.fmss.basketservice.model.dto.BasketResponseDto;
 import com.fmss.basketservice.service.BasketService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +14,7 @@ public class BasketController {
 
     private final BasketService basketService;
 
-    @GetMapping("/basket-user/{userId}") //endpoint doğru mu ?
+    @GetMapping("/basket-user/{userId}")
     public ResponseEntity<BasketResponseDto> getBasketByUserId(@PathVariable String userId) {
         return ResponseEntity.ok(basketService.getBasketByUserId(userId));
     }

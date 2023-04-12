@@ -6,5 +6,5 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Builder
-public record BasketResponseDto(List<BasketItemResponseDto> basketItemList, BigDecimal totalPrice) {
+public record BasketResponseDto(List<BasketItemResponseDto> basketItemList, BigDecimal totalPrice, String basketId) {
 }

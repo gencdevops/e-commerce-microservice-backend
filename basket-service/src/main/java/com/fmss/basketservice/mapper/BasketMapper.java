@@ -11,6 +11,7 @@ public class BasketMapper {
 
     public BasketResponseDto basketToBasketResponseDto(Basket basket){
         return BasketResponseDto.builder()
+                .basketId(basket.getId())
                 .basketItemList(basketItemMapper.toResponseDtoList(basket.getBasketItems()))
                 .totalPrice(basket.getTotalPrice())
                 .build();
