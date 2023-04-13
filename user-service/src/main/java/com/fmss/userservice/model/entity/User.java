@@ -1,26 +1,33 @@
 package com.fmss.userservice.model.entity;
 
-import com.fmss.commondata.model.entity.AbstractEntity;
 import com.fmss.userservice.model.enums.UserStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.UUID;
 
+@Entity
 @Getter
 @Setter
-@Entity
-@Table(name = "users")
-@NoArgsConstructor
+@EqualsAndHashCode
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor
-public class User extends AbstractEntity {
-
+@Builder
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "users")
+public class User  {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID userId;
 
     protected String firstName;
 
@@ -54,6 +61,14 @@ public class User extends AbstractEntity {
     @Column
     @Size(max = 128)
     protected String beforePassword;
+
+    @CreationTimestamp
+    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdDateTime;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    @UpdateTimestamp
+    private LocalDateTime changeDayLastTime;
 
     public String getUserName() {
         return getFirstName() + getLastName();

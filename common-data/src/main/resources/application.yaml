@@ -1,25 +1,14 @@
-spring:
-  kafka:
-    log:
-      topic: logs
-
-logstash:
-  host: localhost
-
-kafka:
-  bootstrap-servers: localhost:9094
-
 logging:
   pattern:
-    level: %5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
 
 management:
+  tracing:
+    sampling:
+      probability: 1.0
   zipkin:
     tracing:
       endpoint: http://localhost:9411/api/v2/spans
-  tracing:
-    sapling:
-      probability: 1.0
 
 redis:
   service:

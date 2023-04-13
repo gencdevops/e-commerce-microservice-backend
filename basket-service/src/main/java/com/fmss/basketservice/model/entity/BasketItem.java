@@ -1,22 +1,30 @@
 package com.fmss.basketservice.model.entity;
 
-import com.fmss.commondata.model.entity.AbstractEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
-public class BasketItem extends AbstractEntity {
+@Builder
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "basket_items")
+public class BasketItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID basketItemId;
+
     private UUID productId;
 
     private Integer quantity;
@@ -24,4 +32,12 @@ public class BasketItem extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "basket_id")
     private Basket basket;
+
+    @CreationTimestamp
+    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdDateTime;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    @UpdateTimestamp
+    private LocalDateTime changeDayLastTime;
 }

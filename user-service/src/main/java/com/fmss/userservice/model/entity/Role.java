@@ -1,17 +1,35 @@
 package com.fmss.userservice.model.entity;
 
-import com.fmss.commondata.model.entity.AbstractEntity;
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Entity
 @Getter
 @Setter
-@Entity
-@NoArgsConstructor
+@EqualsAndHashCode
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor
-public class Role extends AbstractEntity {
+@Builder
+@EntityListeners(AuditingEntityListener.class)
+public class Role  {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID roleId;
+
     private String name;
+
+    @CreationTimestamp
+    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdDateTime;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    @UpdateTimestamp
+    private LocalDateTime changeDayLastTime;
 }

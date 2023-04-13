@@ -1,28 +1,45 @@
 package com.fmss.paymentservice.model.entity;
 
 
-import com.fmss.commondata.model.AbstractEntity;
 import com.fmss.commondata.model.enums.PaymentStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
-public class Payment extends AbstractEntity implements Serializable {
-    private String orderId;
+@Builder
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "payments")
+public class Payment implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID paymentId;
+
+    private UUID orderId;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
-    private String userId;
+    private UUID userId;
+
+    @CreationTimestamp
+    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdDateTime;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    @UpdateTimestamp
+    private LocalDateTime changeDayLastTime;
 }
