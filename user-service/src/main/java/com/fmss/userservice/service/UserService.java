@@ -10,7 +10,6 @@ import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.repository.UserRepository;
 import com.fmss.userservice.request.UserRegisterRequestDto;
 import com.fmss.userservice.security.EcommerceUserDetailService;
-import com.google.common.primitives.Longs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -24,11 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.InvalidNameException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Optional;
 import java.util.Random;
 
 import static com.fmss.userservice.constants.UserConstants.*;
@@ -51,7 +48,7 @@ public class UserService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    //    @PostConstruct
+    //@PostConstruct
     public void init() throws InvalidNameException {
 //        final var ldapUser = new LdapUser();
 //        //ldapUser.setId(new LdapName("uid=sercan1,o=64346c9136393df65a68908f,dc=jumpcloud,dc=com"));
@@ -64,7 +61,7 @@ public class UserService {
 //        ldapRepository.create(ldapUser);
 //        var user = ldapRepository.findUser("sercan@a.com");
 //        System.out.println(user);
-//        sendForgotPasswordMail("muhammed.alagoz@fmsstech.com");
+        sendForgotPasswordMail("muhammed.alagoz@fmsstech.com");
     }
 
     @Transactional
@@ -105,11 +102,11 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public EcommerceUserDetailService getUserByForgotPasswordToken(String uid, String token) {
-        final User user = getUserByEncodedUserId(uid);
-        if (!StringUtils.equals(token, user.generateResetPasswordToken())) {
+        final LdapUser ldapUser = getUserByEncodedUserId(uid);
+        if (!StringUtils.equals(token, ldapUser.generateResetPasswordToken())) {
             throw new RestException(INVALID_TOKEN);
         }
-        return null;//TODO new EcommerceUserDetailService(user);
+        return new EcommerceUserDetailService(ldapUser);
     }
 
 
@@ -120,11 +117,10 @@ public class UserService {
 
 
     @Transactional
-    public void changePassword(Long userId, String currentPassword, String newPassword) {
-        final Optional<User> userOptional = userRepository.findById(userId);
-        final User user = userOptional.orElseThrow(() -> new RestException(USER_NOT_FOUND_WITH_ID));
-        if (passwordEncoder.matches(currentPassword, user.getPassword())) {
-            changeUserPassword(user, newPassword);
+    public void changePassword(String email, String currentPassword, String newPassword) {
+        final var ldapUser = ldapRepository.findUser(email);
+        if (passwordEncoder.matches(currentPassword, ldapUser.getUserPassword())) {
+            changeUserPassword(ldapUser, newPassword);
         } else {
             throw new RestException(CURRENT_AND_BEFORE_PASSWORD_NOT_MATCH);
         }
@@ -132,11 +128,11 @@ public class UserService {
 
     @Transactional
     public EcommerceUserDetailService getUserByCreatePasswordToken(String uid, String token) {
-        final User user = getUserByEncodedUserId(uid);
+        final LdapUser user = getUserByEncodedUserId(uid);
         if (!StringUtils.equals(token, user.generateCreatePasswordToken())) {
             throw new RestException(INVALID_TOKEN);
         }
-        return null;//TODO new EcommerceUserDetailService(user);
+        return new EcommerceUserDetailService(user);
     }
 
     @Transactional
@@ -144,29 +140,26 @@ public class UserService {
         changePassword(uid, password);
     }
 
-    private User getUserByEncodedUserId(String encodedUserId) {
+    private LdapUser getUserByEncodedUserId(String encodedUserId) {
         try {
-            final byte[] bytes = Base64.decodeBase64(URLDecoder.decode(encodedUserId, StandardCharsets.UTF_8.name()));
-            final long userIdLong = Longs.fromByteArray(bytes);
-            final Optional<User> userOptional = userRepository.findById(userIdLong);
-            return userOptional.orElseThrow(() -> new RestException(INVALID_TOKEN));
-        } catch (UnsupportedEncodingException e) {
+            final byte[] bytes = Base64.decodeBase64(URLDecoder.decode(encodedUserId, StandardCharsets.UTF_8));
+            final var userIdLong = new String(bytes, StandardCharsets.UTF_8);
+            return ldapRepository.findUser(userIdLong);
+        } catch (Exception e) {
             throw new RestException(INVALID_TOKEN, e);
         }
     }
 
     private void changePassword(String encodedUserId, String password) {
-        final User user = getUserByEncodedUserId(encodedUserId);
-        log.info("user change password  entry:{}", user.getUserName());
+        final LdapUser user = getUserByEncodedUserId(encodedUserId);
+        log.info("user change password  entry:{}", user.getMail());
         changeUserPassword(user, password);
     }
 
-    private void changeUserPassword(User user, String password) {
-        log.info("user create forgot password link :{}", user.getUserName());
-        final String currentPassword = user.getPassword();
-        user.setBeforePassword(currentPassword);
-        user.setPassword(passwordEncoder.encode(password));
-        userRepository.saveAndFlush(user);
+    private void changeUserPassword(LdapUser user, String password) {
+        log.info("user create forgot password link :{}", user.getMail());
+        user.setUserPassword(passwordEncoder.encode(password));
+        ldapRepository.updateUserPassword(user.getMail(), user.getUserPassword());
     }
 
     private String createNewUserPasswordLink(LdapUser ldapUser) {
@@ -179,7 +172,7 @@ public class UserService {
     }
 
     private String createBase64UserUid(LdapUser ldapUser) {
-        return Base64.encodeBase64URLSafeString(ldapUser.getUid().getBytes());
+        return Base64.encodeBase64URLSafeString(ldapUser.getMail().getBytes());
     }
 
     private String createForgotPasswordLink(LdapUser user) {
