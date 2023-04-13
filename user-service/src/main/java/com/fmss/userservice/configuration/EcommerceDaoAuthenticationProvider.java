@@ -1,5 +1,6 @@
 package com.fmss.userservice.configuration;
 
+import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.util.Validations;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,6 +20,7 @@ import org.springframework.util.Assert;
 @RequiredArgsConstructor
 public class EcommerceDaoAuthenticationProvider extends DaoAuthenticationProvider {
     private UserDetailsChecker postAuthenticationChecks;
+    private final LdapRepository ldapRepository;
 
     @Override
     public void setPostAuthenticationChecks(UserDetailsChecker postAuthenticationChecks) {
@@ -76,6 +78,9 @@ public class EcommerceDaoAuthenticationProvider extends DaoAuthenticationProvide
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) {
+        if (!ldapRepository.checkPassword(userDetails.getUsername(), authentication.getCredentials().toString())) {
+            throw new BadCredentialsException(Validations.ERR_WRONG_USERNAME_OR_PASSWORD);
+        }
         if (authentication.getCredentials() == null) {
             throw new BadCredentialsException(Validations.ERR_WRONG_USERNAME_OR_PASSWORD);
         }

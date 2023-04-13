@@ -1,6 +1,7 @@
 package com.fmss.userservice.configuration;
 
 import com.fmss.userservice.model.entity.User;
+import com.fmss.userservice.repository.model.LdapUser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,14 +18,8 @@ import static java.util.Optional.ofNullable;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUtils {
 
-    public static String getUserEmail() {
-        return getUser()
-                .map(User::getEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found."));
-    }
-
     @NotNull
-    public static Optional<User> getUser() {
+    public static Optional<LdapUser> getUser() {
         return getUserDetails()
                 .map(EcommerceUserDetailService::getDelegate);
     }

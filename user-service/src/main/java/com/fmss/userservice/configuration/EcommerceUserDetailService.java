@@ -1,7 +1,6 @@
 package com.fmss.userservice.configuration;
 
-import com.fmss.userservice.model.entity.Role;
-import com.fmss.userservice.model.entity.User;
+import com.fmss.userservice.repository.model.LdapUser;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,9 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import static com.fmss.userservice.model.enums.UserStatus.ACTIVE;
 
 @Getter
 @ToString
@@ -21,14 +17,11 @@ public class EcommerceUserDetailService implements UserDetails {
     private final Set<GrantedAuthority> authorities;
 
     @ToString.Include
-    private final User delegate;
+    private final LdapUser delegate;
 
-    public EcommerceUserDetailService(User delegate) {
+    public EcommerceUserDetailService(LdapUser delegate) {
         this.delegate = delegate;
-        this.authorities = delegate.getRoles().stream()
-                .map(Role::getName)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
+        this.authorities = Set.of(new SimpleGrantedAuthority("LDAP_USER"));
     }
 
     @Override
@@ -38,28 +31,23 @@ public class EcommerceUserDetailService implements UserDetails {
 
     @Override
     public String getPassword() {
-        return delegate.getPassword();
+        return delegate.getUserPassword();
     }
 
     @Override
     public String getUsername() {
-        return delegate.getEmail();
+        return delegate.getMail();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return delegate.getUserStatus().equals(ACTIVE);
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return delegate.getUserStatus().equals(ACTIVE);
+        return true;
     }
-
-    public String getFullName() {
-        return delegate.getUserName();
-    }
-
 
     @Override
     public boolean isCredentialsNonExpired() {
@@ -68,10 +56,7 @@ public class EcommerceUserDetailService implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return ACTIVE == delegate.getUserStatus();
+        return true;
     }
 
-    public String getBeforePassword() {
-        return delegate.getBeforePassword();
-    }
 }
