@@ -11,4 +11,6 @@ public interface MailingService {
     void sendEmail(String emailTemplate, Map<String, Object> params, String subject, Set<String> to);
 
     void sendUserAccountCreatedEmail(LdapUser user, String tokenLink);
+
+    void sendOtpEmail(String mail, String givenName, String sn, String otp);
 }

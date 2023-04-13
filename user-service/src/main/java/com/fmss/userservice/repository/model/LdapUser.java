@@ -22,4 +22,8 @@ public class LdapUser {
     public String generateResetPasswordToken() {
         return DigestUtils.md5Hex("Reset|" + getMail() + "|" + getGivenName() + "|" + getUserPassword());
     }
+
+    public String generateOtpToken(String otp) {
+        return DigestUtils.md5Hex("Otp|" + otp);
+    }
 }
