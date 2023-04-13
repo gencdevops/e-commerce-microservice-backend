@@ -30,7 +30,6 @@ public class Order implements Serializable {
 
     private BigDecimal totalPrice;
 
-
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
