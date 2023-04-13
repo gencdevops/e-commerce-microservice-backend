@@ -14,10 +14,6 @@ import org.springframework.util.Assert;
 
 import static com.fmss.userservice.constants.UserConstants.WRONG_USERNAME_OR_PASSWORD;
 
-/**
- * @author Muhammed ALAGOZ
- */
-
 @RequiredArgsConstructor
 public class EcommerceDaoAuthenticationProvider extends DaoAuthenticationProvider {
     private UserDetailsChecker postAuthenticationChecks;

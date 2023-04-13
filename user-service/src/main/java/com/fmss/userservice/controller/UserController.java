@@ -25,8 +25,8 @@ public class UserController {
 
     @PostMapping(API_USER_REGISTER)
     @ResponseStatus(HttpStatus.CREATED)
-    public String saveUser(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
-        log.info("");
+    public void saveUser(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
+        log.info("save user method entry :{}", userRegisterRequestDto.userName());
         userService.registerUser(userRegisterRequestDto);
     }
 

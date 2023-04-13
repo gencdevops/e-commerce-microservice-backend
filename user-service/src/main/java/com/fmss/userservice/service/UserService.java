@@ -70,7 +70,7 @@ public class UserService {
     @Transactional
     public void registerUser(UserRegisterRequestDto userRegisterRequestDto) {
         if (existByEmail(userRegisterRequestDto.email())) {
-            log.info("registerUser() methog generate user already exist :{}", userRegisterRequestDto.userName());
+            log.info("registerUser() method generate user already exist :{}", userRegisterRequestDto.userName());
             throw new UserAlreadyExistException("User already exist");
         }
         final var user = userRegisterRequestDto.toUser();
