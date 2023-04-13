@@ -8,7 +8,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
-@EnableAsync
 public class EmailConfiguration {
     public static final String MAIL_SEND_EXECUTOR = "mailSendThreadPoolTaskExecutor";
 

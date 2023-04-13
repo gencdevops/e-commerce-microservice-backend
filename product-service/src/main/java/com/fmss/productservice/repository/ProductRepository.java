@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query(value = "select p from Product p where p.status=true")
     List<Product> getAllProducts();
+
+    void deleteByName(String name);
 }

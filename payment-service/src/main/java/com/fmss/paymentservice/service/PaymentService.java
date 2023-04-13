@@ -1,39 +1,29 @@
 package com.fmss.paymentservice.service;
 
-import com.fmss.paymentservice.exceptions.PaymentNotFoundException;
+import com.fmss.commondata.dtos.request.CreatePaymentRequestDto;
+import com.fmss.commondata.dtos.response.PaymentResponseDto;
+import com.fmss.commondata.model.enums.PaymentStatus;
 import com.fmss.paymentservice.mapper.PaymentMapper;
-import com.fmss.paymentservice.model.dto.CreatePaymentRequestDto;
-import com.fmss.paymentservice.model.dto.PaymentResponseDto;
 import com.fmss.paymentservice.model.entity.Payment;
-import com.fmss.paymentservice.model.enums.PaymentStatus;
 import com.fmss.paymentservice.repository.PaymentRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
-
-
     private final PaymentRepository paymentRepository;
     private final PaymentMapper paymentMapper;
 
+    @Transactional
     public PaymentResponseDto createPayment(CreatePaymentRequestDto createPaymentRequestDto) {
         Payment payment = paymentMapper.createPaymentRequestDtoToPayment(createPaymentRequestDto);
-        paymentRepository.save(payment);
-        return paymentMapper.paymentToPaymentRequestDto(payment);
+        payment.setPaymentStatus(PaymentStatus.PENDING);
+        Payment paymentCreated = paymentRepository.saveAndFlush(payment);
+        log.info("Created payment {}", paymentCreated.getPaymentId());
+        return paymentMapper.paymentToPaymentResponseDto(payment);
     }
-
-    public PaymentResponseDto getPaymentByOrderId(String orderId) {
-        return paymentRepository.findPaymentByOrderId(orderId)
-                        .map(payment -> paymentMapper.paymentToPaymentRequestDto(payment))
-                        .orElseThrow(()-> new PaymentNotFoundException("Payment Not Found!"));
-    }
-
-    public PaymentStatus getPaymentStatus(String paymentId) {
-        return paymentRepository.findById(paymentId)
-                .map(Payment::getPaymentStatus)
-                .orElseThrow(()-> new PaymentNotFoundException("Payment Not Found!"));
-    }
-
 }

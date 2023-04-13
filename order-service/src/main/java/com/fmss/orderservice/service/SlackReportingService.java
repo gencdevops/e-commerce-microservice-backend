@@ -1,10 +1,10 @@
 package com.fmss.orderservice.service;
 
 
-import com.fmss.orderservice.dto.slack.SlackContextMessage;
-import com.fmss.orderservice.dto.slack.SlackDetailMessage;
-import com.fmss.orderservice.dto.slack.SlackMessage;
-import com.fmss.orderservice.dto.slack.SlackMessageBlock;
+import com.fmss.orderservice.model.slack.SlackContextMessage;
+import com.fmss.orderservice.model.slack.SlackDetailMessage;
+import com.fmss.orderservice.model.slack.SlackMessage;
+import com.fmss.orderservice.model.slack.SlackMessageBlock;
 import io.micrometer.core.instrument.util.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,6 +41,10 @@ public class SlackReportingService {
 
     public void sendErrorMessage(String subject, Throwable e) {
         restTemplate.postForEntity(webHookBaseUrl + errorsChannel, getSlackMessage(subject, null, e), String.class);
+    }
+
+    public void sendErrorMessage(String subject, String exMessage) {
+       sendErrorMessage(subject, new RuntimeException(exMessage.toString()));
     }
 
     private SlackMessageBlock getSlackMessage(String subject, String msg, Throwable e) {

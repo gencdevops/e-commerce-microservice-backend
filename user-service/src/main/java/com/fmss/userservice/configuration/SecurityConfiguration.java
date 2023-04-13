@@ -1,11 +1,15 @@
 package com.fmss.userservice.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fmss.commondata.util.JwtUtil;
+import com.fmss.userservice.jwt.JwtTokenFilter;
+import com.fmss.userservice.repository.LdapRepository;
+import com.fmss.userservice.security.EcommerceDaoAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -30,17 +35,17 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
     private final UserDetailsConfig userDetailsConfig;
-    private final PasswordEncoder passwordEncoder;
     private final JwtTokenFilter jwtTokenFilter;
     private final ObjectMapper objectMapper;
+    private final LdapRepository ldapRepository;
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    public EcommerceDaoAuthenticationProvider authenticationProvider() {
+        EcommerceDaoAuthenticationProvider authProvider = new EcommerceDaoAuthenticationProvider(ldapRepository);
 
         authProvider.setUserDetailsService(userDetailsConfig);
-        authProvider.setPasswordEncoder(passwordEncoder);
-
+        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPostAuthenticationChecks(new AccountStatusUserDetailsChecker());
         return authProvider;
     }
 
@@ -89,6 +94,16 @@ public class SecurityConfiguration {
     @Bean
     public RestAuthenticationEntryPoint authenticationEntryPoint() {
         return new RestAuthenticationEntryPoint(objectMapper);
+    }
+
+    @Bean
+    public JwtUtil jwtUtil() {
+        return new JwtUtil();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new LdapShaPasswordEncoder();
     }
 
 }

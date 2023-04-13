@@ -8,6 +8,8 @@ import com.fmss.productservice.model.dto.ProductResponseDto;
 import com.fmss.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,33 +27,29 @@ public class ProductService {
 
     private final FileUploadService fileUploadService;
 
-    //@Cacheable(value = "allProducts", cacheManager = "cacheManager")
+
+
+
+//    @Cacheable(
+//            value = {"products"},
+//            key = "{#methodName}",
+//            unless = "#result == null"
+//    )
     public List<ProductResponseDto> getAllProducts() {
         return productRepository.getAllProducts().parallelStream().map(productMapper::toResponseDto).toList();
     }
 
-    @CacheEvict(value = "allProducts")
-    public ProductResponseDto updateProduct(ProductRequestDto productRequestDto, UUID productId) {
-        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
-        product.setName(productRequestDto.getName());
-        product.setPrice(productRequestDto.getPrice());
-        product.setStatus(productRequestDto.getStatus());
-
-        return productMapper.toResponseDto(productRepository.save(product));
-    }
-
-
-    public void deleteProduct(UUID productId) {
-        productRepository.findById(productId)
-                .ifPresentOrElse(
-                        product -> productRepository.delete(product),
-                        () -> {
-                            throw new ProductNotFoundException();
-                        });
+    public ProductResponseDto getProductById(UUID productId){
+        return productMapper.toResponseDto(productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found")));
     }
 
     @Transactional
+    @Cacheable(
+            value = {"product"},
+            key = "{#methodName}",
+            unless = "#result == null"
+    )
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto, MultipartFile multipartFile) {
 
         String url;

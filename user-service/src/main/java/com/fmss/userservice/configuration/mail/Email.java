@@ -21,7 +21,6 @@ public class Email {
     private Collection<String> replyTo;
     private Collection<MailResource> attachments;
 
-
     public static final class EmailBuilder {
         private String from;
         private Collection<String> to;

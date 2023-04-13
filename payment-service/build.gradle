@@ -27,13 +27,23 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.2'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // OpenApi
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+    // Common
     implementation ("com.fmss:common-data:1.0") { changing = true }
 
-    //PostgreSQL
-    runtimeOnly 'org.postgresql:postgresql'
+    // lombok ve mapstruct bu dependencyleri bu sırada olmalı yoksa çalışmıyor.
+    compileOnly "org.projectlombok:lombok:1.18.26"
+    compileOnly "org.mapstruct:mapstruct:1.5.3.Final"
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
+    annotationProcessor "org.projectlombok:lombok:1.18.26"
 
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    // Database
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'com.h2database:h2'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

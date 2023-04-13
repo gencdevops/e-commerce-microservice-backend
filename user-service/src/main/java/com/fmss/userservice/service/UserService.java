@@ -1,25 +1,34 @@
 package com.fmss.userservice.service;
 
-import com.fmss.userservice.configuration.EcommerceUserDetailService;
 import com.fmss.userservice.configuration.mail.MailingService;
 import com.fmss.userservice.exeption.RestException;
+import com.fmss.userservice.jwt.JwtTokenUtil;
 import com.fmss.userservice.model.dto.request.UserRegisterRequestDto;
 import com.fmss.userservice.model.entity.User;
+import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.repository.UserRepository;
+import com.fmss.userservice.repository.model.LdapUser;
+import com.fmss.userservice.security.EcommerceUserDetailService;
 import com.fmss.userservice.util.Validations;
 import com.google.common.primitives.Longs;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.naming.InvalidNameException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Optional;
+import java.util.Random;
 
 import static com.fmss.userservice.util.AppSettingsKey.CREATE_PASSWORD_URL_FORMAT;
 import static com.fmss.userservice.util.AppSettingsKey.RESET_PASSWORD_URL_FORMAT;
@@ -29,15 +38,38 @@ import static com.fmss.userservice.util.Validations.ERR_INVALID_FORGOT_PASSWORD_
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    public static final String OTP_REDIS_KEY = "-otp";
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    @Lazy
+    private final PasswordEncoder passwordEncoder;
     private final MailingService mailingService;
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final LdapRepository ldapRepository;
+    
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    //    @PostConstruct
+    public void init() throws InvalidNameException {
+//        final var ldapUser = new LdapUser();
+//        //ldapUser.setId(new LdapName("uid=sercan1,o=64346c9136393df65a68908f,dc=jumpcloud,dc=com"));
+//        ldapUser.setGivenName("mahoni");
+//        ldapUser.setUid("mahoni");
+//        ldapUser.setSn("mahoni");
+//        ldapUser.setMail("muhammed.alagoz@fmsstech.com");
+//        ldapUser.setUserPassword(passwordEncoder.encode("1234"));
+//
+//        ldapRepository.create(ldapUser);
+//        var user = ldapRepository.findUser("sercan@a.com");
+//        System.out.println(user);
+//        sendForgotPasswordMail("muhammed.alagoz@fmsstech.com");
+    }
 
     @Transactional
     public void registerUser(UserRegisterRequestDto userRegisterRequestDto) {
         final var user = userRegisterRequestDto.toUser();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        user.setUserPassword(passwordEncoder.encode(userRegisterRequestDto.password()));
+        ldapRepository.create(user);
     }
 
     @Transactional
@@ -45,11 +77,10 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    @Transactional(readOnly = true)
     public void sendForgotPasswordMail(String username) {
-        final var user = userRepository.findByEmail(username);
-        final String link = createForgotPasswordLink(user);
-        mailingService.sendForgotPasswordEmail(user.getEmail(), user.getUserName(), link);
+        final var ldapUser = ldapRepository.findUser(username);
+        final String link = createForgotPasswordLink(ldapUser);
+        mailingService.sendForgotPasswordEmail(ldapUser.getMail(), ldapUser.getGivenName(), ldapUser.getSn(), link);
     }
 
     @Transactional
@@ -70,7 +101,7 @@ public class UserService {
         if (!StringUtils.equals(token, user.generateResetPasswordToken())) {
             throw new RestException(ERR_INVALID_FORGOT_PASSWORD_TOKEN);
         }
-        return new EcommerceUserDetailService(user);
+        return null;//TODO new EcommerceUserDetailService(user);
     }
 
 
@@ -97,7 +128,7 @@ public class UserService {
         if (!StringUtils.equals(token, user.generateCreatePasswordToken())) {
             throw new RestException("error.createPasswordTokenInvalid");
         }
-        return new EcommerceUserDetailService(user);
+        return null;//TODO new EcommerceUserDetailService(user);
     }
 
     @Transactional
@@ -128,25 +159,55 @@ public class UserService {
         userRepository.saveAndFlush(user);
     }
 
-    private String createNewUserPasswordLink(User user) {
-        final String token = user.generateCreatePasswordToken();
+    private String createNewUserPasswordLink(LdapUser ldapUser) {
+        final String token = ldapUser.generateCreatePasswordToken();
         String url = null;
         if (StringUtils.isEmpty(url)) {
-            url = "http://localhost:8090";
+            url = "http://localhost:3000";
         }
-        return String.format(CREATE_PASSWORD_URL_FORMAT, url, token, createBase64UserId(user));
+        return String.format(CREATE_PASSWORD_URL_FORMAT, url, token, createBase64UserUid(ldapUser));
     }
 
-    private String createBase64UserId(User user) {
-        return Base64.encodeBase64URLSafeString(user.getId().getBytes());
+    private String createBase64UserUid(LdapUser ldapUser) {
+        return Base64.encodeBase64URLSafeString(ldapUser.getUid().getBytes());
     }
 
-    private String createForgotPasswordLink(User user) {
+    private String createForgotPasswordLink(LdapUser user) {
         final String token = user.generateResetPasswordToken();
         String url = null;
         if (StringUtils.isEmpty(url)) {
-            url = "http://localhost:8090";
+            url = "http://localhost:3000";
         }
-        return String.format(RESET_PASSWORD_URL_FORMAT, url, token, createBase64UserId(user));
+        return String.format(RESET_PASSWORD_URL_FORMAT, url, token, createBase64UserUid(user));
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        return jwtTokenUtil.validateToken(token, userDetails.getUsername());
+    }
+
+    private String generateOtpToken(LdapUser user) {
+        final var random = new Random();
+        final var randomNumber = random.nextInt(900000) + 100000;
+        redisTemplate.opsForValue().set(user.getUid() + OTP_REDIS_KEY, String.valueOf(randomNumber), Duration.ofMinutes(2));
+        return String.valueOf(randomNumber);
+    }
+
+    public void sentOtp(String email) {
+        final var ldapUser = ldapRepository.findUser(email);
+        final String otp = generateOtpToken(ldapUser);
+        mailingService.sendOtpEmail(ldapUser.getMail(), ldapUser.getGivenName(), ldapUser.getSn(), otp);
+    }
+
+    public boolean verifyOtp(String email, String otp) {
+        try {
+            final var user = ldapRepository.findUser(email);
+            String sessionOtp = (String) redisTemplate.opsForValue().get(user.getUid() + OTP_REDIS_KEY);
+            if (!StringUtils.equals(otp, sessionOtp)) {
+                return false;
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+        return true;
     }
 }

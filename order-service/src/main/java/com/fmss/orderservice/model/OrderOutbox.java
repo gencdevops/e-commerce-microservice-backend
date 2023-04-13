@@ -1,26 +1,43 @@
 package com.fmss.orderservice.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
+
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Table(name = "order_outbox")
 @Entity
-@NoArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor
-@Data
 @Builder
-public class OrderOutbox {
+@EntityListeners(AuditingEntityListener.class)
+public class OrderOutbox  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID orderOutboxId;
+
     @Lob
     private String orderPayload;
+
     private UUID orderId;
+
     private String paymentId;
 
+    @CreationTimestamp
+    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdDateTime;
 
-
+    @Column(columnDefinition = "TIMESTAMP")
+    @UpdateTimestamp
+    private LocalDateTime changeDayLastTime;
 }

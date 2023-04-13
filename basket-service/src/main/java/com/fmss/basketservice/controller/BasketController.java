@@ -1,8 +1,14 @@
 package com.fmss.basketservice.controller;
 
+
 import com.fmss.basketservice.service.BasketService;
+import com.fmss.commondata.dtos.response.BasketResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/basket")
@@ -11,39 +17,26 @@ public class BasketController {
 
     private final BasketService basketService;
 
-
-    @PostMapping
-    public void createBasket(String userId) {
-        basketService.createBasket(userId);
+    @GetMapping("/basket-user/{userId}")
+    public ResponseEntity<BasketResponseDto> getBasketByUserId(@PathVariable UUID userId) {
+        return ResponseEntity.ok(basketService.getBasketByUserId(userId));
     }
 
-    @GetMapping("/userid/{userId}")
-    public void getBasketByUserId(@PathVariable String userId) {
-
+    @GetMapping("/basket-basket/{basketId}")
+    public ResponseEntity<BasketResponseDto> getBasketByBasketId(@PathVariable UUID basketId) {
+        return ResponseEntity.ok(basketService.getBasketByBasketId(basketId));
     }
 
-    @GetMapping("/basketId/{basketId}")
-    public void getBasketByBasketId(@PathVariable String basketId) {
-
+    @PutMapping("/disable/{basketId}")
+    public void disableBasket(@PathVariable UUID basketId) {
+        basketService.disableBasket(basketId);
     }
-//
-//    @PutMapping
-//    public void disableBasket() {
-//
-//    }
-//
-//    @DeleteMapping
-//    public void deleteBasket() {
-//
-//    }
-//
-//    @PostMapping
-//    public void addBasketItemToBasket(BasketItem basketItem) {
-//
-//    }
-//
-//    @PostMapping
-//    public void deleteBasketItemOnBasket(BasketItem basketItem) {
-//
-//    }
+
+    @DeleteMapping("/{basketId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBasket(@PathVariable UUID basketId) {
+        basketService.deleteBasket(basketId);
+    }
+
+
 }

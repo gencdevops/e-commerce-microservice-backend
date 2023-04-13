@@ -1,31 +1,18 @@
 package com.fmss.paymentservice.mapper;
 
-import com.fmss.paymentservice.model.dto.CreatePaymentRequestDto;
-import com.fmss.paymentservice.model.dto.PaymentResponseDto;
+
+import com.fmss.commondata.dtos.request.CreatePaymentRequestDto;
+import com.fmss.commondata.dtos.response.PaymentResponseDto;
 import com.fmss.paymentservice.model.entity.Payment;
-import com.fmss.paymentservice.model.enums.PaymentStatus;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-import java.time.ZonedDateTime;
-
-@Component
-public class PaymentMapper {
+@Mapper(implementationName = "PaymentMapperImpl", componentModel = "spring",
+        imports = {CreatePaymentRequestDto.class, Payment.class, PaymentResponseDto.class})
+public interface PaymentMapper {
 
 
-    public PaymentResponseDto paymentToPaymentRequestDto(Payment payment) {
-        return PaymentResponseDto.builder()
-                .paymentId(payment.getId())
-                .orderId(payment.getOrderId())
-                .paymentStatus(payment.getPaymentStatus())
-                .build();
-    }
+    PaymentResponseDto paymentToPaymentResponseDto(Payment payment);
 
-    public Payment createPaymentRequestDtoToPayment(CreatePaymentRequestDto createPaymentRequestDto) {
-        return Payment.builder()
-                .id(null)
-                .orderId(createPaymentRequestDto.orderId())
-                .paymentStatus(PaymentStatus.PENDING)
-                .createdDate(ZonedDateTime.now())
-                .build();
-    }
+    Payment createPaymentRequestDtoToPayment(CreatePaymentRequestDto createPaymentRequestDto);
+
 }
