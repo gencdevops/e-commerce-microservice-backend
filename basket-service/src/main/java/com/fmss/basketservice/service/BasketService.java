@@ -84,7 +84,7 @@ public class BasketService {
     public BasketItemResponseDto updateQuantityBasketItem(BasketItemUpdateDto basketItemUpdateDto){
         BasketItem basketItem = basketItemRepository.findById(basketItemUpdateDto.basketItemId()).orElseThrow(() -> new RuntimeException("Basket item not found."));
 
-        basketItem.setQuantity(basketItem.getQuantity());
+        basketItem.setQuantity(basketItemUpdateDto.quantity());
 
         return basketItemMapper.toResponseDto(basketItemRepository.save(basketItem));
     }
