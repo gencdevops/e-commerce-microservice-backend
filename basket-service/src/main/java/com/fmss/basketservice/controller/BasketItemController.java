@@ -2,6 +2,7 @@ package com.fmss.basketservice.controller;
 
 
 import com.fmss.basketservice.model.dto.BasketItemRequestDto;
+import com.fmss.basketservice.model.dto.BasketItemUpdateDto;
 import com.fmss.basketservice.service.BasketService;
 import com.fmss.commondata.dtos.response.BasketItemResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,8 @@ public class BasketItemController {
     }
 
     @PutMapping("/quantity-increment/{basketItemId}")
-    public ResponseEntity<BasketItemResponseDto> updateQuantityBasketItem(@PathVariable UUID basketItemId, Integer quantity){
-        return ResponseEntity.ok(basketService.updateQuantityBasketItem(basketItemId, quantity));
+    public ResponseEntity<BasketItemResponseDto> updateQuantityBasketItem(@RequestBody BasketItemUpdateDto basketItemUpdateDto){
+        return ResponseEntity.ok(basketService.updateQuantityBasketItem(basketItemUpdateDto));
     }
 
 
