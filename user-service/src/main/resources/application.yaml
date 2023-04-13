@@ -21,3 +21,17 @@ jwt:
   get:
     token:
       uri: '/authenticate'
+
+redis:
+  service:
+    prefix: CMN-SW:RDS
+    ttl: 3000
+    cacheable:
+      ttl: 180
+  server:
+    address: localhost
+    port: 6379
+    cluster:
+      nodes:
+    password:
+    environment: dev
