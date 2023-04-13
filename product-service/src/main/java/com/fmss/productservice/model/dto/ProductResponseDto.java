@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record ProductResponseDto(
-        UUID id,
+        UUID productId,
         String name,
         String image,
         BigDecimal price) implements Serializable {
