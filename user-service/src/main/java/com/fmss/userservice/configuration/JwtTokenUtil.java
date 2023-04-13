@@ -71,7 +71,7 @@ public class JwtTokenUtil implements Serializable {
         var user = userDetails.getDelegate();
         var userId = user.getId();
         claims.put("userId", userId);
-        claims.put("email", user.getEmail());
+        claims.put("email", user.getMail());
         claims.put("userName", userDetails.getUsername());
         return doGenerateToken(claims, userDetails.getUsername());
     }

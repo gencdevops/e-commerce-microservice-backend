@@ -5,7 +5,7 @@ import com.fmss.userservice.configuration.EcommerceUserDetailService;
 import com.fmss.userservice.configuration.UserDetailsConfig;
 import com.fmss.userservice.model.dto.request.JwtRequest;
 import com.fmss.userservice.model.dto.response.JwtResponse;
-import com.fmss.userservice.model.entity.User;
+import com.fmss.userservice.repository.model.LdapUser;
 import com.fmss.userservice.util.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +36,8 @@ public class JwtAuthenticationController {
 		authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
 		final var userDetails = userDetailsConfig.loadUserByUsername(jwtRequest.getUsername());
 		final var userDetailService = (EcommerceUserDetailService) userDetails;
-		User user = userDetailService.getDelegate();
-		final String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getUserName());
+		LdapUser user = userDetailService.getDelegate();
+		final String token = jwtUtil.generateToken(user.getUid(), user.getMail(), user.getGivenName());
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
