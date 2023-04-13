@@ -16,6 +16,8 @@ public class RedisCacheService {
     @Value("${redis.service.ttl}")
     private long redisSessionTimeToLive;
 
+
+
     @Autowired
     public RedisCacheService(@Qualifier("fmssRedisTemplate") RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -37,6 +39,15 @@ public class RedisCacheService {
         this.redisTemplate.opsForHash().getOperations().delete(this.redisDomainPrefix.concat(key));
 
     }
+
+    @Async
+    public <T> void writeListToCache(String key, String hashKey, T object) {
+        this.redisTemplate.opsForHash().putIfAbsent(this.redisDomainPrefix.concat(key), hashKey, object);
+        this.redisTemplate.expire(this.redisDomainPrefix.concat(key), this.redisSessionTimeToLive, TimeUnit.SECONDS);
+    }
+
+
+
 
 
 }

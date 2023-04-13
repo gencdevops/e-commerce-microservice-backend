@@ -1,15 +1,20 @@
 package com.fmss.productservice;
 
+import com.fmss.productservice.mapper.ProductMapper;
 import com.fmss.productservice.model.Product;
 import com.fmss.productservice.repository.ProductRepository;
+import com.fmss.productservice.service.FileUploadService;
 import com.fmss.productservice.service.ProductService;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,12 +27,13 @@ import java.util.UUID;
 @SpringBootApplication
 public class ProductServiceApplication {
 
+
     public static void main(String[] args) {
         SpringApplication.run(ProductServiceApplication.class, args);
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(ProductRepository productRepository, ProductService productService){
+    public CommandLineRunner commandLineRunner(ProductRepository productRepository, ProductService productService) {
         return args -> {
             productRepository.deleteAll();
 
@@ -63,6 +69,7 @@ public class ProductServiceApplication {
                     .status(true)
                     .build();
             productRepository.saveAllAndFlush(List.of(product1, product2, product3, product4));
+
         };
     }
 
