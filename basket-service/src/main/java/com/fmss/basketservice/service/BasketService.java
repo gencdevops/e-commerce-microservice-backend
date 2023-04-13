@@ -69,8 +69,6 @@ public class BasketService {
     }
 
     public BasketItemResponseDto addBasketItemToBasket(BasketItemRequestDto basketItemRequestDto){
-        Basket basket = getById(basketItemRequestDto.basketId());
-
         BasketItem basketItem = basketItemMapper.toEntity(basketItemRequestDto);
 
         basketItemRepository.save(basketItem);
