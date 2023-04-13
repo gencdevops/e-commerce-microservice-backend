@@ -3,9 +3,7 @@ package com.fmss.productservice;
 import com.fmss.productservice.configuration.RedisCacheService;
 import com.fmss.productservice.mapper.ProductMapper;
 import com.fmss.productservice.model.Product;
-import com.fmss.productservice.model.dto.ProductResponseDto;
 import com.fmss.productservice.repository.ProductRepository;
-import com.fmss.productservice.service.FileUploadService;
 import com.fmss.productservice.service.ProductService;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductServiceApplication {
     private final RedisCacheService redisCacheService;
+    private final ProductMapper productMapper;
+
+
 
     public static void main(String[] args) {
         SpringApplication.run(ProductServiceApplication.class, args);
@@ -76,23 +77,20 @@ public class ProductServiceApplication {
             productRepository.saveAllAndFlush(List.of(product1, product2, product3, product4));
 
 
-//            Product product5 = Product.builder()
-//                    .url("https://advivemy-images.s3.us-east-2.amazonaws.com/sut")
-//                    .price(BigDecimal.valueOf(90))
-//                    .name("taner")
-//                    .productId(UUID.randomUUID())
-//                    .status(true)
-//                    .build();
-//
-//
-//
-//            Map<String, Object> cacheMap = new HashMap<>();
-//            cacheMap.put(product5.getName(), product5);
-//           redisCacheService.addDataTOCache("CMN-SW:RDSproducts" , cacheMap);
-//        };
+            Product product5 = Product.builder()
+                    .url("https://advivemy-images.s3.us-east-2.amazonaws.com/sut")
+                    .price(BigDecimal.valueOf(90))
+                    .name("taner")
+                    .productId(UUID.randomUUID())
+                    .status(true)
+                    .build();
+
 
 
         };
+
+
+
     }
 }
 

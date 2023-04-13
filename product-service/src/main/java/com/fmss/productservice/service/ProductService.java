@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -37,20 +38,18 @@ public class ProductService {
 
     public List<ProductResponseDto> getAllProducts() {
         List<ProductResponseDto> productResponseDtos = productRepository.getAllProducts()
-                .parallelStream()
-                .forEach(product -> {
-                    Map<String, Object> cacheMap = new HashMap<>();
-                    cacheMap.put(product.name(), product);
-                    redisCacheService.writeListToCachePutAll("products", cacheMap);
-                })
-                .map(productMapper::toProductResponseDto).toList();
+                .parallelStream().map(productMapper::toProductResponseDto).toList();
 
-        productResponseDtos.forEach(productResponseDto -> {
+        productResponseDtos.forEach(addDataToCache());
+        return productResponseDtos;
+    }
+
+    private Consumer<ProductResponseDto> addDataToCache() {
+        return productResponseDto -> {
             Map<String, Object> cacheMap = new HashMap<>();
             cacheMap.put(productResponseDto.name(), productResponseDto);
             redisCacheService.writeListToCachePutAll("products", cacheMap);
-        });
-        return productResponseDtos;
+        };
     }
 
 

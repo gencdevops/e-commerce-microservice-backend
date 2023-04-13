@@ -21,7 +21,7 @@ jasypt:
 redis:
   service:
     prefix: CMN-SW:RDS
-    ttl: 3000
+    ttl: 1000
     cacheable:
       ttl: 180
   server:
