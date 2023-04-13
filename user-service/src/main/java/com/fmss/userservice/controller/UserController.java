@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +26,10 @@ public class UserController {
 
     @PostMapping(API_USER_REGISTER)
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveUser(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
+    public ResponseEntity saveUser(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
         log.info("save user method entry :{}", userRegisterRequestDto.userName());
         userService.registerUser(userRegisterRequestDto);
+        return ResponseEntity.ok().build();
     }
 
 
