@@ -25,7 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.naming.InvalidNameException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
 import static com.fmss.userservice.constants.UserConstants.*;
@@ -102,13 +103,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public EcommerceUserDetailService getUserByForgotPasswordToken(String uid, String token) {
-        final LdapUser ldapUser = getUserByEncodedUserId(uid);
-        if (!StringUtils.equals(token, ldapUser.generateResetPasswordToken())) {
+        if (!getTokenEncoded(token)) {
             throw new RestException(INVALID_TOKEN);
         }
+        final LdapUser ldapUser = getUserByEncodedUserId(uid);
         return new EcommerceUserDetailService(ldapUser);
     }
-
 
     @Transactional
     public void resetPassword(String uid, String password) {
@@ -150,6 +150,19 @@ public class UserService {
         }
     }
 
+    private boolean getTokenEncoded(String token) {
+        try {
+            final byte[] bytes = Base64.decodeBase64(URLDecoder.decode(token, StandardCharsets.UTF_8));
+            final var timeString = new String(bytes, StandardCharsets.UTF_8);
+            final var instant = Instant.ofEpochMilli(Long.parseLong(timeString));
+
+            final var localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+            return ChronoUnit.MINUTES.between(localDateTime, LocalDateTime.now()) < 5;
+        } catch (Exception e) {
+            throw new RestException(INVALID_TOKEN, e);
+        }
+    }
+
     private void changePassword(String encodedUserId, String password) {
         final LdapUser user = getUserByEncodedUserId(encodedUserId);
         log.info("user change password  entry:{}", user.getMail());
@@ -176,13 +189,18 @@ public class UserService {
     }
 
     private String createForgotPasswordLink(LdapUser user) {
-        final String token = user.generateResetPasswordToken();
+        final String token = generateTime();
         log.info("user create forgot password link :{}", user.getUid());
         String url = null;
         if (StringUtils.isEmpty(url)) {
             url = "http://localhost:3000";
         }
         return String.format(RESET_PASSWORD_URL_FORMAT, url, token, createBase64UserUid(user));
+    }
+
+    private static String generateTime() {
+        long epochMilli = LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli();
+        return Base64.encodeBase64URLSafeString(String.valueOf(epochMilli).getBytes());
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
