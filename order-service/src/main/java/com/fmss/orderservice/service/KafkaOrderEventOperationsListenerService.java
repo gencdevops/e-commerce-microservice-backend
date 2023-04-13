@@ -43,22 +43,17 @@ public class KafkaOrderEventOperationsListenerService {
     public void handleMessage(String order, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws JsonProcessingException {
         Order orderString = objectMapper.readValue(order, Order.class);
         log.info("Order -> {}", order);
-        Optional<Order> orderOptional = orderRepository.findById(orderString.getId());
+        Optional<Order> orderOptional = orderRepository.findById(orderString.getOrderId());
         orderOptional.ifPresent(ord ->  {
             ord.setOrderStatus(OrderStatus.PREPARING);
             orderRepository.saveAndFlush(ord);
-            orderOutBoxService.deleteOrderOutbox(ord.getId());
+            orderOutBoxService.deleteOrderOutbox(ord.getOrderId());
         });
-
     }
 
     @DltHandler
     public void handleDlt(String order, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         log.info("Message: {} handled by dlq topic: {}", order, topic);
         slackReportingService.sendErrorMessage(topic, order);
-
     }
-
-
-
 }

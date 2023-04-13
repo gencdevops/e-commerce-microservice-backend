@@ -23,8 +23,6 @@ public class ObjectMapperConfig {
                 .modules(module)
                 .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .build();
-
-
     }
 
 }

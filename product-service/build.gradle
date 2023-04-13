@@ -42,6 +42,8 @@ dependencies {
     // OpenApi
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
+
+
     //Common
     implementation ("com.fmss:common-data:1.0") { changing = true }
 
@@ -58,6 +60,7 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
     annotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
     annotationProcessor "org.projectlombok:lombok:1.18.26"
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
