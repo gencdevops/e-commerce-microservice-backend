@@ -49,4 +49,8 @@ public class BasketItemMapper {
                 .basket(basketRepository.findById(basketItemRequestDto.basketId()).orElseThrow(BasketNotFoundException::new))
                 .build();
     }
+
+    public List<BasketItemResponseDto> toResponseDtoList(List<BasketItem> basketItems){
+        return basketItems.stream().map(this::toResponseDto).toList();
+    }
 }
