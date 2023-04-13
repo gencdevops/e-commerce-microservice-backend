@@ -27,7 +27,6 @@ import static com.fmss.orderservice.constants.OrderConstants.*;
 public class OrderController {
     private final OrderService orderService;
 
-
     @Operation(summary = "Create order")
     @ApiResponses(value =
     @ApiResponse(
@@ -38,15 +37,7 @@ public class OrderController {
                     mediaType = "application/json")))
     @PostMapping("/place-order")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderResponseDTO placeOrder(@RequestBody @Valid PlaceOrderRequestDTO placeOrderRequestDTO
-
-
-    ) {
-
+    public OrderResponseDTO placeOrder(@RequestBody @Valid PlaceOrderRequestDTO placeOrderRequestDTO) {
         return orderService.placeOrder(placeOrderRequestDTO);
     }
-
-
-
-
 }

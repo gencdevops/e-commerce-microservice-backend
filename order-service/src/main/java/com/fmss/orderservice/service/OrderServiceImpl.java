@@ -26,9 +26,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@RequiredArgsConstructor
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -47,19 +47,16 @@ public class OrderServiceImpl implements OrderService {
         Order orderCreated = orderRepository.saveAndFlush(order);
         log.info("Created order {}", order.getOrderId());
 
-
         CreatePaymentRequestDto createPaymentRequestDto = new CreatePaymentRequestDto(orderCreated.getOrderId()
                 , placeOrderRequestDTO.userId());
         PaymentResponseDto paymentResponse = paymentServiceFeignClient.createPayment(createPaymentRequestDto);
 
-        if (Objects.isNull(paymentResponse) || !paymentResponse.paymentStatus().equals(PaymentStatus.APPROVAL.toString())) {
+        if (Objects.isNull(paymentResponse) || !paymentResponse.paymentStatus().toString().equals(PaymentStatus.APPROVAL.toString())) {
             String errorLogMessage = "Payment failure";
-            log.error("Payment failure {}, message : {}", paymentResponse.paymentId(), errorLogMessage);
+            log.error("Payment failure message : {}", errorLogMessage);
             throw new PaymentFailureException(errorLogMessage);
         }
         producerService.sendMessage(orderCreated);
-
-
         OrderOutbox orderOutbox;
         try {
             orderOutbox = OrderOutbox.builder()
@@ -72,12 +69,8 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception e) {
             log.error("Error order outbox {}", e.getMessage());
         }
-
-
         return orderMapper.convertOrderFResponseDtoFromOrder(orderCreated);
     }
-
-
 }
 
 
