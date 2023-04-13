@@ -3,30 +3,11 @@ package com.fmss.productservice.mapper;
 import com.fmss.productservice.model.Product;
 import com.fmss.productservice.model.dto.ProductRequestDto;
 import com.fmss.productservice.model.dto.ProductResponseDto;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.UUID;
+@Mapper(implementationName = "PaymentMapperImpl", componentModel = "spring")
+public interface ProductMapper {
+    ProductResponseDto toProductResponseDto(Product product);
 
-@Component
-public class ProductMapper {
-    public ProductResponseDto toResponseDto(Product product) {
-        
-        UUID id;
-        String name;
-        String image;
-        BigDecimal price;
-
-        id = product.getProductId();
-        name = product.getName();
-        image = product.getUrl();
-        price = product.getPrice();
-
-        return new ProductResponseDto(id, name, image, price);
-    }
-
-    public Product toEntity(ProductRequestDto productRequestDto, String url) {
-        return new Product(UUID.randomUUID(),productRequestDto.getName(), productRequestDto.getPrice(), productRequestDto.getStatus(),url, LocalDateTime.now(), LocalDateTime.now());
-    }
+    Product toProduct(ProductRequestDto productRequestDto, String url);
 }

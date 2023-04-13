@@ -35,6 +35,7 @@ public class BasketItemMapper {
 
         return BasketItemResponseDto.builder()
                 .basketItemId(basketItem.getBasketItemId())
+                .price(productById.price())
                 .imgUrl(productById.image())
                 .name(productById.name())
                 .productId(basketItem.getProductId())

@@ -3,7 +3,7 @@ package com.fmss.apigateway.dto;
 import lombok.Data;
 
 @Data
-public class JwtTokenDto {
+public record JwtTokenDto() {
     private String userName;
     private String userId;
     private String email;

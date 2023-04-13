@@ -5,6 +5,7 @@ import com.fmss.basketservice.feign.ProductClient;
 import com.fmss.basketservice.mapper.BasketItemMapper;
 import com.fmss.basketservice.mapper.BasketMapper;
 import com.fmss.basketservice.model.dto.BasketItemRequestDto;
+import com.fmss.basketservice.model.dto.BasketItemUpdateDto;
 import com.fmss.commondata.dtos.response.BasketItemResponseDto;
 import com.fmss.commondata.dtos.response.BasketResponseDto;
 import com.fmss.basketservice.model.entity.Basket;
@@ -69,8 +70,6 @@ public class BasketService {
     }
 
     public BasketItemResponseDto addBasketItemToBasket(BasketItemRequestDto basketItemRequestDto){
-        Basket basket = getById(basketItemRequestDto.basketId());
-
         BasketItem basketItem = basketItemMapper.toEntity(basketItemRequestDto);
 
         basketItemRepository.save(basketItem);
@@ -82,12 +81,10 @@ public class BasketService {
         basketItemRepository.deleteById(basketItemId);
     }
 
-    public BasketItemResponseDto updateQuantityBasketItem(UUID basketItemId, Integer quantity){
-        BasketItem basketItem = basketItemRepository.findById(basketItemId).orElseThrow(() -> new RuntimeException("Basket item not found."));
+    public BasketItemResponseDto updateQuantityBasketItem(BasketItemUpdateDto basketItemUpdateDto){
+        BasketItem basketItem = basketItemRepository.findById(basketItemUpdateDto.basketItemId()).orElseThrow(() -> new RuntimeException("Basket item not found."));
 
-        Integer currentQuantity = basketItem.getQuantity();
-
-        basketItem.setQuantity(currentQuantity + quantity);
+        basketItem.setQuantity(basketItemUpdateDto.quantity());
 
         return basketItemMapper.toResponseDto(basketItemRepository.save(basketItem));
     }

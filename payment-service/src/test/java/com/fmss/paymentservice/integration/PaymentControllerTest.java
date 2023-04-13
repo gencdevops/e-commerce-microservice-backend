@@ -2,7 +2,10 @@ package com.fmss.paymentservice.integration;
 
 import com.fmss.commondata.dtos.request.CreatePaymentRequestDto;
 import com.fmss.commondata.model.enums.PaymentStatus;
+import com.fmss.paymentservice.repository.PaymentRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

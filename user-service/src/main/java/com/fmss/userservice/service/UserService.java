@@ -1,17 +1,17 @@
 package com.fmss.userservice.service;
 
-import com.fmss.userservice.configuration.mail.MailingService;
+import com.fmss.userservice.mail.MailingService;
 import com.fmss.userservice.exeption.RestException;
 import com.fmss.userservice.jwt.JwtTokenUtil;
-import com.fmss.userservice.model.dto.request.UserRegisterRequestDto;
-import com.fmss.userservice.model.entity.User;
+import com.fmss.userservice.request.UserRegisterRequestDto;
+import com.fmss.userservice.model.User;
 import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.repository.UserRepository;
-import com.fmss.userservice.repository.model.LdapUser;
+import com.fmss.userservice.model.LdapUser;
 import com.fmss.userservice.security.EcommerceUserDetailService;
-import com.fmss.userservice.util.Validations;
 import com.google.common.primitives.Longs;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.context.annotation.Lazy;
@@ -36,9 +36,10 @@ import static com.fmss.userservice.util.Validations.ERR_INVALID_FORGOT_PASSWORD_
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
-    public static final String OTP_REDIS_KEY = "-otp";
+
     private final UserRepository userRepository;
     @Lazy
     private final PasswordEncoder passwordEncoder;
@@ -67,6 +68,10 @@ public class UserService {
 
     @Transactional
     public void registerUser(UserRegisterRequestDto userRegisterRequestDto) {
+        if (existByEmail(userRegisterRequestDto.email())) {
+          // throw userAlreadyException
+        }
+
         final var user = userRegisterRequestDto.toUser();
         user.setUserPassword(passwordEncoder.encode(userRegisterRequestDto.password()));
         ldapRepository.create(user);
