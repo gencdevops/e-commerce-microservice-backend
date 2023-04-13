@@ -1,6 +1,6 @@
 package com.fmss.commondata.dtos.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fmss.commondata.model.enums.PaymentStatus;
 import lombok.Builder;
 
 import java.util.UUID;
@@ -9,5 +9,5 @@ import java.util.UUID;
 public record PaymentResponseDto(
         UUID paymentId,
 
-        String paymentStatus) {
+        PaymentStatus paymentStatus) {
 }

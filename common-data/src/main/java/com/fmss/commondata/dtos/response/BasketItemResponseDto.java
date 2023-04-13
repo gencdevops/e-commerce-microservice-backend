@@ -6,5 +6,16 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Builder
-public record BasketItemResponseDto(UUID productId, Integer quantity, UUID basketItemId, String name, String imgUrl, BigDecimal price) {
+public record BasketItemResponseDto(
+        UUID productId,
+
+        Integer quantity,
+
+        UUID basketItemId,
+
+        String name,
+
+        String imgUrl,
+
+        BigDecimal price) {
 }

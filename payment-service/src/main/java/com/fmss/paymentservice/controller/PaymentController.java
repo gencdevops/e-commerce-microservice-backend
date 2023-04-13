@@ -34,7 +34,7 @@ public class PaymentController {
             content = @Content(
                     schema = @Schema(implementation = PaymentResponseDto.class),
                     mediaType = "application/json")))
-    @PostMapping("/place-payment")
+    @PostMapping(API_PLACE_PAYMENT)
     @ResponseStatus(value = HttpStatus.CREATED)
     public PaymentResponseDto createPayment(@RequestBody @Valid CreatePaymentRequestDto createPaymentRequestDto) {
         return paymentService.createPayment(createPaymentRequestDto);

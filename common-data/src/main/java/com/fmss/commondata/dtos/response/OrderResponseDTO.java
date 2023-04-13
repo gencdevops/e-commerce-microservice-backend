@@ -6,9 +6,10 @@ import com.fmss.commondata.model.enums.OrderStatus;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class OrderResponseDTO {
-    private UUID orderId;
-    private BigDecimal totalPrice;
+public record OrderResponseDTO (
+        UUID orderId,
 
-    private OrderStatus orderStatus;
+        BigDecimal totalPrice,
+
+        OrderStatus orderStatus) {
 }

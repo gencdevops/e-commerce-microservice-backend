@@ -1,4 +1,4 @@
-package com.fmss.paymentservice.integration;
+package com.fmss.productservice.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
