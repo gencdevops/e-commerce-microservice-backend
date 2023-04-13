@@ -1,21 +1,20 @@
 package com.fmss.userservice.service;
 
-import com.fmss.userservice.security.EcommerceUserDetailService;
-import com.fmss.userservice.jwt.JwtTokenUtil;
 import com.fmss.userservice.configuration.mail.MailingService;
 import com.fmss.userservice.exeption.RestException;
+import com.fmss.userservice.jwt.JwtTokenUtil;
 import com.fmss.userservice.model.dto.request.UserRegisterRequestDto;
 import com.fmss.userservice.model.entity.User;
 import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.repository.UserRepository;
 import com.fmss.userservice.repository.model.LdapUser;
+import com.fmss.userservice.security.EcommerceUserDetailService;
 import com.fmss.userservice.util.Validations;
 import com.google.common.primitives.Longs;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +25,6 @@ import javax.naming.InvalidNameException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.Optional;
 import java.util.Random;
 
@@ -47,7 +45,7 @@ public class UserService {
 
     private final LdapRepository ldapRepository;
     
-    private final RedisTemplate<String, Object> redisTemplate;
+    //private final RedisTemplate<String, Object> redisTemplate;
 
     //@PostConstruct
     public void init() throws InvalidNameException {
@@ -187,7 +185,7 @@ public class UserService {
     private String generateOtpToken(LdapUser user) {
         final var random = new Random();
         final var randomNumber = random.nextInt(900000) + 100000;
-        redisTemplate.opsForValue().set(user.getUid() + OTP_REDIS_KEY, String.valueOf(randomNumber), Duration.ofMinutes(2));
+        //redisTemplate.opsForValue().set(user.getUid() + OTP_REDIS_KEY, String.valueOf(randomNumber), Duration.ofMinutes(2));
         return String.valueOf(randomNumber);
     }
 
@@ -200,10 +198,10 @@ public class UserService {
     public boolean verifyOtp(String email, String otp) {
         try {
             final var user = ldapRepository.findUser(email);
-            String sessionOtp = (String) redisTemplate.opsForValue().get(user.getUid() + OTP_REDIS_KEY);
-            if (!StringUtils.equals(otp, sessionOtp)) {
-                return false;
-            }
+//            String sessionOtp = (String) redisTemplate.opsForValue().get(user.getUid() + OTP_REDIS_KEY);
+//            if (!StringUtils.equals(otp, sessionOtp)) {
+//                return false;
+//            }
         } catch (Exception ex) {
             return false;
         }
