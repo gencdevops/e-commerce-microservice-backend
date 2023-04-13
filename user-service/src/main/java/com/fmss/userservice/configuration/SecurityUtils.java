@@ -1,10 +1,9 @@
 package com.fmss.userservice.configuration;
 
-import com.fmss.userservice.repository.model.LdapUser;
+import com.fmss.userservice.model.entity.LdapUser;
 import com.fmss.userservice.security.EcommerceUserDetailService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

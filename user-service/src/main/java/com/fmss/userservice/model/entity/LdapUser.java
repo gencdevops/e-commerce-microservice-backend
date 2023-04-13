@@ -1,4 +1,4 @@
-package com.fmss.userservice.repository.model;
+package com.fmss.userservice.model.entity;
 
 import lombok.Data;
 import org.apache.commons.codec.digest.DigestUtils;

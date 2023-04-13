@@ -1,4 +1,4 @@
-package com.fmss.userservice.configuration.mail;
+package com.fmss.userservice.mail;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;

@@ -1,14 +1,20 @@
 package com.fmss.userservice.controller;
 
+import com.fmss.commondata.dtos.response.OrderResponseDTO;
 import com.fmss.commondata.util.JwtUtil;
 import com.fmss.userservice.security.EcommerceUserDetailService;
 import com.fmss.userservice.configuration.UserDetailsConfig;
 import com.fmss.userservice.model.dto.request.JwtRequest;
 import com.fmss.userservice.model.dto.request.VerifyOtpRequest;
-import com.fmss.userservice.model.dto.response.JwtResponse;
-import com.fmss.userservice.repository.model.LdapUser;
+import com.fmss.userservice.model.dto.response.JwtResponseDto;
+import com.fmss.userservice.model.entity.LdapUser;
 import com.fmss.userservice.service.UserService;
 import com.fmss.userservice.util.Validations;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,15 +39,27 @@ public class JwtAuthenticationController {
 	private final UserDetailsConfig userDetailsConfig;
 	private final UserService userService;
 
+
+
+	@Operation(summary = "Create order")
+	@ApiResponses(value =
+	@ApiResponse(
+			responseCode = "201",
+			description = "Place order",
+			content = @Content(
+					schema = @Schema(implementation = OrderResponseDTO.class),
+					mediaType = "application/json")))
+	@PostMapping("/place-order")
+
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("authenticate")
-	public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest jwtRequest, HttpServletRequest request) throws Exception {
+	public ResponseEntity<JwtResponseDto> createAuthenticationToken(@RequestBody JwtRequest jwtRequest, HttpServletRequest request) throws Exception {
 		authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
 		final var userDetails = userDetailsConfig.loadUserByUsername(jwtRequest.getUsername());
 		final var userDetailService = (EcommerceUserDetailService) userDetails;
 		LdapUser user = userDetailService.getDelegate();
 		final String token = jwtUtil.generateToken(user.getUid(), user.getMail(), user.getGivenName());
-		return ResponseEntity.ok(new JwtResponse(token));
+		return ResponseEntity.ok(new JwtResponseDto(token));
 	}
 
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -63,7 +81,7 @@ public class JwtAuthenticationController {
 		final var userDetailService = (EcommerceUserDetailService) userDetails;
 		LdapUser user = userDetailService.getDelegate();
 		final String token = jwtUtil.generateToken(user.getUid(), user.getMail(), user.getGivenName());
-		return ResponseEntity.ok(new JwtResponse(token));
+		return ResponseEntity.ok(new JwtResponseDto(token));
 	}
 
 	private void authenticate(String username, String password) throws Exception {
