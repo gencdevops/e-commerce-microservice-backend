@@ -12,6 +12,7 @@ public class LdapUser {
     private String sn;
     private String mail;
     private String userPassword;
+    private String cn;
 
     public String generateCreatePasswordToken() {
         return DigestUtils.md5Hex("CreatePassword|" + getMail() + "|" + getGivenName() + "|" + getUserPassword());

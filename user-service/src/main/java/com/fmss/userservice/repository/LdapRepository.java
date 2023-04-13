@@ -23,7 +23,7 @@ public class LdapRepository {
     private static final String BASE_DN = "dc=fmss, dc=com";
     private static final String FIRST_NAME = "givenName";
     private static final String LAST_NAME = "sn";
-    private static final String FULLNAME_ATTRIBUTE = "cn";
+    private static final String CN_ATTRIBUTE = "cn";
     private static final String EMAIL_ATTRIBUTE = "mail";
     private static final String UID_ATTRIBUTE = "uid";
     public static final String USER_PASSWORD_ATTRIBUTE = "userPassword";
@@ -70,6 +70,10 @@ public class LdapRepository {
             if (attributes.get(USER_PASSWORD_ATTRIBUTE) != null) {
                 user.setUserPassword(attributes.get(USER_PASSWORD_ATTRIBUTE).get().toString());
             }
+
+            if (attributes.get(CN_ATTRIBUTE) != null) {
+                user.setCn(attributes.get(CN_ATTRIBUTE).get().toString());
+            }
             return user;
         };
     }
@@ -79,7 +83,6 @@ public class LdapRepository {
         try {
             DirContextAdapter context = new DirContextAdapter();
             context.setAttributeValues(OBJECTCLASS, OBJECT_CLASS_ATTRRIBUTES);
-            context.setAttributeValue(FULLNAME_ATTRIBUTE, ldapUser.getGivenName() + " " + ldapUser.getSn());
             context.setAttributeValue(LAST_NAME, ldapUser.getSn());
             context.setAttributeValue(FIRST_NAME, ldapUser.getGivenName());
             context.setAttributeValue(USER_PASSWORD_ATTRIBUTE, ldapUser.getUserPassword());
@@ -91,14 +94,14 @@ public class LdapRepository {
         }
     }
 
-    public void updateUserPassword(String mail, String userPassword) {
+    public void updateUserPassword(String cn, String userPassword) {
         final var modificationItems = new ModificationItem[1];
         modificationItems[0] = new ModificationItem(
                 DirContext.REPLACE_ATTRIBUTE,
                 new BasicAttribute(USER_PASSWORD_ATTRIBUTE, userPassword)
         );
 
-        final var filter = EMAIL_ATTRIBUTE + "=" + mail  + ", dc=fmss, dc=com";
+        final var filter = CN_ATTRIBUTE + "=" + cn  + ", dc=fmss, dc=com";
         ldapTemplate.modifyAttributes(filter, modificationItems);
     }
 }
