@@ -47,7 +47,7 @@ public class ProductController {
             content = @Content(
                     schema = @Schema(implementation = ProductResponseDto.class),
                     mediaType = "application/json")))
-    @GetMapping(API_PLACE_PAYMENT)
+    @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ProductResponseDto getProductById(@PathVariable UUID productId) {
         return productService.getProductById(productId);
