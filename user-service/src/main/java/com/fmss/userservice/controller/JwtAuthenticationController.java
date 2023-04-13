@@ -72,7 +72,7 @@ public class JwtAuthenticationController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("verify-otp")
 	public ResponseEntity verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest, HttpServletRequest request) throws Exception {
-		if (userService.verifyOtp(verifyOtpRequest.getUsername(), verifyOtpRequest.getOtp())) {
+		if (userService.verifyOtp(verifyOtpRequest.getUsername(), verifyOtpRequest. getOtp())) {
 			ResponseEntity.badRequest().build();
 		}
 		authenticate(verifyOtpRequest.getUsername(), verifyOtpRequest.getPassword());

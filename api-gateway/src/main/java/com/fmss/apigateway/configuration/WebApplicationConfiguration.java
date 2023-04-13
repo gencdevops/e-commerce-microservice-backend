@@ -1,4 +1,4 @@
-package com.fmss.apigateway.config;
+package com.fmss.apigateway.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

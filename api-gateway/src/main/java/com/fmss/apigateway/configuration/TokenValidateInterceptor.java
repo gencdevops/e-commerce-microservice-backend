@@ -1,4 +1,4 @@
-package com.fmss.apigateway.config;
+package com.fmss.apigateway.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fmss.apigateway.dto.JwtTokenDto;

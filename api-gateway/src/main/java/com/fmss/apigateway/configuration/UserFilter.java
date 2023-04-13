@@ -1,4 +1,4 @@
-package com.fmss.apigateway.config;
+package com.fmss.apigateway.configuration;
 
 import com.fmss.commondata.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
