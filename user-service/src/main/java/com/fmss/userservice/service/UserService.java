@@ -14,6 +14,7 @@ import com.google.common.primitives.Longs;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,16 +26,18 @@ import javax.naming.InvalidNameException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Optional;
+import java.util.Random;
 
-import static com.fmss.userservice.util.AppSettingsKey.CREATE_PASSWORD_URL_FORMAT;
-import static com.fmss.userservice.util.AppSettingsKey.RESET_PASSWORD_URL_FORMAT;
+import static com.fmss.userservice.util.AppSettingsKey.*;
 import static com.fmss.userservice.util.Validations.ERR_INVALID_FORGOT_PASSWORD_TOKEN;
 
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    public static final String OTP_REDIS_KEY = "-otp";
     private final UserRepository userRepository;
     @Lazy
     private final PasswordEncoder passwordEncoder;
@@ -42,6 +45,7 @@ public class UserService {
     private final JwtTokenUtil jwtTokenUtil;
 
     private final LdapRepository ldapRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     //@PostConstruct
     public void init() throws InvalidNameException {
@@ -176,5 +180,31 @@ public class UserService {
 
     public boolean validateToken(String token, UserDetails userDetails) {
         return jwtTokenUtil.validateToken(token, userDetails.getUsername());
+    }
+
+    private String generateOtpToken(LdapUser user) {
+        final var random = new Random();
+        final var randomNumber = random.nextInt(900000) + 100000;
+        redisTemplate.opsForValue().set(user.getUid() + OTP_REDIS_KEY, String.valueOf(randomNumber), Duration.ofMinutes(2));
+        return String.valueOf(randomNumber);
+    }
+
+    public void sentOtp(String email) {
+        final var ldapUser = ldapRepository.findUser(email);
+        final String otp = generateOtpToken(ldapUser);
+        mailingService.sendOtpEmail(ldapUser.getMail(), ldapUser.getGivenName(), ldapUser.getSn(), otp);
+    }
+
+    public boolean verifyOtp(String email, String otp) {
+        try {
+            final var user = ldapRepository.findUser(email);
+            String sessionOtp = (String) redisTemplate.opsForValue().get(user.getUid() + OTP_REDIS_KEY);
+            if (!StringUtils.equals(otp, sessionOtp)) {
+                return false;
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+        return true;
     }
 }

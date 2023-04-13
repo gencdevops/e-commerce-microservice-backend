@@ -4,8 +4,10 @@ import com.fmss.commondata.util.JwtUtil;
 import com.fmss.userservice.configuration.EcommerceUserDetailService;
 import com.fmss.userservice.configuration.UserDetailsConfig;
 import com.fmss.userservice.model.dto.request.JwtRequest;
+import com.fmss.userservice.model.dto.request.VerifyOtpRequest;
 import com.fmss.userservice.model.dto.response.JwtResponse;
 import com.fmss.userservice.repository.model.LdapUser;
+import com.fmss.userservice.service.UserService;
 import com.fmss.userservice.util.Validations;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +31,35 @@ public class JwtAuthenticationController {
 	private final AuthenticationManager authenticationManager;
 	private final JwtUtil jwtUtil;
 	private final UserDetailsConfig userDetailsConfig;
+	private final UserService userService;
 
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("authenticate")
 	public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest jwtRequest, HttpServletRequest request) throws Exception {
 		authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
 		final var userDetails = userDetailsConfig.loadUserByUsername(jwtRequest.getUsername());
+		final var userDetailService = (EcommerceUserDetailService) userDetails;
+		LdapUser user = userDetailService.getDelegate();
+		final String token = jwtUtil.generateToken(user.getUid(), user.getMail(), user.getGivenName());
+		return ResponseEntity.ok(new JwtResponse(token));
+	}
+
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PostMapping("sent-otp")
+	public ResponseEntity sentOtp(@RequestBody JwtRequest jwtRequest, HttpServletRequest request) throws Exception {
+		userDetailsConfig.loadUserByUsername(jwtRequest.getUsername());
+		userService.sentOtp(jwtRequest.getUsername());
+		return ResponseEntity.ok().build();
+	}
+
+	@CrossOrigin(origins = "http://localhost:3000")
+	@PostMapping("verify-otp")
+	public ResponseEntity verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest, HttpServletRequest request) throws Exception {
+		if (userService.verifyOtp(verifyOtpRequest.getUsername(), verifyOtpRequest.getOtp())) {
+			ResponseEntity.badRequest().build();
+		}
+		authenticate(verifyOtpRequest.getUsername(), verifyOtpRequest.getPassword());
+		final var userDetails = userDetailsConfig.loadUserByUsername(verifyOtpRequest.getUsername());
 		final var userDetailService = (EcommerceUserDetailService) userDetails;
 		LdapUser user = userDetailService.getDelegate();
 		final String token = jwtUtil.generateToken(user.getUid(), user.getMail(), user.getGivenName());

@@ -20,6 +20,7 @@ import static com.fmss.userservice.util.AppSettingsKey.APPLICATION_SOURCE_URL_TE
 public class MailingServiceImpl implements MailingService {
     private static final String TEMPLATE_FORGOT_PASSWORD = "forgot-password";
     private static final String TEMPLATE_NEW_USER_CREATED = "newUserCreated";
+    private static final String TEMPLATE_OTP = "verify-otp";
 
     private static final String SEND_EMAIL_FIRST_NAME = "firstName";
     private static final String SEND_EMAIL_LAST_NAME = "lastName";
@@ -71,6 +72,22 @@ public class MailingServiceImpl implements MailingService {
                 .withParameter(SEND_EMAIL_TOKEN_LINK, tokenLink)
                 .withParameter(APPLICATION_SOURCE_URL_TEMPLATE_KEY, getApplicationBaseUrl())
                 .build();
+        sendEmail(email);
+    }
+
+    @Override
+    public void sendOtpEmail(String to, String firstName, String lastName, String otp) {
+        final Email email = anEmail()
+                .withFrom(getFromMailAddress())
+                .withTo(to)
+                .withSubject("Fmss E-Com Otp bilgileriniz")
+                .withTemplate(TEMPLATE_OTP)
+                .withParameter("firstName", firstName)
+                .withParameter("lastName", lastName)
+                .withParameter("otp", otp)
+                .withParameter(APPLICATION_SOURCE_URL_TEMPLATE_KEY, getApplicationBaseUrl())
+                .build();
+
         sendEmail(email);
     }
 
