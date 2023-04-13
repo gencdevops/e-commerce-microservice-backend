@@ -1,7 +1,9 @@
 package com.fmss.productservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fmss.commondata.redis.RedisCacheService;
+
+
+import com.fmss.productservice.configuration.RedisCacheService;
 import com.fmss.productservice.exception.ProductCouldNotCreateException;
 import com.fmss.productservice.exception.ProductNotFoundException;
 import com.fmss.productservice.mapper.ProductMapper;
@@ -11,18 +13,15 @@ import com.fmss.productservice.model.dto.ProductResponseDto;
 import com.fmss.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -36,13 +35,21 @@ public class ProductService {
     private final RedisCacheService redisCacheService;
 
 
-
     public List<ProductResponseDto> getAllProducts() {
+        List<ProductResponseDto> productResponseDtos = productRepository.getAllProducts()
+                .parallelStream()
+                .forEach(product -> {
+                    Map<String, Object> cacheMap = new HashMap<>();
+                    cacheMap.put(product.name(), product);
+                    redisCacheService.writeListToCachePutAll("products", cacheMap);
+                })
+                .map(productMapper::toProductResponseDto).toList();
 
-        List<ProductResponseDto> productResponseDtos = productRepository.getAllProducts().parallelStream().map(productMapper::toProductResponseDto).toList();
-
-        redisCacheService.writeListToCache("product-list", "product", productResponseDtos);
-
+        productResponseDtos.forEach(productResponseDto -> {
+            Map<String, Object> cacheMap = new HashMap<>();
+            cacheMap.put(productResponseDto.name(), productResponseDto);
+            redisCacheService.writeListToCachePutAll("products", cacheMap);
+        });
         return productResponseDtos;
     }
 
@@ -57,11 +64,6 @@ public class ProductService {
     }
 
     @Transactional
-    @Cacheable(
-            value = {"product"},
-            key = "{#methodName}",
-            unless = "#result == null"
-    )
     public String createProduct(String productRequest, MultipartFile multipartFile) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -71,8 +73,8 @@ public class ProductService {
             File convFile = File.createTempFile(fileName, "-advice");
             multipartFile.transferTo(convFile);
             String url = fileUploadService.storeFile(convFile, productRequestDto.getFileName());
-            Product persistenceProduct = productRepository.save(productMapper.toProduct(productRequestDto, url));
-            log.info("Created product {}", persistenceProduct.getProductId());
+            Product savedProduct = productRepository.save(productMapper.toProduct(productRequestDto, url));
+            log.info("Created product {}", savedProduct.getProductId());
         } catch (IOException e) {
             log.error("Product oluştururken, dosya işlemlerinde hata gerçekleşti.\n {}", e.getMessage());
             throw new ProductCouldNotCreateException("Product oluştururken, dosya işlemlerinde hata gerçekleşti.");
