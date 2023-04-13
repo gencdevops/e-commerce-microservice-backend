@@ -1,8 +1,9 @@
 package com.fmss.userservice.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fmss.commondata.util.JwtUtil;
+import com.fmss.userservice.jwt.JwtTokenFilter;
 import com.fmss.userservice.repository.LdapRepository;
+import com.fmss.userservice.security.EcommerceDaoAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

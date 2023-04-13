@@ -1,4 +1,4 @@
-package com.fmss.userservice.configuration;
+package com.fmss.userservice.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

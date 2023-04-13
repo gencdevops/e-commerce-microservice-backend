@@ -2,6 +2,7 @@ package com.fmss.userservice.configuration;
 
 import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.repository.model.LdapUser;
+import com.fmss.userservice.security.EcommerceUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

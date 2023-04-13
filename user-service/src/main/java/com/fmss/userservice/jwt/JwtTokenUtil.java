@@ -1,5 +1,6 @@
-package com.fmss.userservice.configuration;
+package com.fmss.userservice.jwt;
 
+import com.fmss.userservice.security.EcommerceUserDetailService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -1,4 +1,4 @@
-package com.fmss.userservice.configuration;
+package com.fmss.userservice.security;
 
 import com.fmss.userservice.repository.model.LdapUser;
 import lombok.Getter;

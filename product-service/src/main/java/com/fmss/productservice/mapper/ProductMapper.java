@@ -16,7 +16,7 @@ public class ProductMapper {
         String image;
         BigDecimal price;
 
-        id = product.getId();
+        id = String.valueOf(product.getId());
         name = product.getName();
         image = product.getUrl();
         price = product.getPrice();

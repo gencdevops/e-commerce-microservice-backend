@@ -1,7 +1,7 @@
 package com.fmss.userservice.service;
 
-import com.fmss.userservice.configuration.EcommerceUserDetailService;
-import com.fmss.userservice.configuration.JwtTokenUtil;
+import com.fmss.userservice.security.EcommerceUserDetailService;
+import com.fmss.userservice.jwt.JwtTokenUtil;
 import com.fmss.userservice.configuration.mail.MailingService;
 import com.fmss.userservice.exeption.RestException;
 import com.fmss.userservice.model.dto.request.UserRegisterRequestDto;
@@ -14,9 +14,9 @@ import com.google.common.primitives.Longs;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,8 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.Random;
 
-import static com.fmss.userservice.util.AppSettingsKey.*;
+import static com.fmss.userservice.util.AppSettingsKey.CREATE_PASSWORD_URL_FORMAT;
+import static com.fmss.userservice.util.AppSettingsKey.RESET_PASSWORD_URL_FORMAT;
 import static com.fmss.userservice.util.Validations.ERR_INVALID_FORGOT_PASSWORD_TOKEN;
 
 
@@ -45,6 +46,7 @@ public class UserService {
     private final JwtTokenUtil jwtTokenUtil;
 
     private final LdapRepository ldapRepository;
+    
     private final RedisTemplate<String, Object> redisTemplate;
 
     //@PostConstruct

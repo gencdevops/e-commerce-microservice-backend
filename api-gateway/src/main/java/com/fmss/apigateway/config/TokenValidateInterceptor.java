@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Base64;
@@ -20,8 +21,9 @@ import static org.apache.commons.lang.BooleanUtils.isFalse;
 @RequiredArgsConstructor
 @Slf4j
 public class TokenValidateInterceptor implements HandlerInterceptor {
-
     private final JwtUtil jwtUtil;
+
+    private final WebClient webClient;
     private static final String BEARER = "Bearer ";
     private static final String AUTHORIZATION = "Authorization";
 
@@ -47,6 +49,11 @@ public class TokenValidateInterceptor implements HandlerInterceptor {
             final var userDetails = new ObjectMapper().readValue(payload, JwtTokenDto.class);
             final var userName = userDetails.getUserName();
             boolean isValidToken = jwtUtil.validateToken(token, userName);
+
+            String userId = userDetails.getUserId();
+            WebClient.builder()
+                    .defaultHeader("userId", userId)
+                    .build();
 
             log.info("TokenValidateInterceptor::token validating:{}::userName:{}", isValidToken, userName);
             return isValidToken;

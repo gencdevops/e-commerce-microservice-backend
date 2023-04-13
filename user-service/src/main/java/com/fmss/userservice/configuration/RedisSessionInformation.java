@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.function.Consumer;
 
 /**
- * Do not put this class into hazelcast!
+ *
  *
  * @author Muhammed ALAGOZ
  */

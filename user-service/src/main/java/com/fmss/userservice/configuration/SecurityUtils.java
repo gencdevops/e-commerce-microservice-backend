@@ -1,14 +1,13 @@
 package com.fmss.userservice.configuration;
 
-import com.fmss.userservice.model.entity.User;
 import com.fmss.userservice.repository.model.LdapUser;
+import com.fmss.userservice.security.EcommerceUserDetailService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
@@ -38,12 +37,5 @@ public class SecurityUtils {
                 .map(EcommerceUserDetailService.class::cast);
     }
 
-    public static void clearAuthentication() {
-        SecurityContextHolder.getContext().setAuthentication(null);
-    }
 
-    public static void setAuthenticated(EcommerceUserDetailService ecommerceUserDetailService) {
-        final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(ecommerceUserDetailService, ecommerceUserDetailService.getPassword(), ecommerceUserDetailService.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
 }
