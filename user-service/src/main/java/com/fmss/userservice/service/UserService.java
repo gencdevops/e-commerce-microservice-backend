@@ -49,7 +49,7 @@ public class UserService {
     
     private final RedisTemplate<String, Object> redisTemplate;
 
-    //@PostConstruct
+    //    @PostConstruct
     public void init() throws InvalidNameException {
 //        final var ldapUser = new LdapUser();
 //        //ldapUser.setId(new LdapName("uid=sercan1,o=64346c9136393df65a68908f,dc=jumpcloud,dc=com"));
@@ -60,8 +60,9 @@ public class UserService {
 //        ldapUser.setUserPassword(passwordEncoder.encode("1234"));
 //
 //        ldapRepository.create(ldapUser);
-
-        sendForgotPasswordMail("muhammed.alagoz@fmsstech.com");
+//        var user = ldapRepository.findUser("sercan@a.com");
+//        System.out.println(user);
+//        sendForgotPasswordMail("muhammed.alagoz@fmsstech.com");
     }
 
     @Transactional

@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class LdapRepository {
+    public static final String BIRTH_DATE = "birthDate";
     private final LdapTemplate ldapTemplate;
 
     private static final String BASE_DN = "dc=fmss, dc=com";
@@ -24,12 +25,7 @@ public class LdapRepository {
     private static final String UID_ATTRIBUTE = "uid";
     public static final String USER_PASSWORD_ATTRIBUTE = "userPassword";
     public static final String OBJECTCLASS = "objectclass";
-    public static final String[] OBJECT_CLASS_ATTRRIBUTES = {
-            "top",
-            "person",
-            "organizationalPerson",
-            "inetOrgPerson"
-    };
+    public static final String[] OBJECT_CLASS_ATTRRIBUTES = {"top", "person", "organizationalPerson", "inetOrgPerson"};
 
     public boolean checkPassword(String username, String password) {
         try {
@@ -45,20 +41,30 @@ public class LdapRepository {
     public LdapUser findUser(String username) {
         final var searchFilter = "(" + EMAIL_ATTRIBUTE + "=" + username + ")";
 
-        return Optional.ofNullable(ldapTemplate.search(BASE_DN, searchFilter, convert()))
-                .filter(ldapUsers -> !CollectionUtils.isEmpty(ldapUsers))
-                .map(ldapUsers -> ldapUsers.get(0))
-                .orElse(null);
+        return Optional.ofNullable(ldapTemplate.search(BASE_DN, searchFilter, convert())).filter(ldapUsers -> !CollectionUtils.isEmpty(ldapUsers)).map(ldapUsers -> ldapUsers.get(0)).orElse(null);
     }
 
     private AttributesMapper<LdapUser> convert() {
         return (Attributes attributes) -> {
             LdapUser user = new LdapUser();
-            user.setUid((String) attributes.get(UID_ATTRIBUTE).get());
-            user.setGivenName((String) attributes.get(FIRST_NAME).get());
-            user.setSn((String) attributes.get(LAST_NAME).get());
-            user.setMail((String) attributes.get(EMAIL_ATTRIBUTE).get());
-            user.setUserPassword(attributes.get(USER_PASSWORD_ATTRIBUTE).get().toString());
+            if (attributes.get(UID_ATTRIBUTE) != null) {
+                user.setUid((String) attributes.get(UID_ATTRIBUTE).get());
+            }
+            if (attributes.get(FIRST_NAME) != null) {
+                user.setGivenName((String) attributes.get(FIRST_NAME).get());
+            }
+            if (attributes.get(LAST_NAME) != null) {
+                user.setSn((String) attributes.get(LAST_NAME).get());
+            }
+
+            if (attributes.get(EMAIL_ATTRIBUTE) != null) {
+                user.setMail((String) attributes.get(EMAIL_ATTRIBUTE).get());
+            }
+
+            if (attributes.get(USER_PASSWORD_ATTRIBUTE) != null) {
+                user.setUserPassword(attributes.get(USER_PASSWORD_ATTRIBUTE).get().toString());
+            }
+            ldapTemplate.delete(user);
             return user;
         };
     }
