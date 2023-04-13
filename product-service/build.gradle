@@ -27,6 +27,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.426'
 
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0-rc2'
+
     //Jasypt Property Encryption
     implementation "com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5"
 

@@ -18,6 +18,20 @@ jasypt:
     password: ${JASYPT_ENCRYPTOR_PASSWORD:MyCustomPassword}
 
 
+redis:
+  service:
+    prefix: CMN-SW:RDS
+    ttl: 3000
+    cacheable:
+      ttl: 180
+  server:
+    address: localhost
+    port: 6379
+    cluster:
+      nodes:
+    password:
+    environment: live
+
 aws:
   bucket-name: 'advivemy-images'
 #  access-key: 'AKIAYHLZLDRDSWZZIDPD'
