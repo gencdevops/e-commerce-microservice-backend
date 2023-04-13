@@ -4,19 +4,17 @@ package com.fmss.basketservice.mapper;
 import com.fmss.basketservice.model.entity.Basket;
 import com.fmss.commondata.dtos.response.BasketResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-@RequiredArgsConstructor
-public class BasketMapper {
+@Mapper(implementationName = "BasketMapperImpl", componentModel = "spring", imports = {Basket.class})
+public abstract class BasketMapper {
 
-    private final BasketItemMapper basketItemMapper;
-
-    public BasketResponseDto basketToBasketResponseDto(Basket basket){
-        return BasketResponseDto.builder()
-                .basketId(basket.id())
-                .basketItemList(basketItemMapper.toResponseDtoList(basket.getBasketItems()))
-                .totalPrice(basket.getTotalPrice())
-                .build();
-    }
+    @Autowired
+    public BasketItemMapper basketItemMapper;
+    
+    @Mapping(target = "basketItemList", expression = "java(basketItemMapper.toResponseDtoList(basket.getBasketItems()))")
+    public abstract BasketResponseDto toResponseDto(Basket basket);
 }

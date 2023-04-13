@@ -24,8 +24,8 @@ public class BasketItemController {
     }
 
     @PutMapping("/quantity-increment/{basketItemId}")
-    public ResponseEntity<BasketItemResponseDto> incrementQuantityBasketItem(@PathVariable UUID basketItemId){
-        return ResponseEntity.ok(basketService.incrementQuantityBasketItem(basketItemId));
+    public ResponseEntity<BasketItemResponseDto> updateQuantityBasketItem(@PathVariable UUID basketItemId, Integer quantity){
+        return ResponseEntity.ok(basketService.updateQuantityBasketItem(basketItemId, quantity));
     }
 
 

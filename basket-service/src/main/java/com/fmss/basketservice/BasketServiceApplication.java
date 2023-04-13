@@ -1,5 +1,7 @@
 package com.fmss.basketservice;
 
+import com.fmss.basketservice.feign.ProductClient;
+import com.fmss.basketservice.model.dto.ProductResponseDto;
 import com.fmss.basketservice.service.BasketService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,9 +20,18 @@ public class BasketServiceApplication {
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner(BasketService basketService){
+	CommandLineRunner basketServiceCommandLineRunner(BasketService basketService){
 		return args -> {
 			basketService.getBasketByUserId(UUID.randomUUID());
+			String debug;
+		};
+	}
+
+	@Bean
+	CommandLineRunner productCommandLineRunner(ProductClient productClient){
+		return args -> {
+			ProductResponseDto productById = productClient.getProductById(UUID.fromString("87c88ca0-4d6c-4f0e-a305-8070daf32c80"));
+			String debug;
 		};
 	}
 

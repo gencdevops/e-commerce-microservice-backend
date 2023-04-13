@@ -30,17 +30,17 @@ public class ProductService {
 
 
 
-    @Cacheable(
-            value = {"products"},
-            key = "{#methodName}",
-            unless = "#result == null"
-    )
+//    @Cacheable(
+//            value = {"products"},
+//            key = "{#methodName}",
+//            unless = "#result == null"
+//    )
     public List<ProductResponseDto> getAllProducts() {
         return productRepository.getAllProducts().parallelStream().map(productMapper::toResponseDto).toList();
     }
 
 
-    public ProductResponseDto getProductById(String productId){
+    public ProductResponseDto getProductById(UUID productId){
         return productMapper.toResponseDto(productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found")));
     }
 
