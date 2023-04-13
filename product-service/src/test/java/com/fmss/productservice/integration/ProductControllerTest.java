@@ -59,8 +59,8 @@ class ProductControllerTest extends BaseIntegrationTest{
 
     @Test
     void getProductById() throws Exception{
-        this.mockMvc.perform(get(API_PREFIX + API_VERSION_V1 + API_PRODUCTS + "/" + "olmayan-id")
+        this.mockMvc.perform(get(API_PREFIX + API_VERSION_V1 + API_PRODUCTS + "/" + UUID.randomUUID())
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 }

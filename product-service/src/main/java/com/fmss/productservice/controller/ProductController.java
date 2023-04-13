@@ -16,8 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 
+import static com.fmss.productservice.constants.ProductConstants.*;
+
 @RestController
-@RequestMapping("/api/v1/product")
+@RequestMapping(API_PREFIX + API_VERSION_V1 + API_PRODUCTS)
 @RequiredArgsConstructor
 @CrossOrigin
 public class ProductController {
@@ -45,7 +47,7 @@ public class ProductController {
             content = @Content(
                     schema = @Schema(implementation = ProductResponseDto.class),
                     mediaType = "application/json")))
-    @GetMapping("/{productId}")
+    @GetMapping(API_PLACE_PAYMENT)
     @ResponseStatus(HttpStatus.OK)
     public ProductResponseDto getProductById(@PathVariable UUID productId) {
         return productService.getProductById(productId);
