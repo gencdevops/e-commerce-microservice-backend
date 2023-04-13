@@ -9,7 +9,7 @@ public final class UserConstants {
     public static final String API_USER = "/users";
     public static final String API_USER_REGISTER = "/register";
     public static final String API_USER_VALIDATE = "/validate-token/{token}";
-    public static final String API_USER_FORGET = "/forget-password/{email}";
+    public static final String API_USER_FORGOT = "/forgot-password/{email}";
 
     public static final String OTP_REDIS_KEY = "-otp";
 

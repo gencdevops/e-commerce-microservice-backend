@@ -4,9 +4,11 @@ import com.fmss.userservice.model.LdapUser;
 import com.fmss.userservice.security.EcommerceUserDetailService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
@@ -36,5 +38,9 @@ public class SecurityUtils {
                 .map(EcommerceUserDetailService.class::cast);
     }
 
+    public static void setAuthenticated(UserDetails userDetails) {
+        final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
 }

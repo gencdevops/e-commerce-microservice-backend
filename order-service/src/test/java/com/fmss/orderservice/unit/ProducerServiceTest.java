@@ -9,10 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.kafka.KafkaException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,6 +32,21 @@ class ProducerServiceTest {
         ArgumentCaptor<Object> messageCaptor = ArgumentCaptor.forClass(Object.class);
 
         producerService.sendMessage(order);
+
+        Mockito.verify(kafkaTemplate).send(eq(topic), messageCaptor.capture());
+        assertEquals(order, messageCaptor.getValue());
+    }
+
+    @Test
+    void shouldNotSendMessage_Exception() {
+        String topic = "order_placed";
+        ReflectionTestUtils.setField(producerService, "producerTopic", topic);
+
+        Order order = new Order();
+        ArgumentCaptor<Object> messageCaptor = ArgumentCaptor.forClass(Object.class);
+        Mockito.when(kafkaTemplate.send(topic, order)).thenThrow(KafkaException.class);
+
+        assertThrows(Exception.class, () -> producerService.sendMessage(order));
 
         Mockito.verify(kafkaTemplate).send(eq(topic), messageCaptor.capture());
         assertEquals(order, messageCaptor.getValue());

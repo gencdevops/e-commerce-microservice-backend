@@ -6,6 +6,7 @@ import com.fmss.commondata.model.enums.OrderStatus;
 import com.fmss.orderservice.model.Order;
 import com.fmss.orderservice.repository.OrderRepository;
 import com.fmss.orderservice.service.KafkaOrderEventOperationsListenerService;
+import com.fmss.orderservice.service.OrderOutBoxService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,9 @@ class KafkaOrderEventOperationsListenerServiceTest {
     OrderRepository orderRepository;
     @Mock
     ObjectMapper objectMapper;
+
+    @Mock
+    OrderOutBoxService orderOutBoxService;
     @InjectMocks
     KafkaOrderEventOperationsListenerService kafkaOrderEventOperationsListenerService;
 
@@ -39,11 +43,12 @@ class KafkaOrderEventOperationsListenerServiceTest {
 
         when(objectMapper.readValue(any(String.class), any(Class.class))).thenReturn(mockOrder);
         when(orderRepository.findById(uuid)).thenReturn(Optional.of(mockOrder));
-        when(orderRepository.save(mockOrder)).thenReturn(mockOrder);
+        when(orderRepository.saveAndFlush(mockOrder)).thenReturn(mockOrder);
 
         kafkaOrderEventOperationsListenerService.handleMessage("test", "test");
 
         verify(mockOrder).setOrderStatus(OrderStatus.PREPARING);
-        verify(orderRepository).save(mockOrder);
+        verify(orderRepository).saveAndFlush(mockOrder);
+        verify(orderOutBoxService).deleteOrderOutbox(any());
     }
 }

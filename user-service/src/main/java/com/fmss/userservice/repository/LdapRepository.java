@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
 import java.util.Optional;
 
 @Repository
@@ -41,7 +44,10 @@ public class LdapRepository {
     public LdapUser findUser(String username) {
         final var searchFilter = "(" + EMAIL_ATTRIBUTE + "=" + username + ")";
 
-        return Optional.ofNullable(ldapTemplate.search(BASE_DN, searchFilter, convert())).filter(ldapUsers -> !CollectionUtils.isEmpty(ldapUsers)).map(ldapUsers -> ldapUsers.get(0)).orElse(null);
+        return Optional.ofNullable(ldapTemplate.search(BASE_DN, searchFilter, convert()))
+                .filter(ldapUsers -> !CollectionUtils.isEmpty(ldapUsers))
+                .map(ldapUsers -> ldapUsers.get(0))
+                .orElse(null);
     }
 
     private AttributesMapper<LdapUser> convert() {
@@ -64,7 +70,6 @@ public class LdapRepository {
             if (attributes.get(USER_PASSWORD_ATTRIBUTE) != null) {
                 user.setUserPassword(attributes.get(USER_PASSWORD_ATTRIBUTE).get().toString());
             }
-            ldapTemplate.delete(user);
             return user;
         };
     }
@@ -84,5 +89,16 @@ public class LdapRepository {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void updateUserPassword(String mail, String userPassword) {
+        final var modificationItems = new ModificationItem[1];
+        modificationItems[0] = new ModificationItem(
+                DirContext.REPLACE_ATTRIBUTE,
+                new BasicAttribute(USER_PASSWORD_ATTRIBUTE, userPassword)
+        );
+
+        final var filter = EMAIL_ATTRIBUTE + "=" + mail  + ", dc=fmss, dc=com";
+        ldapTemplate.modifyAttributes(filter, modificationItems);
     }
 }
