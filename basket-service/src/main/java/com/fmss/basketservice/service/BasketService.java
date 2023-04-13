@@ -85,7 +85,9 @@ public class BasketService {
         return basketItemMapper.toResponseDto(basketItem);
     }
 
+    /** Verilen id ile BasketItem nesnesini siler */
     @Transactional
+    @Modifying
     public BasketResponseDto deleteBasketItemFromBasket(UUID basketItemId){
         BasketItem basketItem = basketItemRepository.findById(basketItemId).orElseThrow(BasketItemNotFound::new);
         BasketResponseDto basketResponseDto = basketMapper.toResponseDto(basketItem.getBasket());
