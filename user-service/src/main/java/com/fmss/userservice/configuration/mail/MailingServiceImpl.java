@@ -92,6 +92,6 @@ public class MailingServiceImpl implements MailingService {
     }
 
     private String getFromMailAddress() {
-        return  "ets46475@gmail.com";
+        return  "ecomfmss@gmail.com";
     }
 }
