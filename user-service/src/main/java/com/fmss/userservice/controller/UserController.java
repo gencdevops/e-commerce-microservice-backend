@@ -1,19 +1,15 @@
 package com.fmss.userservice.controller;
 
-import com.fmss.commondata.dtos.response.OrderResponseDTO;
-import com.fmss.userservice.model.dto.request.UserRegisterRequestDto;
+import com.fmss.userservice.request.UserRegisterRequestDto;
 import com.fmss.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
 import static com.fmss.userservice.constants.UserConstants.*;

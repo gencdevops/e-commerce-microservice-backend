@@ -1,4 +1,4 @@
-package com.fmss.userservice.model.dto.request;
+package com.fmss.userservice.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

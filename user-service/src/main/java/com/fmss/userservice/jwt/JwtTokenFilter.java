@@ -3,7 +3,6 @@ package com.fmss.userservice.jwt;
 
 
 import com.fmss.userservice.configuration.UserDetailsConfig;
-import com.fmss.userservice.util.Validations;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

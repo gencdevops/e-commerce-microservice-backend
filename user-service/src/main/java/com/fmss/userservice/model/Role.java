@@ -1,4 +1,4 @@
-package com.fmss.userservice.model.entity;
+package com.fmss.userservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;

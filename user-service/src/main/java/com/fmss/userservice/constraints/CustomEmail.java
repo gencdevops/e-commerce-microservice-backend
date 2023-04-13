@@ -1,4 +1,4 @@
-package com.fmss.userservice.validation.annotation;
+package com.fmss.userservice.constraints;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;

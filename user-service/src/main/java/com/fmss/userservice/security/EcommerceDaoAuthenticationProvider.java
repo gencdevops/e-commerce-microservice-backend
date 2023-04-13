@@ -1,7 +1,6 @@
 package com.fmss.userservice.security;
 
 import com.fmss.userservice.repository.LdapRepository;
-import com.fmss.userservice.util.Validations;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

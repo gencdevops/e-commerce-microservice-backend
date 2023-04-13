@@ -1,4 +1,4 @@
-package com.fmss.userservice.model.dto.request;
+package com.fmss.commondata.dtos.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtRequest {
+public class JwtAuthenticationRequestDto {
 	private String username;
 	private String password;
 }

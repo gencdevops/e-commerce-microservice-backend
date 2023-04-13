@@ -1,4 +1,4 @@
-package com.fmss.userservice.model.entity;
+package com.fmss.userservice.model;
 
 import com.fmss.userservice.model.enums.UserStatus;
 import jakarta.persistence.*;

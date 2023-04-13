@@ -1,6 +1,6 @@
-package com.fmss.userservice.model.dto.request;
+package com.fmss.userservice.request;
 
-import com.fmss.userservice.model.entity.LdapUser;
+import com.fmss.userservice.model.LdapUser;
 
 import javax.validation.constraints.Size;
 

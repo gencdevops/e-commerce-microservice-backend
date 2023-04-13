@@ -1,7 +1,7 @@
 package com.fmss.userservice.configuration;
 
 import com.fmss.userservice.repository.LdapRepository;
-import com.fmss.userservice.model.entity.LdapUser;
+import com.fmss.userservice.model.LdapUser;
 import com.fmss.userservice.security.EcommerceUserDetailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

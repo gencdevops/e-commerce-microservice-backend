@@ -1,6 +1,6 @@
 package com.fmss.userservice.security;
 
-import com.fmss.userservice.model.entity.LdapUser;
+import com.fmss.userservice.model.LdapUser;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;

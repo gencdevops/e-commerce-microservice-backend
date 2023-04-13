@@ -1,6 +1,6 @@
 package com.fmss.userservice.mail;
 
-import com.fmss.userservice.model.entity.LdapUser;
+import com.fmss.userservice.model.LdapUser;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;

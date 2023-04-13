@@ -1,6 +1,6 @@
 package com.fmss.userservice.mail;
 
-import com.fmss.userservice.model.entity.LdapUser;
+import com.fmss.userservice.model.LdapUser;
 
 import java.util.Map;
 import java.util.Set;

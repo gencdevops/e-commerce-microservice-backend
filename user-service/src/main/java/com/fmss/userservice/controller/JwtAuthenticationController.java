@@ -4,12 +4,11 @@ import com.fmss.commondata.dtos.response.OrderResponseDTO;
 import com.fmss.commondata.util.JwtUtil;
 import com.fmss.userservice.security.EcommerceUserDetailService;
 import com.fmss.userservice.configuration.UserDetailsConfig;
-import com.fmss.userservice.model.dto.request.JwtRequest;
-import com.fmss.userservice.model.dto.request.VerifyOtpRequest;
+import com.fmss.userservice.model.dto.request.JwtAuthenticationRequestDto;
+import com.fmss.userservice.request.VerifyOtpRequest;
 import com.fmss.userservice.model.dto.response.JwtResponseDto;
-import com.fmss.userservice.model.entity.LdapUser;
+import com.fmss.userservice.model.LdapUser;
 import com.fmss.userservice.service.UserService;
-import com.fmss.userservice.util.Validations;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,9 +52,9 @@ public class JwtAuthenticationController {
 
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("authenticate")
-	public ResponseEntity<JwtResponseDto> createAuthenticationToken(@RequestBody JwtRequest jwtRequest, HttpServletRequest request) throws Exception {
-		authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
-		final var userDetails = userDetailsConfig.loadUserByUsername(jwtRequest.getUsername());
+	public ResponseEntity<JwtResponseDto> createAuthenticationToken(@RequestBody JwtAuthenticationRequestDto jwtAuthenticationRequestDto, HttpServletRequest request) throws Exception {
+		authenticate(jwtAuthenticationRequestDto.getUsername(), jwtAuthenticationRequestDto.getPassword());
+		final var userDetails = userDetailsConfig.loadUserByUsername(jwtAuthenticationRequestDto.getUsername());
 		final var userDetailService = (EcommerceUserDetailService) userDetails;
 		LdapUser user = userDetailService.getDelegate();
 		final String token = jwtUtil.generateToken(user.getUid(), user.getMail(), user.getGivenName());
@@ -64,9 +63,9 @@ public class JwtAuthenticationController {
 
 	@CrossOrigin(origins = "http://localhost:3000")
 	@PostMapping("sent-otp")
-	public ResponseEntity sentOtp(@RequestBody JwtRequest jwtRequest, HttpServletRequest request) throws Exception {
-		userDetailsConfig.loadUserByUsername(jwtRequest.getUsername());
-		userService.sentOtp(jwtRequest.getUsername());
+	public ResponseEntity sentOtp(@RequestBody JwtAuthenticationRequestDto jwtAuthenticationRequestDto, HttpServletRequest request) throws Exception {
+		userDetailsConfig.loadUserByUsername(jwtAuthenticationRequestDto.getUsername());
+		userService.sentOtp(jwtAuthenticationRequestDto.getUsername());
 		return ResponseEntity.ok().build();
 	}
 

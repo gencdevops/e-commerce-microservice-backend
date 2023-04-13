@@ -1,6 +1,6 @@
 package com.fmss.userservice.configuration;
 
-import com.fmss.userservice.model.entity.LdapUser;
+import com.fmss.userservice.model.LdapUser;
 import com.fmss.userservice.security.EcommerceUserDetailService;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.fmss.userservice.model.dto.response;
+package com.fmss.commondata.dtos.response;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
