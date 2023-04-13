@@ -106,9 +106,9 @@ public class UserGlobalExceptionHandler {
                     content = @Content(
                             schema = @Schema(implementation = ErrorBody.class),
                             mediaType = "application/json"))})
-    @ExceptionHandler(UsernameNotFoundException.class)
+    @ExceptionHandler(UserAlreadyExistException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorBody> usernameNotFoundException(UserAlreadyExistException exception) {
+    public ResponseEntity<ErrorBody> usernameAlreadyExistException(UserAlreadyExistException exception) {
         return responseEntity(ErrorBody.builder()
                 .errorCode(HttpStatus.CONFLICT.value())
                 .errorDescription(exception.getMessage())

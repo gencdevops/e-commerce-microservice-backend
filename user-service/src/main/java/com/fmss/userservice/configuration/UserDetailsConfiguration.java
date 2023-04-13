@@ -13,11 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
-@Component
 @RequiredArgsConstructor
 @Slf4j
-public
-class UserDetailsConfiguration implements UserDetailsService {
+public class UserDetailsConfiguration implements UserDetailsService {
     private final LdapRepository ldapRepository;
 
 
