@@ -42,15 +42,17 @@ public class UserService {
 
     //@PostConstruct
     public void init() throws InvalidNameException {
-        final var ldapUser = new LdapUser();
-        //ldapUser.setId(new LdapName("uid=sercan1,o=64346c9136393df65a68908f,dc=jumpcloud,dc=com"));
-        ldapUser.setGivenName("sercan2");
-        ldapUser.setUid("sercan22");
-        ldapUser.setSn("masar2");
-        ldapUser.setMail("sercan.masar@cc.com");
-        ldapUser.setUserPassword(passwordEncoder.encode("1234"));
+//        final var ldapUser = new LdapUser();
+//        //ldapUser.setId(new LdapName("uid=sercan1,o=64346c9136393df65a68908f,dc=jumpcloud,dc=com"));
+//        ldapUser.setGivenName("mahoni");
+//        ldapUser.setUid("mahoni");
+//        ldapUser.setSn("mahoni");
+//        ldapUser.setMail("muhammed.alagoz@fmsstech.com");
+//        ldapUser.setUserPassword(passwordEncoder.encode("1234"));
+//
+//        ldapRepository.create(ldapUser);
 
-        ldapRepository.create(ldapUser);
+        sendForgotPasswordMail("muhammed.alagoz@fmsstech.com");
     }
 
     @Transactional
@@ -65,11 +67,10 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    @Transactional(readOnly = true)
     public void sendForgotPasswordMail(String username) {
-        final var user = userRepository.findByEmail(username);
-        final String link = createForgotPasswordLink(user);
-        mailingService.sendForgotPasswordEmail(user.getEmail(), user.getUserName(), link);
+        final var ldapUser = ldapRepository.findUser(username);
+        final String link = createForgotPasswordLink(ldapUser);
+        mailingService.sendForgotPasswordEmail(ldapUser.getMail(), ldapUser.getGivenName(), ldapUser.getSn(), link);
     }
 
     @Transactional
@@ -148,25 +149,25 @@ public class UserService {
         userRepository.saveAndFlush(user);
     }
 
-    private String createNewUserPasswordLink(User user) {
-        final String token = user.generateCreatePasswordToken();
+    private String createNewUserPasswordLink(LdapUser ldapUser) {
+        final String token = ldapUser.generateCreatePasswordToken();
         String url = null;
         if (StringUtils.isEmpty(url)) {
-            url = "http://localhost:8090";
+            url = "http://localhost:3000";
         }
-        return String.format(CREATE_PASSWORD_URL_FORMAT, url, token, createBase64UserId(user));
+        return String.format(CREATE_PASSWORD_URL_FORMAT, url, token, createBase64UserUid(ldapUser));
     }
 
-    private String createBase64UserId(User user) {
-        return Base64.encodeBase64URLSafeString(user.getId().getBytes());
+    private String createBase64UserUid(LdapUser ldapUser) {
+        return Base64.encodeBase64URLSafeString(ldapUser.getUid().getBytes());
     }
 
-    private String createForgotPasswordLink(User user) {
+    private String createForgotPasswordLink(LdapUser user) {
         final String token = user.generateResetPasswordToken();
         String url = null;
         if (StringUtils.isEmpty(url)) {
-            url = "http://localhost:8090";
+            url = "http://localhost:3000";
         }
-        return String.format(RESET_PASSWORD_URL_FORMAT, url, token, createBase64UserId(user));
+        return String.format(RESET_PASSWORD_URL_FORMAT, url, token, createBase64UserUid(user));
     }
 }

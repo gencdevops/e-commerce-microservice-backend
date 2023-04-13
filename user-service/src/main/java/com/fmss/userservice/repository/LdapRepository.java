@@ -21,6 +21,7 @@ public class LdapRepository {
     private static final String LAST_NAME = "sn";
     private static final String FULLNAME_ATTRIBUTE = "cn";
     private static final String EMAIL_ATTRIBUTE = "mail";
+    private static final String UID_ATTRIBUTE = "uid";
     public static final String USER_PASSWORD_ATTRIBUTE = "userPassword";
     public static final String OBJECTCLASS = "objectclass";
     public static final String[] OBJECT_CLASS_ATTRRIBUTES = {
@@ -53,9 +54,11 @@ public class LdapRepository {
     private AttributesMapper<LdapUser> convert() {
         return (Attributes attributes) -> {
             LdapUser user = new LdapUser();
+            user.setUid((String) attributes.get(UID_ATTRIBUTE).get());
+            user.setGivenName((String) attributes.get(FIRST_NAME).get());
+            user.setSn((String) attributes.get(LAST_NAME).get());
             user.setMail((String) attributes.get(EMAIL_ATTRIBUTE).get());
             user.setUserPassword(attributes.get(USER_PASSWORD_ATTRIBUTE).get().toString());
-            //TODO set other attributes
             return user;
         };
     }
@@ -69,6 +72,7 @@ public class LdapRepository {
             context.setAttributeValue(FIRST_NAME, ldapUser.getGivenName());
             context.setAttributeValue(USER_PASSWORD_ATTRIBUTE, ldapUser.getUserPassword());
             context.setAttributeValue(EMAIL_ATTRIBUTE, ldapUser.getMail());
+            context.setAttributeValue(UID_ATTRIBUTE, ldapUser.getUid());
             ldapTemplate.bind("cn=" + ldapUser.getUid() + ", dc=fmss, dc=com", null, context.getAttributes());
         } catch (Exception e) {
             throw new RuntimeException(e);
