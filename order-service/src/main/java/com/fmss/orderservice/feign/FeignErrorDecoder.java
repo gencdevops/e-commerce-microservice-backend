@@ -4,10 +4,9 @@ package com.fmss.orderservice.feign;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.fmss.commondata.model.ErrorBody;
+import com.fmss.orderservice.exception.*;
 import feign.Response;
 import feign.codec.ErrorDecoder;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,20 +21,22 @@ public class FeignErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
         ErrorBody message = null;
-        try (InputStream bodyIs = response.body()
-                .asInputStream()) {
+        try (InputStream bodyIs = response.body().asInputStream()) {
             ObjectMapper mapper = new ObjectMapper();
             message = mapper.readValue(bodyIs, ErrorBody.class);
         } catch (IOException e) {
             return new Exception(e.getMessage());
         }
-        switch (response.status()) {
-            case 400:
-                return new BadRequestException(message.getErrorDescription());
-            case 404:
-                return new NotFoundException(message.getErrorDescription());
-            default:
-                return errorDecoder.decode(methodKey, response);
-        }
+
+        return switch (response.status()) {
+            case 400 -> new BadRequestException(message.getErrorDescription());
+            case 403 -> new ForbiddenException(message.getErrorDescription());
+            case 404 -> new NotFoundException(message.getErrorDescription());
+            case 409 -> new ConflictException(message.getErrorDescription());
+            case 412 -> new PreconditionException(message.getErrorDescription());
+            case 429 -> new TooManyRequestException(message.getErrorDescription());
+            case 500 -> new InternalServerException(message.getErrorDescription());
+            default -> errorDecoder.decode(methodKey, response);
+        };
     }
 }

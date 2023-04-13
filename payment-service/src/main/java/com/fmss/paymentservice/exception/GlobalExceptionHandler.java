@@ -1,9 +1,9 @@
-package com.fmss.basketservice.exception;
+package com.fmss.paymentservice.exception;
 
+import com.fmss.commondata.model.ErrorBody;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import com.fmss.commondata.model.ErrorBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(BasketNotFoundException.class)
-    public ResponseEntity<ErrorBody> catchBasketNotFoundExceptions(BasketNotFoundException basketNotFoundException){
-        return ResponseEntity.ok(ErrorBody.builder().errorCode(404).errorDescription(basketNotFoundException.getMessage()).build());
-    }
 
     @ApiResponse(responseCode = "400", description = "Bad Request Error",
             content = @Content(mediaType = "application/json",

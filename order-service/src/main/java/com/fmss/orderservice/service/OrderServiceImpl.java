@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (Objects.isNull(paymentResponse) || !paymentResponse.paymentStatus().equals(PaymentStatus.APPROVAL.toString())) {
             String errorLogMessage = "Payment failure";
-            log.error("Payment failure {}, message : {}", paymentResponse.id(), errorLogMessage);
+            log.error("Payment failure {}, message : {}", paymentResponse.paymentId(), errorLogMessage);
             throw new PaymentFailureException(errorLogMessage);
         }
         producerService.sendMessage(orderCreated);
@@ -64,11 +64,11 @@ public class OrderServiceImpl implements OrderService {
         try {
             orderOutbox = OrderOutbox.builder()
                     .orderPayload(objectMapper.writeValueAsString(order))
-                    .paymentId(String.valueOf(paymentResponse.id()))
-                    .orderId(orderCreated.getId())
+                    .paymentId(String.valueOf(paymentResponse.paymentId()))
+                    .orderId(orderCreated.getOrderId())
                     .build();
             OrderOutbox savedOrderOutbox = orderOutBoxService.saveOrderOutbox(orderOutbox);
-            log.info("order outbox saved database : {}", savedOrderOutbox.getId());
+            log.info("order outbox saved database : {}", savedOrderOutbox.getOrderOutboxId());
         } catch (Exception e) {
             log.error("Error order outbox {}", e.getMessage());
         }
