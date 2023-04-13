@@ -81,12 +81,13 @@ public class BasketService {
         basketItemRepository.deleteById(basketItemId);
     }
 
-    public BasketItemResponseDto updateQuantityBasketItem(BasketItemUpdateDto basketItemUpdateDto){
+    public BasketResponseDto updateQuantityBasketItem(BasketItemUpdateDto basketItemUpdateDto){
         BasketItem basketItem = basketItemRepository.findById(basketItemUpdateDto.basketItemId()).orElseThrow(() -> new RuntimeException("Basket item not found."));
 
         basketItem.setQuantity(basketItemUpdateDto.quantity());
+        basketItem = basketItemRepository.save(basketItem);
 
-        return basketItemMapper.toResponseDto(basketItemRepository.save(basketItem));
+        return basketMapper.toResponseDto(basketItem.getBasket());
     }
 
 }

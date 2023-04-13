@@ -5,6 +5,7 @@ import com.fmss.basketservice.model.dto.BasketItemRequestDto;
 import com.fmss.basketservice.model.dto.BasketItemUpdateDto;
 import com.fmss.basketservice.service.BasketService;
 import com.fmss.commondata.dtos.response.BasketItemResponseDto;
+import com.fmss.commondata.dtos.response.BasketResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class BasketItemController {
     }
 
     @PutMapping("/quantity-increment/{basketItemId}")
-    public ResponseEntity<BasketItemResponseDto> updateQuantityBasketItem(@RequestBody BasketItemUpdateDto basketItemUpdateDto){
+    public ResponseEntity<BasketResponseDto> updateQuantityBasketItem(@RequestBody BasketItemUpdateDto basketItemUpdateDto){
         return ResponseEntity.ok(basketService.updateQuantityBasketItem(basketItemUpdateDto));
     }
 
