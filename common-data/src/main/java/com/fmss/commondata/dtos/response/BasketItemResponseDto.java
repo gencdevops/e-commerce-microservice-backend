@@ -2,6 +2,7 @@ package com.fmss.commondata.dtos.response;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Builder
@@ -14,5 +15,7 @@ public record BasketItemResponseDto(
 
         String name,
 
-        String imgUrl) {
+        String imgUrl,
+
+        BigDecimal price) {
 }
