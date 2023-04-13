@@ -1,6 +1,6 @@
 package com.fmss.userservice.repository;
 
-import com.fmss.userservice.repository.model.LdapUser;
+import com.fmss.userservice.model.entity.LdapUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DirContextAdapter;

@@ -34,7 +34,7 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private final UserDetailsConfig userDetailsConfig;
+    private final UserDetailsConfiguration userDetailsConfiguration;
     private final JwtTokenFilter jwtTokenFilter;
     private final ObjectMapper objectMapper;
     private final LdapRepository ldapRepository;
@@ -43,7 +43,7 @@ public class SecurityConfiguration {
     public EcommerceDaoAuthenticationProvider authenticationProvider() {
         EcommerceDaoAuthenticationProvider authProvider = new EcommerceDaoAuthenticationProvider(ldapRepository);
 
-        authProvider.setUserDetailsService(userDetailsConfig);
+        authProvider.setUserDetailsService(userDetailsConfiguration);
         authProvider.setPasswordEncoder(passwordEncoder());
         authProvider.setPostAuthenticationChecks(new AccountStatusUserDetailsChecker());
         return authProvider;
@@ -60,7 +60,6 @@ public class SecurityConfiguration {
                 .and()
                 .csrf()
                 .disable()
-
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .sessionAuthenticationStrategy(sessionAuthenticationStrategy())

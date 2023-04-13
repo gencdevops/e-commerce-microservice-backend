@@ -13,11 +13,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 
-/**
- * This class returns 401 or 403 Http Status messages for Ajax requests instead of redirecting to login page.
- *
- * @author Muhammed ALAGOZ
- */
+
 @Log4j2
 @RequiredArgsConstructor
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -28,6 +24,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         final HttpStatus status = getHttpStatus(authException);
         response.setStatus(status.value());
         objectMapper.writeValue(response.getOutputStream(), authException.getMessage());
+        log.error("Auth Exception : {}", authException.getMessage());
     }
 
     private HttpStatus getHttpStatus(AuthenticationException authException) {

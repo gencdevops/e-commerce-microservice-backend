@@ -1,5 +1,7 @@
 package com.fmss.userservice.jwt;
 
+
+
 import com.fmss.userservice.configuration.UserDetailsConfig;
 import com.fmss.userservice.util.Validations;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -55,7 +57,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsConfig.loadUserByUsername(username);
+            UserDetails userDetails = userDetailsConfig.loadUserByUsername(use rname);
             if (Boolean.TRUE.equals(jwtTokenUtil.validateToken(token, userDetails.getUsername()))) {
                 setAuthentication(request, userDetails);
             }

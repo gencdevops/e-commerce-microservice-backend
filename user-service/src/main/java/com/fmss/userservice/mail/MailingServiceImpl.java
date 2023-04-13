@@ -1,6 +1,6 @@
-package com.fmss.userservice.configuration.mail;
+package com.fmss.userservice.mail;
 
-import com.fmss.userservice.repository.model.LdapUser;
+import com.fmss.userservice.model.entity.LdapUser;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Set;
 
-import static com.fmss.userservice.configuration.mail.Email.EmailBuilder.anEmail;
-import static com.fmss.userservice.configuration.mail.EmailConfiguration.MAIL_SEND_EXECUTOR;
 import static com.fmss.userservice.util.AppSettingsKey.APPLICATION_SOURCE_URL_TEMPLATE_KEY;
 
 @Log4j2
@@ -32,7 +30,7 @@ public class MailingServiceImpl implements MailingService {
 
     //@Async(value = MAIL_SEND_EXECUTOR)
     public void sendForgotPasswordEmail(String to, String firstName, String lastName, String link) {
-        final Email email = anEmail()
+        final Email email = Email.EmailBuilder.anEmail()
                 .withFrom(getFromMailAddress())
                 .withTo(to)
                 .withSubject(getForgotPasswordEmailSubject())
@@ -47,9 +45,9 @@ public class MailingServiceImpl implements MailingService {
     }
 
     @Override
-    @Async(value = MAIL_SEND_EXECUTOR)
+    @Async(value = EmailConfiguration.MAIL_SEND_EXECUTOR)
     public void sendEmail(String emailTemplate, Map<String, Object> params, String subject, Set<String> to) {
-        final Email email = anEmail()
+        final Email email = Email.EmailBuilder.anEmail()
                 .withFrom(getFromMailAddress())
                 .withTo(to)
                 .withSubject(subject)
@@ -61,7 +59,7 @@ public class MailingServiceImpl implements MailingService {
 
     @Override
     public void sendUserAccountCreatedEmail(LdapUser user, String tokenLink) {
-        final Email email = anEmail()
+        final Email email = Email.EmailBuilder.anEmail()
                 .withFrom(getFromMailAddress())
                 .withTo(user.getMail())
                 .withSubject(getCreatePasswordEmailSubject())
@@ -77,7 +75,7 @@ public class MailingServiceImpl implements MailingService {
 
     @Override
     public void sendOtpEmail(String to, String firstName, String lastName, String otp) {
-        final Email email = anEmail()
+        final Email email = Email.EmailBuilder.anEmail()
                 .withFrom(getFromMailAddress())
                 .withTo(to)
                 .withSubject("Fmss E-Com Otp bilgileriniz")
