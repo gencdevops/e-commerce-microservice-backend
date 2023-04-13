@@ -186,7 +186,7 @@ public class UserService {
         final var random = new Random();
         final var randomNumber = random.nextInt(900000) + 100000;
         redisTemplate.opsForValue().set(user.getUid() + OTP_REDIS_KEY, String.valueOf(randomNumber), Duration.ofMinutes(2));
-        return user.generateOtpToken(String.valueOf(randomNumber));
+        return String.valueOf(randomNumber);
     }
 
     public void sentOtp(String email) {
