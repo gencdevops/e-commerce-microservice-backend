@@ -15,9 +15,11 @@ import com.fmss.basketservice.repository.BasketItemRepository;
 import com.fmss.basketservice.repository.BasketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 
 @Service
@@ -67,6 +69,10 @@ public class BasketService {
         basketRepository.deleteById(basketId);
     }
 
+    public void deleteAllBasketItems(UUID basketId){
+        basketItemRepository.deleteByBasket_BasketId(basketId);
+    }
+
     public BasketItemResponseDto addBasketItemToBasket(BasketItemRequestDto basketItemRequestDto){
         BasketItem basketItem = basketItemMapper.toEntity(basketItemRequestDto);
 
@@ -75,6 +81,7 @@ public class BasketService {
         return basketItemMapper.toResponseDto(basketItem);
     }
 
+    @Transactional
     public void deleteBasketItemFromBasket(UUID basketItemId){
         basketItemRepository.deleteById(basketItemId);
     }
