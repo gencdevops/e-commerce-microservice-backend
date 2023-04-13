@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("integration")
 @SpringBootTest
+@ActiveProfiles("payment-service-integration")
 class PaymentServiceApplicationTests {
 
     @Test

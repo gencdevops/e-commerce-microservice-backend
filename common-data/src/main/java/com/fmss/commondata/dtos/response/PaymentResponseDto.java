@@ -7,8 +7,7 @@ import java.util.UUID;
 
 @Builder
 public record PaymentResponseDto(
-        @JsonProperty(namespace = "paymentId")
-        UUID id,
+        UUID paymentId,
 
         String paymentStatus) {
 }

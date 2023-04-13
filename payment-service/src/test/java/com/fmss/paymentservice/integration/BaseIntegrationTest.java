@@ -10,15 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static com.fmss.paymentservice.constants.PaymentConstants.*;
-
-@AutoConfigureMockMvc
-@ActiveProfiles("integration")
 @ExtendWith({SpringExtension.class})
+@ActiveProfiles("payment-service-integration")
+@AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BaseIntegrationTest {
-
-    public static final String BASE_PAYMENT_API_ENDPOINT = API_PREFIX + API_VERSION_V1 + API_PAYMENTS;
+public abstract class BaseIntegrationTest {
 
     public final ObjectMapper mapper = new ObjectMapper();
 

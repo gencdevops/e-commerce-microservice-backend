@@ -12,16 +12,16 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
-@RequiredArgsConstructor
-@AllArgsConstructor
+@Entity
 @Builder
-@EntityListeners(AuditingEntityListener.class)
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "payments")
+@EntityListeners(AuditingEntityListener.class)
 public class Payment implements Serializable {
 
     @Id

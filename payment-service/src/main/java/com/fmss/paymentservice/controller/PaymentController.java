@@ -3,26 +3,40 @@ package com.fmss.paymentservice.controller;
 
 import com.fmss.commondata.dtos.request.CreatePaymentRequestDto;
 import com.fmss.commondata.dtos.response.PaymentResponseDto;
-import com.fmss.commondata.model.enums.PaymentStatus;
-import com.fmss.paymentservice.repository.PaymentRepository;
 import com.fmss.paymentservice.service.PaymentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+import static com.fmss.paymentservice.constants.PaymentConstants.*;
 
 @RestController
-@RequestMapping("/api/v1/payment")
+@RequestMapping(API_PREFIX + API_VERSION_V1 + API_PAYMENTS)
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentController {
 
     public final PaymentService paymentService;
-    public final PaymentRepository paymentRepository;
 
-    @PostMapping
-    public ResponseEntity<PaymentResponseDto> createPayment(CreatePaymentRequestDto createPaymentRequestDto) {
-        return ResponseEntity.status(201).body(paymentService.createPayment(createPaymentRequestDto));
+    @Operation(summary = "Create payment")
+    @ApiResponses(value =
+    @ApiResponse(
+            responseCode = "201",
+            description = "Place payment",
+            content = @Content(
+                    schema = @Schema(implementation = PaymentResponseDto.class),
+                    mediaType = "application/json")))
+    @PostMapping("/place-payment")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public PaymentResponseDto createPayment(@RequestBody @Valid CreatePaymentRequestDto createPaymentRequestDto) {
+        return paymentService.createPayment(createPaymentRequestDto);
     }
 }
