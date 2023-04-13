@@ -1,5 +1,6 @@
 package com.fmss.basketservice.service;
 
+import com.fmss.basketservice.exception.BasketItemNotFound;
 import com.fmss.basketservice.exception.BasketNotFoundException;
 import com.fmss.basketservice.feign.ProductClient;
 import com.fmss.basketservice.mapper.BasketItemMapper;
@@ -85,8 +86,13 @@ public class BasketService {
     }
 
     @Transactional
-    public void deleteBasketItemFromBasket(UUID basketItemId){
+    public BasketResponseDto deleteBasketItemFromBasket(UUID basketItemId){
+        BasketItem basketItem = basketItemRepository.findById(basketItemId).orElseThrow(BasketItemNotFound::new);
+        BasketResponseDto basketResponseDto = basketMapper.toResponseDto(basketItem.getBasket());
+
         basketItemRepository.deleteById(basketItemId);
+
+        return basketResponseDto;
     }
 
     public BasketResponseDto updateQuantityBasketItem(BasketItemUpdateDto basketItemUpdateDto){

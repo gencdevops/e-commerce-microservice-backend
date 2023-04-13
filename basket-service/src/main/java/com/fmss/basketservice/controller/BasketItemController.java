@@ -31,9 +31,8 @@ public class BasketItemController {
     }
 
     @DeleteMapping("/basket-item/{basketItemId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBasketItemOnBasket(@PathVariable UUID basketItemId) {
-        basketService.deleteBasketItemFromBasket(basketItemId);
+    public ResponseEntity<BasketResponseDto> deleteBasketItemOnBasket(@PathVariable UUID basketItemId) {
+        return ResponseEntity.ok(basketService.deleteBasketItemFromBasket(basketItemId));
     }
 
     @DeleteMapping("/{basketId}")
