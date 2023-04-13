@@ -93,17 +93,27 @@ public class UserGlobalExceptionHandler {
                             mediaType = "application/json"))})
     @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ResponseEntity<ErrorBody> usernameNotFoundException( UsernameNotFoundException exception) {
+    public ResponseEntity<ErrorBody> usernameNotFoundException(UsernameNotFoundException exception) {
         return responseEntity(ErrorBody.builder()
                 .errorCode(HttpStatus.NOT_FOUND.value())
                 .errorDescription(exception.getMessage())
                 .build());
     }
 
-
-
-
-
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404",
+                    description = "User Already Exist",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorBody.class),
+                            mediaType = "application/json"))})
+    @ExceptionHandler(UserAlreadyExistException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorBody> usernameAlreadyExistException(UserAlreadyExistException exception) {
+        return responseEntity(ErrorBody.builder()
+                .errorCode(HttpStatus.CONFLICT.value())
+                .errorDescription(exception.getMessage())
+                .build());
+    }
 
 
     private ResponseEntity<ErrorBody> responseEntity(ErrorBody error) {

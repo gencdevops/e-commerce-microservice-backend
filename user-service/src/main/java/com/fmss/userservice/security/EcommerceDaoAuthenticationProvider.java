@@ -12,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
 
-/**
- * @author Muhammed ALAGOZ
- */
+import static com.fmss.userservice.constants.UserConstants.WRONG_USERNAME_OR_PASSWORD;
 
 @RequiredArgsConstructor
 public class EcommerceDaoAuthenticationProvider extends DaoAuthenticationProvider {
@@ -43,7 +41,7 @@ public class EcommerceDaoAuthenticationProvider extends DaoAuthenticationProvide
                 user = retrieveUser(username, (UsernamePasswordAuthenticationToken) authentication);
             } catch (UsernameNotFoundException notFound) {
                 if (hideUserNotFoundExceptions) {
-                    throw new BadCredentialsException(Validations.ERR_WRONG_USERNAME_OR_PASSWORD);
+                    throw new BadCredentialsException(WRONG_USERNAME_OR_PASSWORD);
                 } else {
                     throw notFound;
                 }
@@ -78,10 +76,10 @@ public class EcommerceDaoAuthenticationProvider extends DaoAuthenticationProvide
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) {
         if (!ldapRepository.checkPassword(userDetails.getUsername(), authentication.getCredentials().toString())) {
-            throw new BadCredentialsException(Validations.ERR_WRONG_USERNAME_OR_PASSWORD);
+            throw new BadCredentialsException(WRONG_USERNAME_OR_PASSWORD);
         }
         if (authentication.getCredentials() == null) {
-            throw new BadCredentialsException(Validations.ERR_WRONG_USERNAME_OR_PASSWORD);
+            throw new BadCredentialsException(WRONG_USERNAME_OR_PASSWORD);
         }
     }
 }

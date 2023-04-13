@@ -35,7 +35,7 @@ public class BasketMapper {
 
         return BasketResponseDto.builder()
                 .basketId(basket.getBasketId())
-                .basketItemList(basketItemResponseDtos.stream().sorted((o1, o2) -> o2.name().compareTo(o2.name())).toList())
+                .basketItemList(basketItemResponseDtos.stream().sorted(Comparator.comparing(BasketItemResponseDto::name)).toList())
                 .totalPrice(
                         basketItemResponseDtos
                                 .stream()
@@ -43,4 +43,5 @@ public class BasketMapper {
                                 .reduce(BigDecimal::add).orElse(BigDecimal.ZERO))
                 .build();
     }
+
 }

@@ -1,7 +1,7 @@
 package com.fmss.userservice.configuration;
 
-import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.model.LdapUser;
+import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.security.EcommerceUserDetailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
-@Component
 @RequiredArgsConstructor
 @Slf4j
-class UserDetailsConfiguration implements UserDetailsService {
+public class UserDetailsConfiguration implements UserDetailsService {
     private final LdapRepository ldapRepository;
 
 
@@ -27,6 +26,7 @@ class UserDetailsConfiguration implements UserDetailsService {
         if (Objects.nonNull(ldapUser)) {
             return new EcommerceUserDetailService(ldapUser);
         }
+        log.error("Retrieved ldap user not found {}", username);
         throw new UsernameNotFoundException(username);
     }
 }

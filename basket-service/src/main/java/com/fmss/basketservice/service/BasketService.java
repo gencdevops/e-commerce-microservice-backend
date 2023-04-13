@@ -14,10 +14,13 @@ import com.fmss.basketservice.model.enums.BasketStatus;
 import com.fmss.basketservice.repository.BasketItemRepository;
 import com.fmss.basketservice.repository.BasketRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 
 @Service
@@ -49,9 +52,7 @@ public class BasketService {
     }
 
     public BasketResponseDto getBasketByBasketId(UUID basketId) {
-        return basketMapper.toResponseDto(
-                getById(basketId)
-        );
+        return basketMapper.toResponseDto(getById(basketId));
     }
 
     public void disableBasket(UUID basketId){
@@ -69,6 +70,12 @@ public class BasketService {
         basketRepository.deleteById(basketId);
     }
 
+    @Transactional
+    @Modifying
+    public void deleteAllBasketItems(UUID basketId){
+        basketItemRepository.deleteByBasket_BasketId(basketId);
+    }
+
     public BasketItemResponseDto addBasketItemToBasket(BasketItemRequestDto basketItemRequestDto){
         BasketItem basketItem = basketItemMapper.toEntity(basketItemRequestDto);
 
@@ -77,6 +84,7 @@ public class BasketService {
         return basketItemMapper.toResponseDto(basketItem);
     }
 
+    @Transactional
     public void deleteBasketItemFromBasket(UUID basketItemId){
         basketItemRepository.deleteById(basketItemId);
     }
@@ -87,7 +95,9 @@ public class BasketService {
         basketItem.setQuantity(basketItemUpdateDto.quantity());
         basketItem = basketItemRepository.save(basketItem);
 
-        return basketMapper.toResponseDto(basketItem.getBasket());
+        BasketResponseDto basketResponseDto = basketMapper.toResponseDto(basketItem.getBasket());
+
+        return basketResponseDto;
     }
 
 }

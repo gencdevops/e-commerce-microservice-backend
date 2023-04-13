@@ -1,8 +1,8 @@
 package com.fmss.userservice.jwt;
 
 
-
-import com.fmss.userservice.configuration.UserDetailsConfig;
+import com.fmss.commondata.util.JwtUtil;
+import com.fmss.userservice.configuration.UserDetailsConfiguration;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,27 +13,22 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.fmss.userservice.constants.UserConstants.*;
 import static java.util.Objects.nonNull;
 
-@Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private static final String JSESSIONID = "JSESSIONID";
-    private static final String BEARER = "Bearer ";
-    private static final String AUTHORIZATION = "Authorization";
-
-    private final JwtTokenUtil jwtTokenUtil;
-    private final UserDetailsConfig userDetailsConfig;
+    private final JwtUtil jwtUtil;
+    private final UserDetailsConfiguration userDetailsConfig;
 
     public JwtTokenFilter(
-            JwtTokenUtil jwtTokenUtil,
-            UserDetailsConfig userDetailsConfig) {
-        this.jwtTokenUtil = jwtTokenUtil;
+            JwtUtil jwtUtil,
+            UserDetailsConfiguration userDetailsConfig) {
+        this.jwtUtil = jwtUtil;
         this.userDetailsConfig = userDetailsConfig;
     }
 
@@ -41,23 +36,21 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String token = parseJwt(request);
         String username = null;
-
         if (nonNull(token)) {
             try {
-                username = jwtTokenUtil.getUsernameFromToken(token);
+                username = jwtUtil.getUsernameFromToken(token);
             } catch (IllegalArgumentException ex) {
-                throw new BadCredentialsException(Validations.ERR_WRONG_USERNAME_OR_PASSWORD);
+                throw new BadCredentialsException(WRONG_USERNAME_OR_PASSWORD);
             } catch (ExpiredJwtException e) {
-                //TODO Token Expire exception
-                throw new BadCredentialsException(Validations.ERR_WRONG_USERNAME_OR_PASSWORD);
+                throw new BadCredentialsException(JWT_TOKEN_EXPIRED);
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsConfig.loadUserByUsername(use rname);
-            if (Boolean.TRUE.equals(jwtTokenUtil.validateToken(token, userDetails.getUsername()))) {
+            UserDetails userDetails = userDetailsConfig.loadUserByUsername(username);
+            if (Boolean.TRUE.equals(jwtUtil.validateToken(token, userDetails.getUsername()))) {
                 setAuthentication(request, userDetails);
             }
         }
@@ -71,10 +64,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader(AUTHORIZATION);
-
-        if (org.springframework.util.StringUtils.hasText(headerAuth) && headerAuth.startsWith(BEARER)) {
-            return headerAuth.substring(7);
+        try {
+            String headerAuth = request.getHeader(AUTHORIZATION);
+            if (org.springframework.util.StringUtils.hasText(headerAuth) && headerAuth.startsWith(BEARER)) {
+                return headerAuth.substring(7);
+            }
+            logger.warn("Jwt parse error");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         return null;

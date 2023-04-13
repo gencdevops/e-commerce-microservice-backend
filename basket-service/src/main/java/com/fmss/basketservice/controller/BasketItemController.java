@@ -30,10 +30,16 @@ public class BasketItemController {
         return ResponseEntity.ok(basketService.updateQuantityBasketItem(basketItemUpdateDto));
     }
 
-
     @DeleteMapping("/basket-item/{basketItemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBasketItemOnBasket(UUID basketItemId) {
+    public void deleteBasketItemOnBasket(@PathVariable UUID basketItemId) {
         basketService.deleteBasketItemFromBasket(basketItemId);
     }
+
+    @DeleteMapping("/{basketId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAllBasketItems(@PathVariable UUID basketId) {
+        basketService.deleteAllBasketItems(basketId);
+    }
+
 }
