@@ -3,6 +3,7 @@ package com.fmss.paymentservice.controller;
 
 import com.fmss.commondata.dtos.request.CreatePaymentRequestDto;
 import com.fmss.commondata.dtos.response.PaymentResponseDto;
+import com.fmss.commondata.model.enums.PaymentStatus;
 import com.fmss.paymentservice.repository.PaymentRepository;
 import com.fmss.paymentservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +24,5 @@ public class PaymentController {
     @PostMapping
     public ResponseEntity<PaymentResponseDto> createPayment(CreatePaymentRequestDto createPaymentRequestDto) {
         return ResponseEntity.status(201).body(paymentService.createPayment(createPaymentRequestDto));
-    }
-
-    @GetMapping
-    public ResponseEntity<PaymentResponseDto> getPaymentByOrderId(String orderId) {
-        return ResponseEntity.ok(paymentService.getPaymentByOrderId(orderId));
     }
 }

@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 public interface PaymentMapper {
 
 
-    PaymentResponseDto convertPaymentResponseDtoFromPayment(Payment payment);
+    PaymentResponseDto paymentToPaymentResponseDto(Payment payment);
 
     Payment createPaymentRequestDtoToPayment(CreatePaymentRequestDto createPaymentRequestDto);
 
