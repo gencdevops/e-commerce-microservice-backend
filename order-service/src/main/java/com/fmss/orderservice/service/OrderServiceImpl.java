@@ -45,10 +45,10 @@ public class OrderServiceImpl implements OrderService {
         var order = orderMapper.convertOrderFromPlaceOrderRequestDTO(placeOrderRequestDTO);
         order.setOrderStatus(OrderStatus.RECEIVED);
         Order orderCreated = orderRepository.saveAndFlush(order);
-        log.info("Created order {}", order.getId());
+        log.info("Created order {}", order.getOrderId());
 
 
-        CreatePaymentRequestDto createPaymentRequestDto = new CreatePaymentRequestDto(orderCreated.getId().toString()
+        CreatePaymentRequestDto createPaymentRequestDto = new CreatePaymentRequestDto(orderCreated.getOrderId()
                 , placeOrderRequestDTO.userId());
         PaymentResponseDto paymentResponse = paymentServiceFeignClient.createPayment(createPaymentRequestDto);
 

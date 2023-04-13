@@ -39,6 +39,9 @@ dependencies {
     //OpenFeign
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.2'
 
+    // OpenApi
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
     //Common
     implementation ("com.fmss:common-data:1.0") { changing = true }
 
@@ -48,7 +51,6 @@ dependencies {
     //PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
 
-    //Lombok
     // lombok ve mapstruct bu dependencyleri bu sırada olmalı yoksa çalışmıyor.
     compileOnly "org.projectlombok:lombok:1.18.26"
     compileOnly "org.mapstruct:mapstruct:1.5.3.Final"

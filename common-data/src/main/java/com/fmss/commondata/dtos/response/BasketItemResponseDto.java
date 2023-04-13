@@ -5,5 +5,14 @@ import lombok.Builder;
 import java.util.UUID;
 
 @Builder
-public record BasketItemResponseDto(UUID productId, Integer quantity, UUID basketItemId, String name, String imgUrl) {
+public record BasketItemResponseDto(
+        UUID productId,
+
+        Integer quantity,
+
+        UUID basketItemId,
+
+        String name,
+
+        String imgUrl) {
 }
