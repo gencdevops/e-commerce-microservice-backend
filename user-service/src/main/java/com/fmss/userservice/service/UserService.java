@@ -1,13 +1,14 @@
 package com.fmss.userservice.service;
 
-import com.fmss.userservice.mail.MailingService;
+import com.fmss.commondata.util.JwtUtil;
 import com.fmss.userservice.exeption.RestException;
-import com.fmss.userservice.jwt.JwtTokenUtil;
-import com.fmss.userservice.request.UserRegisterRequestDto;
+import com.fmss.userservice.exeption.UserAlreadyExistException;
+import com.fmss.userservice.mail.MailingService;
+import com.fmss.userservice.model.LdapUser;
 import com.fmss.userservice.model.User;
 import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.repository.UserRepository;
-import com.fmss.userservice.model.LdapUser;
+import com.fmss.userservice.request.UserRegisterRequestDto;
 import com.fmss.userservice.security.EcommerceUserDetailService;
 import com.google.common.primitives.Longs;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +31,9 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.Random;
 
+import static com.fmss.userservice.constants.UserConstants.*;
 import static com.fmss.userservice.util.AppSettingsKey.CREATE_PASSWORD_URL_FORMAT;
 import static com.fmss.userservice.util.AppSettingsKey.RESET_PASSWORD_URL_FORMAT;
-import static com.fmss.userservice.util.Validations.ERR_INVALID_FORGOT_PASSWORD_TOKEN;
 
 
 @Service
@@ -44,10 +45,10 @@ public class UserService {
     @Lazy
     private final PasswordEncoder passwordEncoder;
     private final MailingService mailingService;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtUtil jwtTokenUtil;
 
     private final LdapRepository ldapRepository;
-    
+
     private final RedisTemplate<String, Object> redisTemplate;
 
     //    @PostConstruct
@@ -69,9 +70,9 @@ public class UserService {
     @Transactional
     public void registerUser(UserRegisterRequestDto userRegisterRequestDto) {
         if (existByEmail(userRegisterRequestDto.email())) {
-          // throw userAlreadyException
+            log.info("registerUser() methog generate user already exist :{}", userRegisterRequestDto.userName());
+            throw new UserAlreadyExistException("User already exist");
         }
-
         final var user = userRegisterRequestDto.toUser();
         user.setUserPassword(passwordEncoder.encode(userRegisterRequestDto.password()));
         ldapRepository.create(user);
@@ -84,14 +85,16 @@ public class UserService {
 
     public void sendForgotPasswordMail(String username) {
         final var ldapUser = ldapRepository.findUser(username);
+        log.info("sendForgetLink(userName) method entry :{}", username);
         final String link = createForgotPasswordLink(ldapUser);
+        log.info("password forget link method entry :{}", link.isEmpty());
         mailingService.sendForgotPasswordEmail(ldapUser.getMail(), ldapUser.getGivenName(), ldapUser.getSn(), link);
     }
 
     @Transactional
     public User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException(Validations.CUSTOMER_ID_INVALID));
+                .orElseThrow(() -> new UsernameNotFoundException(CUSTOMER_ID_INVALID));
     }
 
     @Transactional
@@ -104,7 +107,7 @@ public class UserService {
     public EcommerceUserDetailService getUserByForgotPasswordToken(String uid, String token) {
         final User user = getUserByEncodedUserId(uid);
         if (!StringUtils.equals(token, user.generateResetPasswordToken())) {
-            throw new RestException(ERR_INVALID_FORGOT_PASSWORD_TOKEN);
+            throw new RestException(INVALID_TOKEN);
         }
         return null;//TODO new EcommerceUserDetailService(user);
     }
@@ -119,11 +122,11 @@ public class UserService {
     @Transactional
     public void changePassword(Long userId, String currentPassword, String newPassword) {
         final Optional<User> userOptional = userRepository.findById(userId);
-        final User user = userOptional.orElseThrow(() -> new RestException("error.userNotFoundById"));
+        final User user = userOptional.orElseThrow(() -> new RestException(USER_NOT_FOUND_WITH_ID));
         if (passwordEncoder.matches(currentPassword, user.getPassword())) {
             changeUserPassword(user, newPassword);
         } else {
-            throw new RestException("error.currentPasswordNotMatch");
+            throw new RestException(CURRENT_AND_BEFORE_PASSWORD_NOT_MATCH);
         }
     }
 
@@ -131,7 +134,7 @@ public class UserService {
     public EcommerceUserDetailService getUserByCreatePasswordToken(String uid, String token) {
         final User user = getUserByEncodedUserId(uid);
         if (!StringUtils.equals(token, user.generateCreatePasswordToken())) {
-            throw new RestException("error.createPasswordTokenInvalid");
+            throw new RestException(INVALID_TOKEN);
         }
         return null;//TODO new EcommerceUserDetailService(user);
     }
@@ -146,18 +149,20 @@ public class UserService {
             final byte[] bytes = Base64.decodeBase64(URLDecoder.decode(encodedUserId, StandardCharsets.UTF_8.name()));
             final long userIdLong = Longs.fromByteArray(bytes);
             final Optional<User> userOptional = userRepository.findById(userIdLong);
-            return userOptional.orElseThrow(() -> new RestException(ERR_INVALID_FORGOT_PASSWORD_TOKEN));
+            return userOptional.orElseThrow(() -> new RestException(INVALID_TOKEN));
         } catch (UnsupportedEncodingException e) {
-            throw new RestException(ERR_INVALID_FORGOT_PASSWORD_TOKEN, e);
+            throw new RestException(INVALID_TOKEN, e);
         }
     }
 
     private void changePassword(String encodedUserId, String password) {
         final User user = getUserByEncodedUserId(encodedUserId);
+        log.info("user change password  entry:{}", user.getUserName());
         changeUserPassword(user, password);
     }
 
     private void changeUserPassword(User user, String password) {
+        log.info("user create forgot password link :{}", user.getUserName());
         final String currentPassword = user.getPassword();
         user.setBeforePassword(currentPassword);
         user.setPassword(passwordEncoder.encode(password));
@@ -179,6 +184,7 @@ public class UserService {
 
     private String createForgotPasswordLink(LdapUser user) {
         final String token = user.generateResetPasswordToken();
+        log.info("user create forgot password link :{}", user.getUid());
         String url = null;
         if (StringUtils.isEmpty(url)) {
             url = "http://localhost:3000";
@@ -187,10 +193,12 @@ public class UserService {
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
+        log.info("validate otp token entry :{}", userDetails.getUsername());
         return jwtTokenUtil.validateToken(token, userDetails.getUsername());
     }
 
     private String generateOtpToken(LdapUser user) {
+        log.info("generate otp token entry :{}", user.getUid());
         final var random = new Random();
         final var randomNumber = random.nextInt(900000) + 100000;
         redisTemplate.opsForValue().set(user.getUid() + OTP_REDIS_KEY, String.valueOf(randomNumber), Duration.ofMinutes(2));
@@ -198,12 +206,14 @@ public class UserService {
     }
 
     public void sentOtp(String email) {
+        log.info("user send otp mothod entry :{}", email);
         final var ldapUser = ldapRepository.findUser(email);
         final String otp = generateOtpToken(ldapUser);
         mailingService.sendOtpEmail(ldapUser.getMail(), ldapUser.getGivenName(), ldapUser.getSn(), otp);
     }
 
     public boolean verifyOtp(String email, String otp) {
+        log.info("user verify otp mothod entry :{}", email);
         try {
             final var user = ldapRepository.findUser(email);
             String sessionOtp = (String) redisTemplate.opsForValue().get(user.getUid() + OTP_REDIS_KEY);

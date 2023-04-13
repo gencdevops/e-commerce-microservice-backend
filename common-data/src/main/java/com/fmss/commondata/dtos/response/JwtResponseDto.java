@@ -1,14 +1,9 @@
 package com.fmss.commondata.dtos.response;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
+import java.io.Serial;
 import java.io.Serializable;
 
-
-@EqualsAndHashCode(callSuper = true)
-@Data
 public record JwtResponseDto(String jwtToken) implements Serializable {
-
+    @Serial
     private static final long serialVersionUID = -8091879091924046844L;
 }

@@ -22,27 +22,37 @@ public class UserController {
 
     private final UserService userService;
 
+
     @PostMapping(API_USER_REGISTER)
     @ResponseStatus(HttpStatus.CREATED)
     public String saveUser(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
-
+        log.info("");
         userService.registerUser(userRegisterRequestDto);
     }
 
 
-    @Operation(summary = "Create order")
+    @Operation(summary = "Validate token")
     @ApiResponses(value =
     @ApiResponse(
             responseCode = "201",
-            description = "Place order",
+            description = "Validate token",
             content = @Content(
                     mediaType = "application/json")))
     @PostMapping(API_USER_VALIDATE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public boolean validateToken(@RequestBody UserDetails userDetails, @PathVariable String token) {
-        return userService.validateToken(token, userDetails);
+        boolean validateToken = userService.validateToken(token, userDetails);
+        log.info("is token expire :{}", validateToken);
+        return validateToken;
     }
 
+    @Operation(summary = "Send forget password link token")
+    @ApiResponses(value =
+    @ApiResponse(
+            responseCode = "201",
+            description = "Send forget password link token",
+            content = @Content(
+                    mediaType = "application/json")))
     @GetMapping(API_USER_FORGET)
     @ResponseStatus(HttpStatus.OK)
     public void sendForgetPasswordLink(@PathVariable String email) {
