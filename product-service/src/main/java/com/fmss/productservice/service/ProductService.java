@@ -40,31 +40,6 @@ public class ProductService {
     }
 
 
-    @CacheEvict(
-            value = {"product"},
-            allEntries = true
-    )
-    @Transactional
-    public ProductResponseDto updateProduct(ProductRequestDto productRequestDto, String productId) {
-        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
-
-        product.setName(productRequestDto.getName());
-        product.setPrice(productRequestDto.getPrice());
-        product.setStatus(productRequestDto.getStatus());
-
-        return productMapper.toResponseDto(productRepository.save(product));
-    }
-
-
-    public void deleteProduct(String productId) {
-        productRepository.findById(productId)
-                .ifPresentOrElse(
-                        product -> productRepository.delete(product),
-                        () -> {
-                            throw new ProductNotFoundException();
-                        });
-    }
-
     public ProductResponseDto getProductById(String productId){
         return productMapper.toResponseDto(productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found")));
     }
