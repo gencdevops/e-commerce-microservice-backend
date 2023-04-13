@@ -14,6 +14,7 @@ import com.fmss.basketservice.model.enums.BasketStatus;
 import com.fmss.basketservice.repository.BasketItemRepository;
 import com.fmss.basketservice.repository.BasketRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +70,8 @@ public class BasketService {
         basketRepository.deleteById(basketId);
     }
 
+    @Transactional
+    @Modifying
     public void deleteAllBasketItems(UUID basketId){
         basketItemRepository.deleteByBasket_BasketId(basketId);
     }
