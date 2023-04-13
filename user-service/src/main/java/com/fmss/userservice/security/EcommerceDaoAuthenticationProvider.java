@@ -1,4 +1,4 @@
-package com.fmss.userservice.configuration;
+package com.fmss.userservice.security;
 
 import com.fmss.userservice.repository.LdapRepository;
 import com.fmss.userservice.util.Validations;

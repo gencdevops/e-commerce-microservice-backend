@@ -1,4 +1,4 @@
-package com.fmss.userservice.configuration;
+package com.fmss.userservice.ldap;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,7 @@
 package com.fmss.userservice.service;
 
-import com.fmss.userservice.configuration.EcommerceUserDetailService;
-import com.fmss.userservice.configuration.JwtTokenUtil;
+import com.fmss.userservice.security.EcommerceUserDetailService;
+import com.fmss.userservice.jwt.JwtTokenUtil;
 import com.fmss.userservice.configuration.mail.MailingService;
 import com.fmss.userservice.exeption.RestException;
 import com.fmss.userservice.model.dto.request.UserRegisterRequestDto;

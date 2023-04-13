@@ -1,7 +1,7 @@
 package com.fmss.userservice.controller;
 
 import com.fmss.commondata.util.JwtUtil;
-import com.fmss.userservice.configuration.EcommerceUserDetailService;
+import com.fmss.userservice.security.EcommerceUserDetailService;
 import com.fmss.userservice.configuration.UserDetailsConfig;
 import com.fmss.userservice.model.dto.request.JwtRequest;
 import com.fmss.userservice.model.dto.request.VerifyOtpRequest;
