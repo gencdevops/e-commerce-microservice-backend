@@ -38,8 +38,8 @@ public class BasketItemController {
 
     @DeleteMapping("/{basketId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAllBasket(@PathVariable UUID basketId) {
-        basketService.deleteBasket(basketId);
+    public void deleteAllBasketItems(@PathVariable UUID basketId) {
+        basketService.deleteAllBasketItems(basketId);
     }
 
 }
