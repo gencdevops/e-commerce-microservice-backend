@@ -30,8 +30,8 @@ public class BasketServiceApplication {
 	@Bean
 	CommandLineRunner productCommandLineRunner(ProductClient productClient){
 		return args -> {
-			ProductResponseDto productById = productClient.getProductById(UUID.fromString("87c88ca0-4d6c-4f0e-a305-8070daf32c80"));
-			String debug;
+//			ProductResponseDto productById = productClient.getProductById(UUID.fromString("87c88ca0-4d6c-4f0e-a305-8070daf32c80"));
+//			String debug;
 		};
 	}
 
