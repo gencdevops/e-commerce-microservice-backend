@@ -35,7 +35,7 @@ public class BasketMapper {
         return BasketResponseDto.builder()
                 .basketId(basket.getBasketId())
                 .basketItemList(basketItemResponseDtos)
-                .totalPrice(basketItemResponseDtos.stream().map(BasketItemResponseDto::price).reduce(BigDecimal::add).get())
+                .totalPrice(basketItemResponseDtos.stream().map(BasketItemResponseDto::price).reduce(BigDecimal::add).orElse(BigDecimal.ZERO))
                 .build();
     }
 }
