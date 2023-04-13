@@ -64,7 +64,7 @@ public class UserController {
             description = "Send forget password link token",
             content = @Content(
                     mediaType = "application/json")))
-    @GetMapping(API_USER_FORGET)
+    @GetMapping(API_USER_FORGOT)
     @ResponseStatus(HttpStatus.OK)
     public void sendForgetPasswordLink(@PathVariable String email) {
         userService.sendForgotPasswordMail(email);

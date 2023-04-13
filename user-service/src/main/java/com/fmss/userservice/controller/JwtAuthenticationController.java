@@ -30,7 +30,7 @@ import java.util.Objects;
 
 import static com.fmss.userservice.constants.UserConstants.*;
 
-@RestController
+@RestController(API_PREFIX + API_VERSION_V1)
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationController {
@@ -51,7 +51,7 @@ public class JwtAuthenticationController {
 					mediaType = "application/json")))
 	@ResponseStatus(HttpStatus.CREATED)
 	@CrossOrigin(origins = "http://localhost:3000")
-	@PostMapping("authenticate")
+	@PostMapping("/authenticate")
 	public ResponseEntity<JwtResponseDto> createAuthenticationToken(@RequestBody JwtAuthenticationRequestDto jwtAuthenticationRequestDto, HttpServletRequest request) throws Exception {
 		authenticate(jwtAuthenticationRequestDto.getUsername(), jwtAuthenticationRequestDto.getPassword());
 		log.info("create authentication user :{}", jwtAuthenticationRequestDto.getUsername());
