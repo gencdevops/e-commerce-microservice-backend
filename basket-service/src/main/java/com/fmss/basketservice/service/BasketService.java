@@ -90,11 +90,12 @@ public class BasketService {
     @Modifying
     public BasketResponseDto deleteBasketItemFromBasket(UUID basketItemId){
         BasketItem basketItem = basketItemRepository.findById(basketItemId).orElseThrow(BasketItemNotFound::new);
-        BasketResponseDto basketResponseDto = basketMapper.toResponseDto(basketItem.getBasket());
+        UUID currentBasketId = basketItem.getBasket().getBasketId();
 
         basketItemRepository.deleteById(basketItemId);
+        basketItemRepository.flush();
 
-        return basketResponseDto;
+        return basketMapper.toResponseDto(getById(currentBasketId));
     }
 
     public BasketResponseDto updateQuantityBasketItem(BasketItemUpdateDto basketItemUpdateDto){
