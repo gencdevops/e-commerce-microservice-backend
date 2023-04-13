@@ -49,9 +49,7 @@ public class BasketService {
     }
 
     public BasketResponseDto getBasketByBasketId(UUID basketId) {
-        return basketMapper.toResponseDto(
-                getById(basketId)
-        );
+        return basketMapper.toResponseDto(getById(basketId));
     }
 
     public void disableBasket(UUID basketId){
@@ -87,7 +85,9 @@ public class BasketService {
         basketItem.setQuantity(basketItemUpdateDto.quantity());
         basketItem = basketItemRepository.save(basketItem);
 
-        return basketMapper.toResponseDto(basketItem.getBasket());
+        BasketResponseDto basketResponseDto = basketMapper.toResponseDto(basketItem.getBasket());
+
+        return basketResponseDto;
     }
 
 }
