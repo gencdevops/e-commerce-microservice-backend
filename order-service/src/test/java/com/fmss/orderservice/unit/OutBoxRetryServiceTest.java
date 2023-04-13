@@ -5,14 +5,17 @@ import com.fmss.orderservice.repository.OrderOutboxRepository;
 import com.fmss.orderservice.scheduler.OutBoxRetryService;
 import com.fmss.orderservice.service.ProducerService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class OutBoxRetryServiceTest {
 
     @Mock
