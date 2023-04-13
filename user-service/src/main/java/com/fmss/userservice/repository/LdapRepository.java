@@ -70,6 +70,7 @@ public class LdapRepository {
     }
 
     public void create(LdapUser ldapUser) {
+
         try {
             DirContextAdapter context = new DirContextAdapter();
             context.setAttributeValues(OBJECTCLASS, OBJECT_CLASS_ATTRRIBUTES);
