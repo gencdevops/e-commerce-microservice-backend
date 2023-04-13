@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 
 //@Mapper(implementationName = "BasketMapperImpl", componentModel = "spring", imports = {Basket.class})
@@ -34,7 +35,7 @@ public class BasketMapper {
 
         return BasketResponseDto.builder()
                 .basketId(basket.getBasketId())
-                .basketItemList(basketItemResponseDtos)
+                .basketItemList(basketItemResponseDtos.stream().sorted((o1, o2) -> o2.name().compareTo(o2.name())).toList())
                 .totalPrice(
                         basketItemResponseDtos
                                 .stream()
