@@ -172,7 +172,7 @@ public class UserService {
     private void changeUserPassword(LdapUser user, String password) {
         log.info("user create forgot password link :{}", user.getMail());
         user.setUserPassword(passwordEncoder.encode(password));
-        ldapRepository.updateUserPassword(user.getMail(), user.getUserPassword());
+        ldapRepository.updateUserPassword(user.getCn(), user.getUserPassword());
     }
 
     private String createNewUserPasswordLink(LdapUser ldapUser) {
