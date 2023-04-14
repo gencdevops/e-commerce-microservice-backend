@@ -34,9 +34,7 @@ redis:
 
 aws:
   bucket-name: 'advivemy-images'
-#  access-key: 'AKIAYHLZLDRDSWZZIDPD'
   access-key: 'ENC(KkzvILYtPYAvvqTnXEvF5i5nTaiUyclnZ/syVbFY+BNMX/gnl1OHEWaI4nBOsLkXNIJxtq4CS55jZsFeM1GD+A==)'
-#  secret-key: 'wiFKmDKgzmc+UFvVScOt6HWkbFwSws6xJUWYi6xb'
   secret-key: 'ENC(fxJEJcxznne4OtHb2rUlAX11oQ2ZmBqgIRvAZonTojXixoS8xZsWCEKRbLdNtcVPFDFZ/VG21TcJnnA1FOI1oI5hfrvgdbyHIIjLxAeqSkw=)'
 
 
