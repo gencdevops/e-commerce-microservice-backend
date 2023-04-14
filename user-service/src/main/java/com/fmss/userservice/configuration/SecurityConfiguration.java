@@ -69,7 +69,7 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/authenticate").permitAll()
+                .requestMatchers("/api/v1/authenticate").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .authenticationProvider(authenticationProvider())

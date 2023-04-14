@@ -119,10 +119,20 @@ public class UserService {
     @Transactional
     public void changePassword(String email, String currentPassword, String newPassword) {
         final var ldapUser = ldapRepository.findUser(email);
-        if (passwordEncoder.matches(currentPassword, ldapUser.getUserPassword())) {
+//        if (passwordEncoder.matches(currentPassword, ldapUser.getUserPassword())) {
+        if (ldapAuth(email, currentPassword)) {
             changeUserPassword(ldapUser, newPassword);
         } else {
             throw new RestException(CURRENT_AND_BEFORE_PASSWORD_NOT_MATCH);
+        }
+    }
+
+    private boolean ldapAuth(String username, String password) {
+        try {
+            return ldapRepository.checkPassword(username, password);
+        } catch (Exception e) {
+            log.error("Password not matched : " + username, e);
+            return false;
         }
     }
 

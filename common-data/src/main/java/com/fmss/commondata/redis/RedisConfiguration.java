@@ -1,4 +1,4 @@
-package com.fmss.productservice.configuration;
+package com.fmss.commondata.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
@@ -24,10 +24,20 @@ public class RedisConfiguration {
     @Value(value = "${redis.server.port}")
     private int redisServerPort;
 
+    @Value(value = "${redis.server.password}")
+    private String redisServerPassword;
 
+    @Value(value = "${redis.server.environment}")
+    private String redisServerEnvironment;
+
+    @Value(value = "${redis.server.cluster.nodes:}")
+    private List<String> redisServerClusterNodes;
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
+        if(redisServerEnvironment.equalsIgnoreCase("live"))
+            return new LettuceConnectionFactory(openshiftRedisConnection());
+        else
             return new LettuceConnectionFactory(localRedisConnection());
     }
 
@@ -49,5 +59,14 @@ public class RedisConfiguration {
         return redisStandaloneConfiguration;
     }
 
-
+    private RedisClusterConfiguration openshiftRedisConnection(){
+        RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
+        if (redisServerClusterNodes != null && !redisServerClusterNodes.isEmpty()) {
+            redisClusterConfiguration = new RedisClusterConfiguration(redisServerClusterNodes);
+        } else {
+            redisClusterConfiguration.addClusterNode(new RedisNode(redisServerAddress, redisServerPort));
+        }
+        redisClusterConfiguration.setPassword(RedisPassword.of(redisServerPassword));
+        return redisClusterConfiguration;
+    }
 }

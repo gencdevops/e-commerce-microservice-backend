@@ -63,7 +63,7 @@ public class JwtUtil implements Serializable {
         claims.put("userId", userId);
         claims.put("email", userEmail);
         claims.put("userName", userName);
-        return doGenerateToken(claims, userName);
+        return doGenerateToken(claims, userEmail);
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
