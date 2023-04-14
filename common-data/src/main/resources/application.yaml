@@ -19,3 +19,5 @@ redis:
       nodes:
     password:
     environment: live
+jwt:
+  enabled: true
