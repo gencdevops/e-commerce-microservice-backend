@@ -38,8 +38,6 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final FileUploadService fileUploadService;
     private final RedisCacheService redisCacheService;
-    @Autowired
-    private UserContext userContext;
 
     @SneakyThrows
     public List<ProductResponseDto> getAllProducts(String bearerToken) throws JsonProcessingException {
