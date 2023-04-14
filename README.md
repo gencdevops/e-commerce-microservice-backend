@@ -27,6 +27,11 @@ Bu projede, kullanıcıların kaydolabileceği, şifre değiştirebileceği, sep
     Spring Config Server
     Zipkin
     Gradle
+    JWT
+    OpenShift
+    Jenkins
+    React
+    
 
 <br>
 
@@ -60,4 +65,12 @@ Bu projede, kullanıcıların kaydolabileceği, şifre değiştirebileceği, sep
 <li>Ürünleri ID ile getirme işlemini gerçekleştirir.</li>
 <li>Tüm ürünleri getirme işlemini gerçekleştirir.</li>
 </ul>
+
+## Uygulamadan Görüntüler
+<b>Grafana</b>
+<br>
+![Grafana](https://user-images.githubusercontent.com/98235097/231936997-a5c67559-14f3-45c2-b12b-8a6f4b6873dd.gif)
+<br>
+<br>
+<b>ELK</b>
 
