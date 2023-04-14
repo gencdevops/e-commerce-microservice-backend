@@ -13,6 +13,7 @@ import com.fmss.basketservice.model.entity.BasketItem;
 import com.fmss.basketservice.model.enums.BasketStatus;
 import com.fmss.basketservice.repository.BasketItemRepository;
 import com.fmss.basketservice.repository.BasketRepository;
+import com.fmss.commondata.configuration.UserContext;
 import com.fmss.commondata.dtos.response.BasketItemResponseDto;
 import com.fmss.commondata.dtos.response.BasketResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class BasketService {
     private final BasketMapper basketMapper;
     private final BasketItemMapper basketItemMapper;
     private final ProductClient productClient;
+
 
     private Basket createBasket (UUID userId) {
         Basket newBasket = Basket.builder()

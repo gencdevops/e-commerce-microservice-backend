@@ -1,9 +1,11 @@
-package com.fmss.productservice.filter;
+package com.fmss.basketservice.filter;
 
 import com.fmss.commondata.util.JwtUtil;
+import com.fmss.productservice.filter.TokenValidateConfiguration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -13,7 +15,7 @@ public class UserFilter implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new TokenValidateConfiguration(jwtUtil()));
+        registry.addInterceptor((HandlerInterceptor) new TokenValidateConfiguration(jwtUtil()));
     }
 
     @Bean

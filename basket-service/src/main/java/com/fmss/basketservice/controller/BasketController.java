@@ -2,6 +2,7 @@ package com.fmss.basketservice.controller;
 
 
 import com.fmss.basketservice.service.BasketService;
+import com.fmss.commondata.configuration.UserContext;
 import com.fmss.commondata.dtos.response.BasketResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,6 +24,7 @@ import static com.fmss.basketservice.constants.BasketConstants.*;
 public class BasketController {
 
     private final BasketService basketService;
+    private final UserContext userContext;
 
     @Operation(summary = "Basket get by userId")
     @ApiResponses(value =
@@ -34,8 +36,8 @@ public class BasketController {
                     mediaType = "application/json")))
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/userId/{userId}")
-    public BasketResponseDto getBasketByUserId(@PathVariable UUID userId) {
-        return basketService.getBasketByUserId(userId);
+    public BasketResponseDto getBasketByUserId() {
+        return basketService.getBasketByUserId(UUID.fromString(userContext.getUserId()));
     }
 
     @Operation(summary = "Basket get by userId")

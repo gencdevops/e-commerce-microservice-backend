@@ -1,8 +1,10 @@
 package com.fmss.orderservice.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fmss.commondata.configuration.UserContext;
 import com.fmss.commondata.dtos.response.JwtTokenResponseDto;
 import com.fmss.commondata.util.JwtUtil;
+import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,28 +14,37 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.io.IOException;
 import java.util.Base64;
 
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class TokenValidateConfiguration implements HandlerInterceptor {
+public class TokenValidateConfiguration implements Filter {
     private final JwtUtil jwtUtil;
 
     private static final String BEARER = "Bearer ";
     private static final String AUTHORIZATION = "Authorization";
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        final var token = parseJwt(request);
+    public void init(FilterConfig filterConfig) throws ServletException {
+        Filter.super.init(filterConfig);
+    }
 
-        if(Strings.isEmpty(token)) {
-            return false;
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+        final var token = parseJwt((HttpServletRequest) request);
+
+        if (Strings.isEmpty(token)) {
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden because of headers");
+            return;
         }
 
         try {
-
+            UserContext userContext = new UserContext();
+            userContext.setUserId(jwtUtil.getUserDetailsFromToken(token).userId());
             final var chunks = token.split("\\.");
             final var decoder = Base64.getUrlDecoder();
 
@@ -42,15 +53,11 @@ public class TokenValidateConfiguration implements HandlerInterceptor {
             final var userDetails = new ObjectMapper().readValue(payload, JwtTokenResponseDto.class);
             final var userName = userDetails.email();
             boolean isValidToken = jwtUtil.validateToken(token, userName);
-            
+
             log.info("TokenValidateInterceptor::token validating:{}::userName:{}", isValidToken, userName);
-            return isValidToken;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return false;
+        } catch (Exception e) {
+            log.debug("logContextModel can not be init : {}", e.getMessage());
         }
-
-
     }
 
     private String parseJwt(HttpServletRequest request) {
@@ -59,6 +66,13 @@ public class TokenValidateConfiguration implements HandlerInterceptor {
             return headerAuth.substring(7);
         }
         return "";
+    }
+
+
+
+    @Override
+    public void destroy() {
+        Filter.super.destroy();
     }
 
 }
