@@ -41,6 +41,7 @@ dependencies {
 
     // OpenApi
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 
     //Common
     implementation ("com.fmss:common-data:1.0") { changing = true }
