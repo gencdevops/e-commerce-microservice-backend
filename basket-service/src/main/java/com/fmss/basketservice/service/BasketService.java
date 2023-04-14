@@ -6,6 +6,7 @@ import com.fmss.basketservice.feign.ProductClient;
 import com.fmss.basketservice.mapper.BasketItemMapper;
 import com.fmss.basketservice.mapper.BasketMapper;
 import com.fmss.basketservice.model.dto.BasketItemRequestDto;
+import com.fmss.basketservice.model.dto.BasketItemRequestWithUserIdDto;
 import com.fmss.basketservice.model.dto.BasketItemUpdateDto;
 import com.fmss.commondata.dtos.response.BasketItemResponseDto;
 import com.fmss.commondata.dtos.response.BasketResponseDto;
@@ -21,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.UUID;
 
 @Service
@@ -63,12 +63,32 @@ public class BasketService {
         basketRepository.save(basket);
     }
 
+    public void disableBasketWithUserId(UUID userId){
+        Basket basket = getByUserId(userId);
+        basket.setBasketStatus(BasketStatus.PASSIVE);
+
+        basketRepository.save(basket);
+    }
+
     private Basket getById(UUID basketId){
         return basketRepository.findById(basketId).orElseThrow(BasketNotFoundException::new);
     }
 
+    private Basket getByUserId(UUID userId){
+        return basketRepository.findActiveBasketByUserId(userId).orElseThrow(BasketNotFoundException::new);
+    }
+
+    @Transactional
+    @Modifying
     public void deleteBasket(UUID basketId){
         basketRepository.deleteById(basketId);
+    }
+
+    @Transactional
+    @Modifying
+    public void deleteBasketByUserId(UUID userId){
+        Basket basketByUserId = getByUserId(userId);
+        basketRepository.delete(basketByUserId);
     }
 
     @Transactional
@@ -77,8 +97,23 @@ public class BasketService {
         basketItemRepository.deleteByBasket_BasketId(basketId);
     }
 
+    @Transactional
+    @Modifying
+    public void deleteAllBasketItemsWithUserId(UUID userId){
+        Basket basketByUserId = getByUserId(userId);
+        basketItemRepository.deleteByBasket_BasketId(basketByUserId.getBasketId());
+    }
+
     public BasketItemResponseDto addBasketItemToBasket(BasketItemRequestDto basketItemRequestDto){
         BasketItem basketItem = basketItemMapper.toEntity(basketItemRequestDto);
+
+        basketItemRepository.save(basketItem);
+
+        return basketItemMapper.toResponseDto(basketItem);
+    }
+
+    public BasketItemResponseDto addBasketItemToBasketWithUserId(BasketItemRequestWithUserIdDto basketItemRequestWithUserIdDto){
+        BasketItem basketItem = basketItemMapper.toEntityWithUserId(basketItemRequestWithUserIdDto);
 
         basketItemRepository.save(basketItem);
 

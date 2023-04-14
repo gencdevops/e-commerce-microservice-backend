@@ -24,7 +24,7 @@ jwt:
 
 redis:
   service:
-    prefix: USR-SW:RDS
+    prefix: CMN-SW:RDS
     ttl: 3000
     cacheable:
       ttl: 180
@@ -34,4 +34,4 @@ redis:
     cluster:
       nodes:
     password:
-    environment: live
+    environment: dev

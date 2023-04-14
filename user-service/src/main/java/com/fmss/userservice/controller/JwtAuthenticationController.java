@@ -30,7 +30,8 @@ import java.util.Objects;
 
 import static com.fmss.userservice.constants.UserConstants.*;
 
-@RestController(API_PREFIX + API_VERSION_V1)
+@RestController
+@RequestMapping(API_PREFIX + API_VERSION_V1)
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationController {
