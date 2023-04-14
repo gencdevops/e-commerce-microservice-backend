@@ -1,8 +1,8 @@
 package com.fmss.basketservice.controller;
 
 
+import com.fmss.basketservice.filter.UserContext;
 import com.fmss.basketservice.service.BasketService;
-import com.fmss.commondata.configuration.UserContext;
 import com.fmss.commondata.dtos.response.BasketResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

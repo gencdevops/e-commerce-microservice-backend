@@ -3,7 +3,6 @@ package com.fmss.basketservice.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fmss.commondata.configuration.UserContext;
 import com.fmss.commondata.dtos.response.JwtTokenResponseDto;
-import com.fmss.commondata.util.JwtUtil;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +20,8 @@ import java.util.Base64;
 @RequiredArgsConstructor
 @Slf4j
 public class TokenValidateConfiguration implements Filter {
-    private final JwtUtil jwtUtil;
+
+    private final JwtUtil jwtUtil = new JwtUtil();
 
     private static final String BEARER = "Bearer ";
     private static final String AUTHORIZATION = "Authorization";
