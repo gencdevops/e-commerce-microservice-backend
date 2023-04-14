@@ -1,5 +1,8 @@
 package com.fmss.commondata.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fmss.commondata.dtos.response.JwtTokenResponseDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -10,6 +13,7 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,5 +88,15 @@ public class JwtUtil implements Serializable {
     public Boolean validateToken(String token, String userName) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userName) && !isTokenExpired(token));
+    }
+
+    public JwtTokenResponseDto getUserDetailsFromToken(String token) throws JsonProcessingException {
+        final var chunks = token.split("\\.");
+        final var decoder = Base64.getUrlDecoder();
+
+        final var header = new String(decoder.decode(chunks[0]));
+        final var payload = new String(decoder.decode(chunks[1]));
+        return new ObjectMapper().readValue(payload, JwtTokenResponseDto.class);
+
     }
 }
