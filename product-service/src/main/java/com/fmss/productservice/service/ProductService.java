@@ -1,8 +1,9 @@
 package com.fmss.productservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-
+import com.fmss.commondata.dtos.response.JwtTokenResponseDto;
+import com.fmss.commondata.util.JwtUtil;
 import com.fmss.productservice.exception.ProductCouldNotCreateException;
 import com.fmss.productservice.exception.ProductNotFoundException;
 import com.fmss.productservice.mapper.ProductMapper;
@@ -12,6 +13,7 @@ import com.fmss.productservice.model.dto.ProductResponseDto;
 import com.fmss.productservice.redis.RedisCacheService;
 import com.fmss.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +37,10 @@ public class ProductService {
     private final FileUploadService fileUploadService;
     private final RedisCacheService redisCacheService;
 
-
-    public List<ProductResponseDto> getAllProducts() {
+    @SneakyThrows
+    public List<ProductResponseDto> getAllProducts(String bearerToken) throws JsonProcessingException {
+        JwtTokenResponseDto dto = new JwtUtil().getUserDetailsFromToken(bearerToken);
+        var id = dto.userId();
         List<ProductResponseDto> productResponseDtos = productRepository.getAllProducts()
                 .parallelStream()
                 .map(productMapper::toProductResponseDto).toList();

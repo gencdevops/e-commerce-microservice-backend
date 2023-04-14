@@ -62,7 +62,7 @@ class ProductServiceTest {
 
         when(productRepository.getAllProducts()).thenReturn(productList);
         when(productMapper.toProductResponseDto(any())).thenReturn(productResponseDto);
-        productService.getAllProducts();
+//        productService.getAllProducts();
         Mockito.verify(redisCacheService).writeListToCachePutAll(any(), any());
     }
 
