@@ -1,4 +1,4 @@
-package com.fmss.commondata.configuration;
+package com.fmss.productservice.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fmss.commondata.dtos.response.JwtTokenResponseDto;
@@ -7,14 +7,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Base64;
+import java.util.Objects;
 
-import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Component
 @RequiredArgsConstructor
@@ -25,20 +25,16 @@ public class TokenValidateConfiguration implements HandlerInterceptor {
     private static final String BEARER = "Bearer ";
     private static final String AUTHORIZATION = "Authorization";
 
-    @Value("${jwt.enabled:false}")
-    private boolean isJwtEnabled;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (isFalse(isJwtEnabled)) {
-            return true;
+        final var token = parseJwt(request);
+
+        if(Strings.isEmpty(token)) {
+            return false;
         }
 
         try {
-            final var token = parseJwt(request);
-            if (!StringUtils.hasText(token)) {
-                return false;
-            }
+
             final var chunks = token.split("\\.");
             final var decoder = Base64.getUrlDecoder();
 
@@ -54,6 +50,8 @@ public class TokenValidateConfiguration implements HandlerInterceptor {
             ex.printStackTrace();
             return false;
         }
+
+
     }
 
     private String parseJwt(HttpServletRequest request) {

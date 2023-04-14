@@ -7,6 +7,6 @@ public class ProductConstants {
 
     public static final String API_PREFIX = "/api";
     public static final String API_VERSION_V1 = "/v1";
-    public static final String API_PRODUCTS = "/product";
+    public static final String API_PRODUCTS = "/products";
     public static final String API_PLACE_PAYMENT = "/place-payment";
 }

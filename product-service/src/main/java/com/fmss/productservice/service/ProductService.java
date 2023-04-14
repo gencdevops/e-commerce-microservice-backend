@@ -3,13 +3,13 @@ package com.fmss.productservice.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-import com.fmss.productservice.configuration.RedisCacheService;
 import com.fmss.productservice.exception.ProductCouldNotCreateException;
 import com.fmss.productservice.exception.ProductNotFoundException;
 import com.fmss.productservice.mapper.ProductMapper;
 import com.fmss.productservice.model.Product;
 import com.fmss.productservice.model.dto.ProductRequestDto;
 import com.fmss.productservice.model.dto.ProductResponseDto;
+import com.fmss.productservice.redis.RedisCacheService;
 import com.fmss.productservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +38,8 @@ public class ProductService {
 
     public List<ProductResponseDto> getAllProducts() {
         List<ProductResponseDto> productResponseDtos = productRepository.getAllProducts()
-                .parallelStream().map(productMapper::toProductResponseDto).toList();
-
+                .parallelStream()
+                .map(productMapper::toProductResponseDto).toList();
         productResponseDtos.forEach(addDataToCache());
         return productResponseDtos;
     }
@@ -51,6 +51,8 @@ public class ProductService {
             redisCacheService.writeListToCachePutAll("products", cacheMap);
         };
     }
+
+    ;
 
 
     public ProductResponseDto getProductById(UUID productId) {

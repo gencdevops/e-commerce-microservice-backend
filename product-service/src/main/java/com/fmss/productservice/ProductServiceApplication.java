@@ -1,8 +1,9 @@
 package com.fmss.productservice;
 
-import com.fmss.productservice.configuration.RedisCacheService;
+
 import com.fmss.productservice.mapper.ProductMapper;
 import com.fmss.productservice.model.Product;
+import com.fmss.productservice.redis.RedisCacheService;
 import com.fmss.productservice.repository.ProductRepository;
 import com.fmss.productservice.service.ProductService;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
@@ -30,8 +31,6 @@ import java.util.UUID;
 @SpringBootApplication
 @RequiredArgsConstructor
 public class ProductServiceApplication {
-    private final RedisCacheService redisCacheService;
-    private final ProductMapper productMapper;
 
 
 
@@ -75,17 +74,6 @@ public class ProductServiceApplication {
                     .status(true)
                     .build();
             productRepository.saveAllAndFlush(List.of(product1, product2, product3, product4));
-
-
-            Product product5 = Product.builder()
-                    .url("https://advivemy-images.s3.us-east-2.amazonaws.com/sut")
-                    .price(BigDecimal.valueOf(90))
-                    .name("taner")
-                    .productId(UUID.randomUUID())
-                    .status(true)
-                    .build();
-
-
 
         };
 

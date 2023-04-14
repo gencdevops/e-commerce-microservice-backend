@@ -1,4 +1,4 @@
-package com.fmss.commondata.configuration;
+package com.fmss.productservice.filter;
 
 import com.fmss.commondata.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
