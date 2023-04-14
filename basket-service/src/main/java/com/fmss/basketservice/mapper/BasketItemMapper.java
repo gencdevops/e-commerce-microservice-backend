@@ -11,7 +11,6 @@ import com.fmss.basketservice.repository.BasketItemRepository;
 import com.fmss.basketservice.repository.BasketRepository;
 import com.fmss.commondata.dtos.response.BasketItemResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

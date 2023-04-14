@@ -1,7 +1,6 @@
 package com.fmss.basketservice.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 public enum CustomHttpStatus {
     CUSTOM_HTTP_STATUS(434, HttpStatus.Series.CLIENT_ERROR, "Customized");

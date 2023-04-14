@@ -5,9 +5,6 @@ import com.fmss.basketservice.model.entity.Basket;
 import com.fmss.commondata.dtos.response.BasketItemResponseDto;
 import com.fmss.commondata.dtos.response.BasketResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
