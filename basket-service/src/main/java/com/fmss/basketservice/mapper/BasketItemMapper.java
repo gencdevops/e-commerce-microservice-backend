@@ -4,8 +4,10 @@ package com.fmss.basketservice.mapper;
 import com.fmss.basketservice.exception.BasketNotFoundException;
 import com.fmss.basketservice.feign.ProductClient;
 import com.fmss.basketservice.model.dto.BasketItemRequestDto;
+import com.fmss.basketservice.model.dto.BasketItemRequestWithUserIdDto;
 import com.fmss.basketservice.model.dto.ProductResponseDto;
 import com.fmss.basketservice.model.entity.BasketItem;
+import com.fmss.basketservice.repository.BasketItemRepository;
 import com.fmss.basketservice.repository.BasketRepository;
 import com.fmss.commondata.dtos.response.BasketItemResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,8 @@ public class BasketItemMapper {
     private final BasketRepository basketRepository;
     private final ProductClient productClient;
 
+    private final BasketItemRepository basketItemRepository;
+
     public BasketItemResponseDto toResponseDto(BasketItem basketItem){
         ProductResponseDto productById = productClient.getProductById(basketItem.getProductId());
 
@@ -48,6 +52,14 @@ public class BasketItemMapper {
                 .productId(basketItemRequestDto.productId())
                 .quantity(basketItemRequestDto.quantity())
                 .basket(basketRepository.findById(basketItemRequestDto.basketId()).orElseThrow(BasketNotFoundException::new))
+                .build();
+    }
+
+    public BasketItem toEntityWithUserId(BasketItemRequestWithUserIdDto basketItemRequestWithUserIdDto){
+        return BasketItem.builder()
+                .productId(basketItemRequestWithUserIdDto.productId())
+                .quantity(basketItemRequestWithUserIdDto.quantity())
+                .basket(basketRepository.findActiveBasketByUserId(basketItemRequestWithUserIdDto.userId()).orElseThrow(BasketNotFoundException::new))
                 .build();
     }
 
