@@ -21,7 +21,7 @@ public class PaymentService {
     @Transactional
     public PaymentResponseDto createPayment(CreatePaymentRequestDto createPaymentRequestDto) {
         Payment payment = paymentMapper.createPaymentRequestDtoToPayment(createPaymentRequestDto);
-        payment.setPaymentStatus(PaymentStatus.PENDING);
+        payment.setPaymentStatus(PaymentStatus.APPROVAL);
         Payment paymentCreated = paymentRepository.saveAndFlush(payment);
         log.info("Created payment {}", paymentCreated.getPaymentId());
         return paymentMapper.paymentToPaymentResponseDto(payment);

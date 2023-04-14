@@ -50,7 +50,7 @@ dependencies {
 
     //PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
-    implementation 'com.h2database:h2'
+    testImplementation 'com.h2database:h2'
 
     // lombok ve mapstruct bu dependencyleri bu sırada olmalı yoksa çalışmıyor.
     compileOnly "org.projectlombok:lombok:1.18.26"

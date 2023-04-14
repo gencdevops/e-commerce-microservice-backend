@@ -22,6 +22,7 @@ import static com.fmss.paymentservice.constants.PaymentConstants.*;
 @RequestMapping(API_PREFIX + API_VERSION_V1 + API_PAYMENTS)
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin
 public class PaymentController {
 
     public final PaymentService paymentService;
@@ -34,7 +35,7 @@ public class PaymentController {
             content = @Content(
                     schema = @Schema(implementation = PaymentResponseDto.class),
                     mediaType = "application/json")))
-    @PostMapping(API_PLACE_PAYMENT)
+    @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public PaymentResponseDto createPayment(@RequestBody @Valid CreatePaymentRequestDto createPaymentRequestDto) {
         return paymentService.createPayment(createPaymentRequestDto);

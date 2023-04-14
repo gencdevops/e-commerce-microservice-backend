@@ -43,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDTO placeOrder(@NotNull PlaceOrderRequestDTO placeOrderRequestDTO) {
         var order = orderMapper.convertOrderFromPlaceOrderRequestDTO(placeOrderRequestDTO);
+        order.setTotalPrice(placeOrderRequestDTO.basketResponseDto().totalPrice());
         order.setOrderStatus(OrderStatus.RECEIVED);
         Order orderCreated = orderRepository.saveAndFlush(order);
         log.info("Created order {}", order.getOrderId());
@@ -69,6 +70,7 @@ public class OrderServiceImpl implements OrderService {
         } catch (Exception e) {
             log.error("Error order outbox {}", e.getMessage());
         }
+        log.info("Order success");
         return orderMapper.convertOrderFResponseDtoFromOrder(orderCreated);
     }
 }

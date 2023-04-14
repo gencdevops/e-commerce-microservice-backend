@@ -24,6 +24,7 @@ import static com.fmss.orderservice.constants.OrderConstants.*;
 @RequestMapping(API_PREFIX + API_VERSION_V1 + API_ORDER)
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin
 public class OrderController {
     private final OrderService orderService;
 
