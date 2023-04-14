@@ -33,8 +33,7 @@ public class LdapRepository {
     public boolean checkPassword(String username, String password) {
         try {
             final var searchFilter = "(" + EMAIL_ATTRIBUTE + "=" + username + ")";
-            ldapTemplate.authenticate(BASE_DN, searchFilter, password);
-            return true;
+            return ldapTemplate.authenticate(BASE_DN, searchFilter, password);
         } catch (Exception ex) {
             //TODO
         }
