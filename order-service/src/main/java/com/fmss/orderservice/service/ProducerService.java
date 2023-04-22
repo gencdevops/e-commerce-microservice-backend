@@ -18,8 +18,6 @@ public class ProducerService {
     @Value("${spring.kafka.producer.topic}")
     private  String producerTopic;
 
-
-
     public void sendMessage(Order order) {
         try {
             log.info("Order send kafka topic :    {}", order);
@@ -28,8 +26,5 @@ public class ProducerService {
             slackReportingService.sendErrorMessage("Order Outbox Retry Error", e);
         }
     }
-
-
-
 }
 

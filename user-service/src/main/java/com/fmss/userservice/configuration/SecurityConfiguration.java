@@ -34,8 +34,6 @@ import java.util.Arrays;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private final UserDetailsConfiguration userDetailsConfiguration;
-    private final JwtTokenFilter jwtTokenFilter;
     private final ObjectMapper objectMapper;
     private final LdapRepository ldapRepository;
 
@@ -43,10 +41,15 @@ public class SecurityConfiguration {
     public EcommerceDaoAuthenticationProvider authenticationProvider() {
         EcommerceDaoAuthenticationProvider authProvider = new EcommerceDaoAuthenticationProvider(ldapRepository);
 
-        authProvider.setUserDetailsService(userDetailsConfiguration);
+        authProvider.setUserDetailsService(userDetailsConfiguration());
         authProvider.setPasswordEncoder(passwordEncoder());
         authProvider.setPostAuthenticationChecks(new AccountStatusUserDetailsChecker());
         return authProvider;
+    }
+
+    @Bean
+    public UserDetailsConfiguration userDetailsConfiguration() {
+        return new UserDetailsConfiguration(ldapRepository);
     }
 
     @Bean
@@ -66,14 +69,19 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/authenticate").permitAll()
+                .requestMatchers("/api/v1/authenticate").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
 
         return http.build();
+    }
+
+    @Bean
+    public JwtTokenFilter jwtTokenFilter() {
+        return new JwtTokenFilter(jwtUtil(), userDetailsConfiguration());
     }
 
     @Bean

@@ -35,16 +35,12 @@ public class SlackReportingService {
 
     private final RestTemplate restTemplate = getInstance();
 
-
-
-
-
     public void sendErrorMessage(String subject, Throwable e) {
         restTemplate.postForEntity(webHookBaseUrl + errorsChannel, getSlackMessage(subject, null, e), String.class);
     }
 
     public void sendErrorMessage(String subject, String exMessage) {
-       sendErrorMessage(subject, new RuntimeException(exMessage.toString()));
+        sendErrorMessage(subject, new RuntimeException(exMessage));
     }
 
     private SlackMessageBlock getSlackMessage(String subject, String msg, Throwable e) {
@@ -81,7 +77,7 @@ public class SlackReportingService {
         template.setErrorHandler(new DefaultResponseErrorHandler() {
             @Override
             public void handleError(ClientHttpResponse response) throws IOException {
-                log.error("ERROR TEXT: {} {}", response.getRawStatusCode(), response.getStatusText());
+                log.error("ERROR TEXT: {} {}", response.getStatusCode(), response.getStatusText());
                 log.error("response body: {} ", IOUtils.toString(response.getBody(), StandardCharsets.UTF_8));
                 super.handleError(response);
             }

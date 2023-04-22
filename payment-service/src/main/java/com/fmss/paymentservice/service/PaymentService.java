@@ -1,5 +1,6 @@
 package com.fmss.paymentservice.service;
 
+import com.fmss.commondata.configuration.UserContext;
 import com.fmss.commondata.dtos.request.CreatePaymentRequestDto;
 import com.fmss.commondata.dtos.response.PaymentResponseDto;
 import com.fmss.commondata.model.enums.PaymentStatus;
@@ -21,7 +22,7 @@ public class PaymentService {
     @Transactional
     public PaymentResponseDto createPayment(CreatePaymentRequestDto createPaymentRequestDto) {
         Payment payment = paymentMapper.createPaymentRequestDtoToPayment(createPaymentRequestDto);
-        payment.setPaymentStatus(PaymentStatus.PENDING);
+        payment.setPaymentStatus(PaymentStatus.APPROVAL);
         Payment paymentCreated = paymentRepository.saveAndFlush(payment);
         log.info("Created payment {}", paymentCreated.getPaymentId());
         return paymentMapper.paymentToPaymentResponseDto(payment);

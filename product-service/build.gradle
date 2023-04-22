@@ -41,6 +41,7 @@ dependencies {
 
     // OpenApi
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 
     //Common
     implementation ("com.fmss:common-data:1.0") { changing = true }
@@ -50,7 +51,7 @@ dependencies {
 
     //PostgreSQL
     runtimeOnly 'org.postgresql:postgresql'
-    implementation 'com.h2database:h2'
+    testImplementation 'com.h2database:h2'
 
     // lombok ve mapstruct bu dependencyleri bu sırada olmalı yoksa çalışmıyor.
     compileOnly "org.projectlombok:lombok:1.18.26"
@@ -58,6 +59,7 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
     annotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
     annotationProcessor "org.projectlombok:lombok:1.18.26"
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

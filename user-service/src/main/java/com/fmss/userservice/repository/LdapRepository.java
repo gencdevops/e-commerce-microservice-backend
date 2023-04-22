@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
 import java.util.Optional;
 
 @Repository
@@ -20,7 +23,7 @@ public class LdapRepository {
     private static final String BASE_DN = "dc=fmss, dc=com";
     private static final String FIRST_NAME = "givenName";
     private static final String LAST_NAME = "sn";
-    private static final String FULLNAME_ATTRIBUTE = "cn";
+    private static final String CN_ATTRIBUTE = "cn";
     private static final String EMAIL_ATTRIBUTE = "mail";
     private static final String UID_ATTRIBUTE = "uid";
     public static final String USER_PASSWORD_ATTRIBUTE = "userPassword";
@@ -30,8 +33,7 @@ public class LdapRepository {
     public boolean checkPassword(String username, String password) {
         try {
             final var searchFilter = "(" + EMAIL_ATTRIBUTE + "=" + username + ")";
-            ldapTemplate.authenticate(BASE_DN, searchFilter, password);
-            return true;
+            return ldapTemplate.authenticate(BASE_DN, searchFilter, password);
         } catch (Exception ex) {
             //TODO
         }
@@ -41,7 +43,10 @@ public class LdapRepository {
     public LdapUser findUser(String username) {
         final var searchFilter = "(" + EMAIL_ATTRIBUTE + "=" + username + ")";
 
-        return Optional.ofNullable(ldapTemplate.search(BASE_DN, searchFilter, convert())).filter(ldapUsers -> !CollectionUtils.isEmpty(ldapUsers)).map(ldapUsers -> ldapUsers.get(0)).orElse(null);
+        return Optional.ofNullable(ldapTemplate.search(BASE_DN, searchFilter, convert()))
+                .filter(ldapUsers -> !CollectionUtils.isEmpty(ldapUsers))
+                .map(ldapUsers -> ldapUsers.get(0))
+                .orElse(null);
     }
 
     private AttributesMapper<LdapUser> convert() {
@@ -64,16 +69,19 @@ public class LdapRepository {
             if (attributes.get(USER_PASSWORD_ATTRIBUTE) != null) {
                 user.setUserPassword(attributes.get(USER_PASSWORD_ATTRIBUTE).get().toString());
             }
-            ldapTemplate.delete(user);
+
+            if (attributes.get(CN_ATTRIBUTE) != null) {
+                user.setCn(attributes.get(CN_ATTRIBUTE).get().toString());
+            }
             return user;
         };
     }
 
     public void create(LdapUser ldapUser) {
+
         try {
             DirContextAdapter context = new DirContextAdapter();
             context.setAttributeValues(OBJECTCLASS, OBJECT_CLASS_ATTRRIBUTES);
-            context.setAttributeValue(FULLNAME_ATTRIBUTE, ldapUser.getGivenName() + " " + ldapUser.getSn());
             context.setAttributeValue(LAST_NAME, ldapUser.getSn());
             context.setAttributeValue(FIRST_NAME, ldapUser.getGivenName());
             context.setAttributeValue(USER_PASSWORD_ATTRIBUTE, ldapUser.getUserPassword());
@@ -83,5 +91,16 @@ public class LdapRepository {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void updateUserPassword(String cn, String userPassword) {
+        final var modificationItems = new ModificationItem[1];
+        modificationItems[0] = new ModificationItem(
+                DirContext.REPLACE_ATTRIBUTE,
+                new BasicAttribute(USER_PASSWORD_ATTRIBUTE, userPassword)
+        );
+
+        final var filter = CN_ATTRIBUTE + "=" + cn  + ", dc=fmss, dc=com";
+        ldapTemplate.modifyAttributes(filter, modificationItems);
     }
 }

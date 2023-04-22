@@ -36,7 +36,6 @@ public class LogEventConsumerService {
         log.info(message);
         FileWriterUtil.writeToFile(logModel1);
         logModelRepository.save(logModel1);
-        System.out.println(logModelRepository.findAll().size());
     }
 }
 

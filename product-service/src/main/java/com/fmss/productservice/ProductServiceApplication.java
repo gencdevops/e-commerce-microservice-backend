@@ -1,9 +1,11 @@
 package com.fmss.productservice;
 
+
 import com.fmss.productservice.model.Product;
 import com.fmss.productservice.repository.ProductRepository;
 import com.fmss.productservice.service.ProductService;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,17 +22,19 @@ import java.util.UUID;
 @EnableCaching
 @EnableEncryptableProperties
 @SpringBootApplication
+@RequiredArgsConstructor
 public class ProductServiceApplication {
+
+
 
     public static void main(String[] args) {
         SpringApplication.run(ProductServiceApplication.class, args);
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(ProductRepository productRepository, ProductService productService){
+    public CommandLineRunner commandLineRunner(ProductRepository productRepository, ProductService productService) {
         return args -> {
             productRepository.deleteAll();
-
             Product product1 = Product.builder()
                     .url("https://advivemy-images.s3.us-east-2.amazonaws.com/a3434")
                     .price(BigDecimal.valueOf(1012.00))
@@ -63,7 +67,11 @@ public class ProductServiceApplication {
                     .status(true)
                     .build();
             productRepository.saveAllAndFlush(List.of(product1, product2, product3, product4));
-        };
-    }
 
+        };
+
+
+
+    }
 }
+

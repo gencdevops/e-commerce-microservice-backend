@@ -1,5 +1,6 @@
 package com.fmss.productservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fmss.productservice.model.dto.ProductResponseDto;
 import com.fmss.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,8 +36,9 @@ public class ProductController {
                     mediaType = "application/json")))
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponseDto> getAllProducts() {
-        return productService.getAllProducts();
+    public List<ProductResponseDto> getAllProducts(@RequestHeader String bearerToken) throws JsonProcessingException {
+
+        return productService.getAllProducts(bearerToken);
     }
 
     @Operation(summary = "Get product")
@@ -47,7 +49,7 @@ public class ProductController {
             content = @Content(
                     schema = @Schema(implementation = ProductResponseDto.class),
                     mediaType = "application/json")))
-    @GetMapping(API_PLACE_PAYMENT)
+    @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ProductResponseDto getProductById(@PathVariable UUID productId) {
         return productService.getProductById(productId);

@@ -37,7 +37,7 @@
             </layout>
         </encoder>
         <topic>logs</topic>
-        <producerConfig>bootstrap.servers=localhost:9094</producerConfig>
+        <producerConfig>bootstrap.servers=89.19.23.50:9094</producerConfig>
     </appender>
 
     <logger name="com.fmss" level="INFO">

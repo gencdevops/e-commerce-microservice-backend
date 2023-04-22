@@ -1,7 +1,6 @@
 package com.fmss.basketservice;
 
 import com.fmss.basketservice.feign.ProductClient;
-import com.fmss.basketservice.model.dto.ProductResponseDto;
 import com.fmss.basketservice.service.BasketService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

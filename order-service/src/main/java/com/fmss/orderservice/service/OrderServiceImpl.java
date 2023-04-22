@@ -26,9 +26,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@RequiredArgsConstructor
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -43,41 +43,36 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDTO placeOrder(@NotNull PlaceOrderRequestDTO placeOrderRequestDTO) {
         var order = orderMapper.convertOrderFromPlaceOrderRequestDTO(placeOrderRequestDTO);
+        order.setTotalPrice(placeOrderRequestDTO.basketResponseDto().totalPrice());
         order.setOrderStatus(OrderStatus.RECEIVED);
         Order orderCreated = orderRepository.saveAndFlush(order);
         log.info("Created order {}", order.getOrderId());
-
 
         CreatePaymentRequestDto createPaymentRequestDto = new CreatePaymentRequestDto(orderCreated.getOrderId()
                 , placeOrderRequestDTO.userId());
         PaymentResponseDto paymentResponse = paymentServiceFeignClient.createPayment(createPaymentRequestDto);
 
-        if (Objects.isNull(paymentResponse) || !paymentResponse.paymentStatus().equals(PaymentStatus.APPROVAL.toString())) {
+        if (Objects.isNull(paymentResponse) || !paymentResponse.paymentStatus().toString().equals(PaymentStatus.APPROVAL.toString())) {
             String errorLogMessage = "Payment failure";
-            log.error("Payment failure {}, message : {}", paymentResponse.id(), errorLogMessage);
+            log.error("Payment failure message : {}", errorLogMessage);
             throw new PaymentFailureException(errorLogMessage);
         }
         producerService.sendMessage(orderCreated);
-
-
         OrderOutbox orderOutbox;
         try {
             orderOutbox = OrderOutbox.builder()
                     .orderPayload(objectMapper.writeValueAsString(order))
-                    .paymentId(String.valueOf(paymentResponse.id()))
-                    .orderId(orderCreated.getId())
+                    .paymentId(String.valueOf(paymentResponse.paymentId()))
+                    .orderId(orderCreated.getOrderId())
                     .build();
             OrderOutbox savedOrderOutbox = orderOutBoxService.saveOrderOutbox(orderOutbox);
-            log.info("order outbox saved database : {}", savedOrderOutbox.getId());
+            log.info("order outbox saved database : {}", savedOrderOutbox.getOrderOutboxId());
         } catch (Exception e) {
             log.error("Error order outbox {}", e.getMessage());
         }
-
-
+        log.info("Order success");
         return orderMapper.convertOrderFResponseDtoFromOrder(orderCreated);
     }
-
-
 }
 
 
