@@ -88,25 +88,6 @@ Elastic Logstash Kibana uygulamanın içerisinde embedded logback xmle' bağlı 
 <br>
 <img width="1005" alt="image" src="https://user-images.githubusercontent.com/98235097/231942164-2a1f4c10-5f3a-464c-8628-13fa380d7524.png">
 
-<img width="637" alt="image" src="https://user-images.githubusercontent.com/98235097/231942309-49f79b23-c991-4911-8aa2-bac41f238325.png">
-<img width="947" alt="image" src="https://user-images.githubusercontent.com/98235097/231939381-738c7b08-d155-41a5-9a37-ac2f6751b5a0.png">
-<br>
-<br>
-<img width="637" alt="image" src="https://user-images.githubusercontent.com/98235097/231939988-9ae9940c-90b5-468a-84b1-94bc697f3a03.png">
-<br>
-Uygulama'da unit test ve integration test yazilmistir
-<br>
-<img width="760" alt="image" src="https://user-images.githubusercontent.com/98235097/231940032-e3a5112a-f8c4-4596-8bc8-bf2cbf9b3385.png">
-<img width="899" alt="image" src="https://user-images.githubusercontent.com/98235097/231938560-40c1d06c-189a-4225-b616-cb084f720897.png">
-<img width="986" alt="image" src="https://user-images.githubusercontent.com/98235097/231938801-873d3994-2648-4c5c-b182-4f8b14eef16d.png">
-<br>
-<br>
-<img width="1204" alt="image" src="https://user-images.githubusercontent.com/98235097/231942812-884996f8-a5fa-453c-bd6d-4006fb1e206c.png">
-<img width="1032" alt="image" src="https://user-images.githubusercontent.com/98235097/231943044-08dd9c48-2e0d-4e1b-980a-6eeca767316f.png">
-<img width="1029" alt="image" src="https://user-images.githubusercontent.com/98235097/231943831-35b88a77-1efb-4b21-a763-b1cd53907e74.png">
-
-<img width="1713" alt="Screen Shot 2023-04-14 at 07 42 15" src="https://user-images.githubusercontent.com/52275789/231944813-34f0fc2a-74a8-4dd3-ba7e-cf9633eff981.png">
-<img width="1915" alt="Screen Shot 2023-04-14 at 07 42 37" src="https://user-images.githubusercontent.com/52275789/231944815-e603e5f7-590d-4e25-8d9a-5e7b69f293e7.png">
 
 ## Bağlantılar
 https://github.com/fmssbilisimtech/ecommerce-template-backend
