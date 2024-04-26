@@ -1,4 +1,4 @@
-# Fmss e-commerce template
+# e-commerce template
 
 <br>
 
